@@ -3,6 +3,16 @@ entries:
   elk-frontend:
   - apiVersion: v2
     appVersion: v0.8.0
+    created: "2023-04-18T20:21:22.963894567Z"
+    description: A Helm chart for Kubernetes
+    digest: 2037f6bd6f9dfb380c605e46fb953f52a686febcdc027fb2580b85aa957f485c
+    name: elk-frontend
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/elk-frontend-0.1.2/elk-frontend-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: v0.8.0
     created: "2023-04-18T19:48:44.206843886Z"
     description: A Helm chart for Kubernetes
     digest: 23318cab062375af41ee6e2371341ff9a724c456f751f83b49a37eb4ce831e71
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/elk-frontend-0.1.1/elk-frontend-0.1.1.tgz
     version: 0.1.1
-generated: "2023-04-18T19:48:44.206849986Z"
+generated: "2023-04-18T20:21:22.963903168Z"
