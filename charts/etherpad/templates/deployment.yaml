@@ -1,0 +1,236 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "etherpad.fullname" . }}
+  labels:
+    {{- include "etherpad.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "etherpad.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "etherpad.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "etherpad.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: TITLE
+              value: {{ .Values.etherpad.general.title }}
+            - name: FAVICON
+              value: {{ .Values.etherpad.general.favicon }}
+            - name: DEFAULT_PAD_TEXT
+              value: {{ .Values.etherpad.general.defaultPadText }}
+            - name: IP
+              value: {{ .Values.etherpad.general.ip }}
+            - name: PORT
+              value: {{ .Values.etherpad.general.port |quote }}
+            {{- if .Values.etherpad.general.admin.existingSecret.enabled }}
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.etherpad.general.admin.existingSecret.secretName }}
+                  key: {{ .Values.etherpad.general.admin.existingSecret.secretKey }}
+            {{- else if .Values.etherpad.general.admin.password }}
+            - name: ADMIN_PASSWORD
+              value: {{ .Values.etherpad.general.admin.password }}
+            {{- end }}
+            {{- if .Values.etherpad.general.userPassword }}
+            - name: USER_PASSWORD
+              value: {{  .Values.etherpad.general.userPassword }}
+            {{- end }}
+            - name: PAD_OPTIONS_NO_COLORS
+              value: {{ .Values.etherpad.padOptions.NoColors |quote }}
+            - name: PAD_OPTIONS_SHOW_CONTROLS
+              value: {{ .Values.etherpad.padOptions.showControls |quote }}
+            - name: PAD_OPTIONS_SHOW_CHAT
+              value: {{ .Values.etherpad.padOptions.showChat |quote }}
+            - name: PAD_OPTIONS_SHOW_LINE_NUMBERS
+              value: {{ .Values.etherpad.padOptions.showLineNumbers |quote }}
+            - name: PAD_OPTIONS_USE_MONOSPACE_FONT
+              value: {{ .Values.etherpad.padOptions.useMonospaceFont |quote }}
+            - name: PAD_OPTIONS_USER_NAME
+              value: {{ .Values.etherpad.padOptions.userName |quote }}
+            - name: PAD_OPTIONS_USER_COLOR
+              value: {{ .Values.etherpad.padOptions.userColor |quote }}
+            - name: PAD_OPTIONS_RTL
+              value: {{ .Values.etherpad.padOptions.rtl |quote }}
+            - name: PAD_OPTIONS_ALWAYS_SHOW_CHAT
+              value: {{ .Values.etherpad.padOptions.alwaysShowChat |quote }}
+            - name: PAD_OPTIONS_CHAT_AND_USERS
+              value: {{ .Values.etherpad.padOptions.chatAndUsers |quote }}
+            - name: PAD_OPTIONS_LANG
+              value: {{ .Values.etherpad.padOptions.lang }}
+            - name: PAD_SHORTCUTS_ENABLED_ALT_F9
+              value: {{ .Values.etherpad.shortcuts.enabledAltF9 |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_ALT_C
+              value: {{ .Values.etherpad.shortcuts.enabledAltC |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_CMD_S
+              value: {{ .Values.etherpad.shortcuts.enabledCmdS |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_CMD_Z
+              value: {{ .Values.etherpad.shortcuts.enabledCmdZ |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_CMD_Y
+              value: {{ .Values.etherpad.shortcuts.enabledCmdY |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_CMD_I
+              value: {{ .Values.etherpad.shortcuts.enabledCmdI |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_CMD_B
+              value: {{ .Values.etherpad.shortcuts.enabledCmdB |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_CMD_U
+              value: {{ .Values.etherpad.shortcuts.enabledCmdU |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_CMD_H
+              value: {{ .Values.etherpad.shortcuts.enabledCmdH |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_CMD_5
+              value: {{ .Values.etherpad.shortcuts.enabledCmd5 |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_CMD_SHIFT_1
+              value: {{ .Values.etherpad.shortcuts.enabledCmdShift1 |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_CMD_SHIFT_2
+              value: {{ .Values.etherpad.shortcuts.enabledCmdShift2 |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_CMD_SHIFT_L
+              value: {{ .Values.etherpad.shortcuts.enabledCmdShiftL |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_CMD_SHIFT_N
+              value: {{ .Values.etherpad.shortcuts.enabledCmdShiftN |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_CMD_SHIFT_C
+              value: {{ .Values.etherpad.shortcuts.enabledCmdShiftC |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_DELETE
+              value: {{ .Values.etherpad.shortcuts.enabledDELETE |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_RETURN
+              value: {{ .Values.etherpad.shortcuts.enabledRETURN |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_ESC
+              value: {{ .Values.etherpad.shortcuts.enabledESC |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_TAB
+              value: {{ .Values.etherpad.shortcuts.enabledTAB |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_CTRL_HOME
+              value: {{ .Values.etherpad.shortcuts.enabledCTRLHOME |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_PAGE_UP
+              value: {{ .Values.etherpad.shortcuts.enabledPAGEUP |quote }}
+            - name: PAD_SHORTCUTS_ENABLED_PAGE_DOWN
+              value: {{ .Values.etherpad.shortcuts.enabledPAGEDOWN |quote }}
+            - name: SKIN_NAME 
+              value: {{ .Values.etherpad.skins.skinName }}
+            - name: SKIN_VARIANTS
+              value: {{ .Values.etherpad.skins.skinVariants }}
+            - name: LOGLEVEL
+              value: {{ .Values.etherpad.logging.logLevel }}
+            - name: DISABLE_IP_LOGGING
+              value: {{ .Values.etherpad.logging.disableIPLogging |quote }}
+            - name: HOW_SETTINGS_IN_ADMIN_PAGE
+              value: {{ .Values.etherpad.advanced.showSettingsInAdminPage |quote }}
+            - name: TRUST_PROXY
+              value: {{ .Values.etherpad.advanced.trustProxy |quote }}
+            - name: IMPORT_MAX_FILE_SIZE
+              value: {{ .Values.etherpad.advanced.importMaxFileSize |quote }}
+            - name: IMPORT_EXPORT_MAX_REQ_PER_IP
+              value: {{ .Values.etherpad.advanced.importExportMaxReqPerIp |quote }}
+            - name: IMPORT_EXPORT_RATE_LIMIT_WINDOW
+              value: {{ .Values.etherpad.advanced.importExportRateLimitWindow |quote }}
+            - name: COMMIT_RATE_LIMIT_DURATION
+              value: {{ .Values.etherpad.advanced.commitRateLimitDuration |quote }}
+            - name: COMMIT_RATE_LIMIT_POINTS
+              value: {{ .Values.etherpad.advanced.commitRateLimitPoints |quote }}
+            - name: SUPPRESS_ERRORS_IN_PAD_TEXT
+              value: {{ .Values.etherpad.advanced.suppressErrorsInPadText |quote }}
+            - name: REQUIRE_SESSION
+              value: {{ .Values.etherpad.advanced.requireSession |quote }}
+            - name: EDIT_ONLY
+              value: {{ .Values.etherpad.advanced.editOnly |quote }}
+            - name: MINIFY
+              value: {{ .Values.etherpad.advanced.minify |quote }}
+            - name: MAX_AGE
+              value: {{ .Values.etherpad.advanced.maxAge |quote }}
+            - name: ABIWORD
+              value: {{ .Values.etherpad.advanced.abiword |quote }}
+            - name: SOFFICE
+              value: {{ .Values.etherpad.advanced.soffice |quote }}
+            - name: TIDY_HTML
+              value: {{ .Values.etherpad.advanced.tidyHTML |quote }}
+            - name: ALLOW_UNKNOWN_FILE_ENDS
+              value: {{ .Values.etherpad.advanced.allowUnknownFileEnds |quote }}
+            - name: REQUIRE_AUTHENTICATION
+              value: {{ .Values.etherpad.advanced.requireAuthentication |quote }}
+            - name: REQUIRE_AUTHORIZATION
+              value: {{ .Values.etherpad.advanced.requireAuthorization |quote }}
+            - name: AUTOMATIC_RECONNECTION_TIMEOUT
+              value: {{ .Values.etherpad.advanced.automaticReconnectionTimeout |quote }}
+            - name: FOCUS_LINE_PERCENTAGE_ABOVE
+              value: {{ .Values.etherpad.advanced.focusLinePercentageAbove |quote }}
+            - name: FOCUS_LINE_PERCENTAGE_BELOW
+              value: {{ .Values.etherpad.advanced.focusLinePercentageBelow |quote }}
+            - name: FOCUS_LINE_PERCENTAGE_ARROW_UP
+              value: {{ .Values.etherpad.advanced.focusLinePercentageArrowUp |quote }}
+            - name: FOCUS_LINE_DURATION
+              value: {{ .Values.etherpad.advanced.focusLineDuration |quote }}
+            - name: FOCUS_LINE_CARET_SCROLL
+              value: {{ .Values.etherpad.advanced.focusLineCaretScroll |quote }}
+            - name: SOCKETIO_MAX_HTTP_BUFFER_SIZE
+              value: {{ .Values.etherpad.advanced.socketioMaxHttpBufferSize |quote }}
+            - name: LOAD_TEST
+              value: {{ .Values.etherpad.advanced.loadTest |quote }}
+            - name: DUMP_ON_UNCLEAN_EXIT
+              value: {{ .Values.etherpad.advanced.dumpOnUncleanExit |quote }}
+            - name: EXPOSE_VERSION
+              value: {{ .Values.etherpad.advanced.exposeVersion |quote }}
+            {{- if .Values.postgresql.enabled }}
+            - name: DB_TYPE
+              value: postgres
+            - name: DB_HOST
+              value: "{{ include "gotosocial.postgresql.host" . }}"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: {{ .Values.postgresql.auth.database }}
+            - name: DB_USER
+              value: {{ .Values.postgresql.auth.username }}
+            {{- if .Values.postgresql.auth.existingSecret }}
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgresql.auth.existingSecret }}
+                  key: password
+            {{- else }}
+            - name: DB_PASS
+              value: {{ .Values.postgresql.auth.password }}
+            {{- end }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.etherpad.general.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
