@@ -1,3 +1,5 @@
+[![Release Charts](https://github.com/fSocietySocial/charts/actions/workflows/release.yml/badge.svg)](https://github.com/fSocietySocial/charts/actions/workflows/release.yml)
+[![pages-build-deployment](https://github.com/fSocietySocial/charts/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/fSocietySocial/charts/actions/workflows/pages/pages-build-deployment)
 # Helm Charts
 Find your favorite application and launch it. :)
 
