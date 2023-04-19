@@ -80,4 +80,21 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/etherpad-0.1.0/etherpad-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-18T20:38:31.581480721Z"
+  uptime-kuma:
+  - apiVersion: v2
+    appVersion: 1.21.2-alpine
+    created: "2023-04-19T19:23:10.39369367Z"
+    description: A Helm chart for Kubernetes to Deploy uptime-kuma.
+    digest: 8ef782c9aa6796a02140172b81d18d099e67c2f6dce1dda18aa8115fb0b25d40
+    home: https://github.com/louislam/uptime-kuma
+    icon: https://github.com/louislam/uptime-kuma/raw/master/public/icon.svg
+    maintainers:
+    - email: dev+github@schoenwald.aero
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: uptime-kuma
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/uptime-kuma-0.1.0/uptime-kuma-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-04-19T19:23:10.39370767Z"
