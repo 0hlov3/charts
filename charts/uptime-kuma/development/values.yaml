@@ -1,0 +1,19 @@
+persistence:
+  enabled: true
+  size: 4Gi
+
+ingress:
+  enabled: true
+  className: "nginx-internal"
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-cloudflare
+  hosts:
+    - host: uptime.schoenwald.cloud
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: tls-uptimekuma-general
+      hosts:
+        - uptime.schoenwald.cloud
