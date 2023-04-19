@@ -1,6 +1,8 @@
 apiVersion: v2
 name: uptime-kuma
-description: A Helm chart for Kubernetes
+description: A Helm chart for Kubernetes to Deploy uptime-kuma.
+icon: https://github.com/louislam/uptime-kuma/raw/master/public/icon.svg
+home: https://github.com/louislam/uptime-kuma
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -22,3 +24,8 @@ version: 0.1.0
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 appVersion: "1.21.2-alpine"
+
+maintainers:
+  - name: 0hlov3
+    email: dev+github@schoenwald.aero
+    url: https://schoenwald.aero
