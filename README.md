@@ -1,5 +1,6 @@
 [![Release Charts](https://github.com/fSocietySocial/charts/actions/workflows/release.yml/badge.svg)](https://github.com/fSocietySocial/charts/actions/workflows/release.yml)
 [![pages-build-deployment](https://github.com/fSocietySocial/charts/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/fSocietySocial/charts/actions/workflows/pages/pages-build-deployment)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/focietyocial-charts)](https://artifacthub.io/packages/search?repo=focietyocial-charts)
 # Helm Charts
 Find your favorite application and launch it. :)
 
