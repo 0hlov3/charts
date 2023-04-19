@@ -53,7 +53,7 @@ spec:
           persistentVolumeClaim:
             claimName: {{ $fullName }}
           {{- else }}
-          emtyDir:
+          emptyDir:
             sizeLimit: 4Gi
           {{- end }}
       {{- with .Values.nodeSelector }}
