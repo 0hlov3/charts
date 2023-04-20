@@ -1,0 +1,22 @@
+apiVersion: v2
+name: joplin-server
+description: This server allows you to sync any Joplin client
+home: https://github.com/laurent22/joplin
+icon: https://raw.githubusercontent.com/laurent22/joplin/dev/Assets/LinuxIcons/256x256.png
+
+maintainers:
+  - name: 0hlov3
+    email: dev+github@schoenwald.aero
+    url: https://schoenwald.aero
+
+type: application
+# ChartVersion
+version: "0.1.7"
+# AppVersion
+appVersion: "2.10.10-beta"
+
+dependencies:
+  - name: postgresql
+    version: ~11.9.13
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled

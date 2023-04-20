@@ -1,0 +1,102 @@
+{{- $postgresHost := include "joplin-server.postgresql.host" . }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "joplin-server.fullname" . }}
+  labels:
+    {{- include "joplin-server.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "joplin-server.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "joplin-server.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "joplin-server.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: APP_PORT
+              value: {{ .Values.joplin.APP_PORT |quote }}
+            - name: APP_BASE_URL
+              value: "{{ .Values.joplin.APP_BASE_URL }}"
+            {{- if .Values.joplin.externalPostgres.enabled }}
+            - name: DB_CLIENT
+              value: "pg"
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.joplin.externalPostgres.POSTGRES_PASSWORD }}"
+            - name: POSTGRES_DATABASE
+              value: "{{ .Values.joplin.externalPostgres.POSTGRES_DATABASE }}"
+            - name: POSTGRES_USER
+              value: "{{ .Values.joplin.externalPostgres.POSTGRES_USER }}"
+            - name: POSTGRES_PORT
+              value: "{{ .Values.joplin.externalPostgres.POSTGRES_PORT }}"
+            - name: POSTGRES_HOST
+              value: "{{ .Values.joplin.externalPostgres.POSTGRES_HOST }}"
+            {{- else if .Values.postgresql.enabled }}
+            - name: DB_CLIENT
+              value: "pg"
+            - name: POSTGRES_DATABASE
+              value: "{{ .Values.postgresql.auth.database }}"
+            - name: POSTGRES_USER
+              value: "{{ .Values.postgresql.auth.username }}"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_HOST
+              value: "{{ $postgresHost }}"
+            {{- if .Values.postgresql.auth.existingSecret }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: "{{ .Values.postgresql.auth.existingSecret }}"
+            {{- else }}
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.postgresql.auth.password }}"
+            {{- end }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 22300
+              protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
