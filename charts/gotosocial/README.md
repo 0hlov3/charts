@@ -11,9 +11,9 @@ kubectl create secret generic gts-postgresql-secret --from-literal="password=$(o
 ```
 ### Deploy Helm Chart
 ```shell
-helm repo add maxxblow https://maxxblow.de/charts
+helm repo add fsociety https://charts.fsociety.social
 helm repo update
-helm upgrade --install gotosocial maxxblow/gotosocial --namespace gotosocial --create-namespace --set gotosocial.config.host='domain.tld' --set gotosocial.config.accountDomain='domain.tld'
+helm upgrade --install gotosocial fsociety/gotosocial --namespace gotosocial --create-namespace --set gotosocial.config.host='domain.tld' --set gotosocial.config.accountDomain='domain.tld'
 ```
 ## Create first User
 ```shell
@@ -88,6 +88,7 @@ kubectl exec -ti $CONTAINER_ID -- /gotosocial/gotosocial --config-path /config/c
 
 ### Postgres Packeged by Bitnami
 If this is enabled, it will override the External Postgres and SQLite options.
+
 | Name                                                       | Description                                                                                                                                                                           | Value |
 | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
 | postgresql.enabled | Enabled [Postgres Packaged by Bitnami](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) | true |
@@ -108,6 +109,7 @@ You can find other config Options in the Bitnami Chart for Postgresql [https://g
 
 ### External Postgres
 If this is enabled and `postgresql.enabled` is disabled, it will override the SQLite options.
+
 | Name                                                       | Description                                                                                                                                                                           | Value |
 | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
 | externalPostgresql.enabled | Enables external Postgres access | false |
@@ -152,6 +154,8 @@ If this is enabled and `postgresql.enabled` and `externalPostgresql.enabled` are
 | gotosocial.config.media.emojiRemoteMaxSize | Int. Max size in bytes of emojis to download from other instances. | 102400 |
 
 ## STORAGE CONFIG Parameters
+| Name | Description | Value |
+|----- | ----------- | ----- |
 | gotosocial.config.storage.backend | String. Type of storage backend to use. | "local" |
 | gotosocial.config.storage.localBasePath | String. Directory to use as a base path for storing files. | "/gotosocial/storage" |
 | gotosocial.config.storage.s3.enabled | Enabled or Disables the User of s3 Storage | false |
@@ -162,6 +166,8 @@ If this is enabled and `postgresql.enabled` and `externalPostgresql.enabled` are
 | gotosocial.config.storage.s3.s3Bucket | Only required when running with the s3 storage backend. | "" |
 
 ## STATUSES CONFIG Parameters
+| Name | Description | Value |
+|----- | ----------- | ----- |
 | gotosocial.config.statuses.maxChars | Int. Maximum amount of characters permitted for a new status. | 5000 |
 | gotosocial.config.statuses.cwMaxChars | Int. Maximum amount of characters allowed in the CW/subject header of a status. | 100 |
 | gotosocial.config.statuses.pollMaxOptions | Int. Maximum amount of options to permit when creating a new poll. | 6 |
@@ -169,12 +175,16 @@ If this is enabled and `postgresql.enabled` and `externalPostgresql.enabled` are
 | gotosocial.config.statuses.mediaMaxFiles | Int. Maximum amount of media files that can be attached to a new status. | 6 |
 
 ## LETSENCRYPT CONFIG Parameters
+| Name | Description | Value |
+|----- | ----------- | ----- |
 | gotosocial.config.letsencrypt.enabled | Bool. Whether or not letsencrypt should be enabled for the server. | false |
 | gotosocial.config.letsencrypt.port | Int. Port to listen for letsencrypt certificate challenges on. | 80 |
 | gotosocial.config.letsencrypt.certDir | String. Directory in which to store LetsEncrypt certificates. | "/gotosocial/storage/certs" |
 | gotosocial.config.letsencrypt.emailAddress | String. Email address to use when registering LetsEncrypt certs. | "" |
 
 ## OIDC CONFIG Parameters
+| Name | Description | Value |
+|----- | ----------- | ----- |
 | gotosocial.config.oidc.enabled | Bool. Enable authentication with external OIDC provider. | false |
 | gotosocial.config.oidc.idpName | String. Name of the oidc idp (identity provider). | "" |
 | gotosocial.config.oidc.skipVerification | Bool. Skip the normal verification flow of tokens returned from the OIDC provider. | false |
@@ -185,6 +195,8 @@ If this is enabled and `postgresql.enabled` and `externalPostgresql.enabled` are
 | gotosocial.config.oidc.linkExisting | Bool. Link OIDC authenticated users to existing ones based on their email address. | false |
 
 ## SMTP CONFIG Parameters
+| Name | Description | Value |
+|----- | ----------- | ----- |
 | gotosocial.config.smtp.host | String. The hostname of the smtp server you want to use. | "" |
 | gotosocial.config.smtp.port | Int. Port to use to connect to the smtp server. | 0 |
 | gotosocial.config.smtp.userName| String. Username to use when authenticating with the smtp server. | "" |
@@ -194,10 +206,14 @@ If this is enabled and `postgresql.enabled` and `externalPostgresql.enabled` are
 | gotosocial.config.smtp.from | String. 'From' address for sent emails. | "" |
 
 ## SYSLOG CONFIG Parameters
+| Name | Description | Value |
+|----- | ----------- | ----- |
 | gotosocial.config.syslog.enabled | Bool. Enable the syslog logging hook. Logs will be mirrored to the configured destination. | false |
 | gotosocial.config.syslog.protocol | String. Protocol to use when directing logs to syslog. Leave empty to connect to local syslog. | "udp" |
 | gotosocial.config.syslog.address | String. Address:port to send syslog logs to. Leave empty to connect to local syslog. | "localhost:514" |
 
 ## ADVANCED SETTINGS Parameters
+| Name | Description | Value |
+|----- | ----------- | ----- |
 | gotosocial.config.advanced.cookiesSamesite | String. Value of the SameSite attribute of cookies set by GoToSocial. | "lax" |
 | gotosocial.config.advanced.rateLimitRequest | Int. Amount of requests to permit from a single IP address within a span of 5 minutes. | 1000 |
