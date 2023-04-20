@@ -211,6 +211,28 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/gotosocial-0.3.7/gotosocial-0.3.7.tgz
     version: 0.3.7
+  joplin-server:
+  - apiVersion: v2
+    appVersion: 2.10.10-beta
+    created: "2023-04-20T21:10:26.997828378Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~11.9.13
+    description: This server allows you to sync any Joplin client
+    digest: 32ad120551dc59b171092295b70eee8c443e0ca403461ebca0afe1d2738320c0
+    home: https://github.com/laurent22/joplin
+    icon: https://raw.githubusercontent.com/laurent22/joplin/dev/Assets/LinuxIcons/256x256.png
+    maintainers:
+    - email: dev+github@schoenwald.aero
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: joplin-server
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/joplin-server-0.1.7/joplin-server-0.1.7.tgz
+    version: 0.1.7
   uptime-kuma:
   - apiVersion: v2
     appVersion: 1.21.2-alpine
@@ -228,4 +250,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/uptime-kuma-0.1.0/uptime-kuma-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-20T21:10:17.095778766Z"
+generated: "2023-04-20T21:10:26.997847879Z"
