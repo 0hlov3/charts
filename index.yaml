@@ -80,6 +80,33 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/etherpad-0.1.0/etherpad-0.1.0.tgz
     version: 0.1.0
+  gotosocial:
+  - annotations:
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/images: |-
+        - name: gotosocial
+          image: superseriousbusiness/gotosocial:0.8.0
+    apiVersion: v2
+    appVersion: 0.8.0
+    created: "2023-04-20T18:36:02.981075199Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~11.9.13
+    description: A Helm chart for Kubernetes
+    digest: a639d239867bee09dd0be5f745bbc63f86b8ad2f6ea6d0fcceedada3d0d75c7a
+    home: https://github.com/superseriousbusiness/gotosocial
+    icon: https://docs.gotosocial.org/en/latest/assets/sloth.png
+    maintainers:
+    - email: dev+github@schoenwald.aero
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: gotosocial
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/gotosocial-0.3.7/gotosocial-0.3.7.tgz
+    version: 0.3.7
   uptime-kuma:
   - apiVersion: v2
     appVersion: 1.21.2-alpine
@@ -97,4 +124,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/uptime-kuma-0.1.0/uptime-kuma-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-19T19:23:10.39370767Z"
+generated: "2023-04-20T18:36:02.9811033Z"
