@@ -47,61 +47,127 @@ gotosocial:
     size: "10Gi"
     #storageClass: ""
   config:
-    #logLevel: "info"
-    #logDBQueries: ""
-    #applicationName: "gotosocial"
-    #host: ""
-    #accountDomain: ""
+    logLevel: "info"
+    logDBQueries: false
+    applicationName: "gotosocial"
+    landingPageUser: ""
+    host: ""
+    accountDomain: ""
+    protocol: "https"
+    bindAddress: "0.0.0.0"
     trustedProxies:
       - "10.0.0.0/8"
       - "172.16.0.0/12"
       - "192.168.0.0/16"
     db:
+      sqliteAddress: "/gotosocial/storage/sqlite.db"
+      maxOpenConnsMultiplier: 8
+      sqliteSynchronous: "NORMAL"
+      sqliteCacheSize: "8MiB"
+      sqliteBusyTimeout: "5m"
+      visibilitySweepFreq: "1m"
       cache:
         enabled: false
-        gts: {}
-      sqlite_address:
+        visibilityMaxSize: 2000
+        visibilityTTL: "30m"
+        gts:
+          accountMaxSize: 2000
+          accountTTl: "30m"
+          accountSweepFreq: "1m"
+          blockMaxSize: 100
+          blockTTl: "24h"
+          blockSweepFreq: "1m"
+          domainBlockMaxSize: 2000
+          domainBlockTTl: "24h"
+          domainBlockSweepFreq: "1m"
+          emojiMaxSize: 2000
+          emojiTTl: "30m"
+          emojiSweepFreq: "1m"
+          emojiCategoryMaxSize: 100
+          emojiCategoryTTl: "30m"
+          emojiCategorySweepFreq: "1m"
+          followMaxSize: 2000
+          followTTL: "30m"
+          followSweepFreq: "1m"
+          followRequestMaxSize: 2000
+          followRequestTTL: "30m"
+          followRequestSweepFreq: "1m"
+          mediaMaxSize: 1000
+          mediaTTL: "30m"
+          mediaSweepFreq: "1m"
+          mentionMaxSize: 2000
+          mentionTTl: "30m"
+          mentionSweepFreq: "1m"
+          notificationMaxSize: 1000
+          notificationTTl: "30m"
+          notificationSweepFreq: "1m"
+          reportMaxSize: 100
+          reportTTl: "30m"
+          reportSweepFreq: "1m"
+          statusMaxSize: 2000
+          statusTTl: "30m"
+          statusSweepFreq: "1m"
+          statusFaveMaxSize: 2000
+          statusFaveTTL: "30m"
+          statusFaveSweepFreq: "1m"
+          tombstoneMaxSize: 500
+          tombstoneTTl: "30m"
+          tombstoneSweepFreq: "1m"
+          userMaxSize: 500
+          userTTl: "30m"
+          userSweepFreq: "1m"
+          webfingerMaxSize: 250
+          webfingerTTL: "24h"
+          webfingerSweepFreq: "1m"
     web:
       templateBaseDir: "./web/template/" 
       assetBaseDir: "./web/assets/"
     instance:
-      instanceExposePeers: ""
-      instanceExposeSuspended: ""
-      instanceDeliverToSharedInboxe: true
+      exposePeers: false
+      exposeSuspended: false
+      exposeSuspendedWeb: false
+      exposePublicTimeline: false
+      deliverToSharedInboxes: true
     accounts:
-      registrationOpen: ""
-      approvalRequired: ""
-      reasonRequired: ""
-      allowCustomCSS: ""
+      registrationOpen: true
+      approvalRequired: true
+      reasonRequired: true
+      allowCustomCSS: false
     media:
-      imageMaxSize: ""
-      videoMaxSize: ""
-      descriptionMinChars: ""
-      descriptionMaxChars: ""
-      emojiLocalMaxSize: ""
-      emojiRemoteMaxSize: ""
+      imageMaxSize: 10485760
+      videoMaxSize: 41943040
+      descriptionMinChars: 0
+      descriptionMaxChars: 500
+      mediaRemoteCacheDays: 30
+      emojiLocalMaxSize: 51200
+      emojiRemoteMaxSize: 102400
     storage:
-      backend: ""
-      localBasePath: ""
+      backend: "local"
+      localBasePath: "/gotosocial/storage"
       s3:
        enabled: false
        s3Endpoint: ""
+       s3Proxy: false
+       s3UseSSL: true
        s3AccessKey: ""
        s3SecretKey: ""
        s3Bucket: ""
     statuses:
-      maxChars: ""
-      cwMaxChars: ""
-      pollMaxOptions: ""
-      pollOptionMaxChars: ""
-      mediaMaxFiles: ""
+      maxChars: 5000
+      cwMaxChars: 100
+      pollMaxOptions: 6
+      pollOptionMaxChars: 50
+      mediaMaxFiles: 6
     letsencrypt:
-      enabled: ""
-      port: ""
-      certDir: ""
+      enabled: false
+      port: 80
+      certDir: "/gotosocial/storage/certs"
       emailAddress: ""
+    tls:
+      certificateChain: ""
+      certificateKey: ""
     oidc:
-      enabled: ""
+      enabled: false
       idpName: ""
       skipVerification: ""
       issuer: ""
@@ -112,23 +178,28 @@ gotosocial:
         - "email"
         - "profile"
         - "groups"
+      linkExisting: false
+      adminGroups: []
     smtp:
       host: ""
-      port: ""
+      port: 0
       userName: ""
       # password: ""
       # existingSecretName: ""
       # existingSecretKey: ""
       from: ""
+      discloseRecipients: false
     syslog:
-      enabled: ""
-      protocol: ""
-      address:  ""
+      enabled: false
+      protocol: "udp"
+      address:  "localhost:514"
     observability:
-      requestIdHeader: ""
+      requestIdHeader: "X-Request-Id"
     advanced:
-      cookiesSamesite: ""
-      rateLimitRequests: ""
+      cookiesSamesite: "lax"
+      rateLimitRequests: 300
+      throttlingMultiplier: 8
+      throttlingRetryAfter: "30s"
 
 postgresql:
   enabled: false
