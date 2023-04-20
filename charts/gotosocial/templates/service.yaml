@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "gotosocial.fullname" . }}
+  labels:
+    {{- include "gotosocial.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: gotosocial
+      protocol: TCP
+      name: gotosocial
+  selector:
+    {{- include "gotosocial.selectorLabels" . | nindent 4 }}

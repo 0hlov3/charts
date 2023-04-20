@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "gotosocial.fullname" . }}-test-connection"
+  labels:
+    {{- include "gotosocial.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "gotosocial.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

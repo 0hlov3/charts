@@ -1,0 +1,210 @@
+# Default values for gotosocial.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: superseriousbusiness/gotosocial
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # cert-manager.io/cluster-issuer: "letsencrypt"
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: tls-gotosocial-general
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+gotosocial:
+  strategy:
+    type: Recreate
+  persistence:
+    enabled: false
+    accessMode: "ReadWriteOnce"
+    size: "10Gi"
+    #storageClass: ""
+  config:
+    #logLevel: "info"
+    #logDBQueries: ""
+    #applicationName: "gotosocial"
+    #host: ""
+    #accountDomain: ""
+    trustedProxies:
+      - "10.0.0.0/8"
+      - "172.16.0.0/12"
+      - "192.168.0.0/16"
+    db:
+      cache:
+        enabled: false
+        gts: {}
+      sqlite_address:
+    web:
+      templateBaseDir: "./web/template/" 
+      assetBaseDir: "./web/assets/"
+    instance:
+      instanceExposePeers: ""
+      instanceExposeSuspended: ""
+      instanceDeliverToSharedInboxe: true
+    accounts:
+      registrationOpen: ""
+      approvalRequired: ""
+      reasonRequired: ""
+      allowCustomCSS: ""
+    media:
+      imageMaxSize: ""
+      videoMaxSize: ""
+      descriptionMinChars: ""
+      descriptionMaxChars: ""
+      emojiLocalMaxSize: ""
+      emojiRemoteMaxSize: ""
+    storage:
+      backend: ""
+      localBasePath: ""
+      s3:
+       enabled: false
+       s3Endpoint: ""
+       s3AccessKey: ""
+       s3SecretKey: ""
+       s3Bucket: ""
+    statuses:
+      maxChars: ""
+      cwMaxChars: ""
+      pollMaxOptions: ""
+      pollOptionMaxChars: ""
+      mediaMaxFiles: ""
+    letsencrypt:
+      enabled: ""
+      port: ""
+      certDir: ""
+      emailAddress: ""
+    oidc:
+      enabled: ""
+      idpName: ""
+      skipVerification: ""
+      issuer: ""
+      clientID: ""
+      clientSecret: ""
+      oidcScopes:
+        - "openid"
+        - "email"
+        - "profile"
+        - "groups"
+    smtp:
+      host: ""
+      port: ""
+      userName: ""
+      # password: ""
+      # existingSecretName: ""
+      # existingSecretKey: ""
+      from: ""
+    syslog:
+      enabled: ""
+      protocol: ""
+      address:  ""
+    observability:
+      requestIdHeader: ""
+    advanced:
+      cookiesSamesite: ""
+      rateLimitRequests: ""
+
+postgresql:
+  enabled: false
+  image:
+    pullPolicy: Always
+  auth:
+    username: "gotosocial"
+    # password:
+    database: "gotosocial"
+    existingSecret: gts-postgresql-secret
+  primary:
+    persistence:
+      enabled: true
+      # existingClaim:
+      # storageClass:
+      size: 10Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 250m
+        memory: 512Mi
+  volumePermissions:
+    enabled: false
+
+externalPostgresql:
+  enabled: false
+  # host: postgres
+  # port: 5432
+  ## The name of an existing secret with postgresql credentials
+  # username: GoToSocial
+  ## Password key to be retrieved from existing secret
+  # password: GoToSocial
+  ## The name of an existing secret with postgresql credentials
+  # existingSecret: postgres-secrets
+  ## Password key to be retrieved from existing secret
+  # existingSecretPasswordKey: postgres-password
+  ## TLS Mode
+  # tls_mode: disable
+  ## CA Cert to use when tls mode is in required state
+  # ca_cert:
+  database: GoToSocial
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+securityContext:
+  capabilities:
+    drop: 
+      - ALL
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
