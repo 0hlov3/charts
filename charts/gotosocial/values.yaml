@@ -61,62 +61,62 @@ gotosocial:
       - "192.168.0.0/16"
     db:
       sqliteAddress: "/gotosocial/storage/sqlite.db"
-      maxOpenConnsMultiplier: 8
+      maxOpenConnsMultiplier: "8"
       sqliteSynchronous: "NORMAL"
       sqliteCacheSize: "8MiB"
       sqliteBusyTimeout: "5m"
       visibilitySweepFreq: "1m"
       cache:
         enabled: false
-        visibilityMaxSize: 2000
+        visibilityMaxSize: "2000"
         visibilityTTL: "30m"
         gts:
-          accountMaxSize: 2000
+          accountMaxSize: "2000"
           accountTTl: "30m"
           accountSweepFreq: "1m"
-          blockMaxSize: 100
+          blockMaxSize: "100"
           blockTTl: "24h"
           blockSweepFreq: "1m"
-          domainBlockMaxSize: 2000
+          domainBlockMaxSize: "2000"
           domainBlockTTl: "24h"
           domainBlockSweepFreq: "1m"
-          emojiMaxSize: 2000
+          emojiMaxSize: "2000"
           emojiTTl: "30m"
           emojiSweepFreq: "1m"
-          emojiCategoryMaxSize: 100
+          emojiCategoryMaxSize: "100"
           emojiCategoryTTl: "30m"
           emojiCategorySweepFreq: "1m"
-          followMaxSize: 2000
+          followMaxSize: "2000"
           followTTL: "30m"
           followSweepFreq: "1m"
-          followRequestMaxSize: 2000
+          followRequestMaxSize: "2000"
           followRequestTTL: "30m"
           followRequestSweepFreq: "1m"
-          mediaMaxSize: 1000
+          mediaMaxSize: "1000"
           mediaTTL: "30m"
           mediaSweepFreq: "1m"
-          mentionMaxSize: 2000
+          mentionMaxSize: "2000"
           mentionTTl: "30m"
           mentionSweepFreq: "1m"
-          notificationMaxSize: 1000
+          notificationMaxSize: "1000"
           notificationTTl: "30m"
           notificationSweepFreq: "1m"
-          reportMaxSize: 100
+          reportMaxSize: "100"
           reportTTl: "30m"
           reportSweepFreq: "1m"
-          statusMaxSize: 2000
+          statusMaxSize: "2000"
           statusTTl: "30m"
           statusSweepFreq: "1m"
-          statusFaveMaxSize: 2000
+          statusFaveMaxSize: "2000"
           statusFaveTTL: "30m"
           statusFaveSweepFreq: "1m"
-          tombstoneMaxSize: 500
+          tombstoneMaxSize: "500"
           tombstoneTTl: "30m"
           tombstoneSweepFreq: "1m"
-          userMaxSize: 500
+          userMaxSize: "500"
           userTTl: "30m"
           userSweepFreq: "1m"
-          webfingerMaxSize: 250
+          webfingerMaxSize: "250"
           webfingerTTL: "24h"
           webfingerSweepFreq: "1m"
     web:
@@ -134,13 +134,13 @@ gotosocial:
       reasonRequired: true
       allowCustomCSS: false
     media:
-      imageMaxSize: 10485760
-      videoMaxSize: 41943040
-      descriptionMinChars: 0
-      descriptionMaxChars: 500
-      mediaRemoteCacheDays: 30
-      emojiLocalMaxSize: 51200
-      emojiRemoteMaxSize: 102400
+      imageMaxSize: "10485760"
+      videoMaxSize: "41943040"
+      descriptionMinChars: "0"
+      descriptionMaxChars: "500"
+      mediaRemoteCacheDays: "30"
+      emojiLocalMaxSize: "51200"
+      emojiRemoteMaxSize: "102400"
     storage:
       backend: "local"
       localBasePath: "/gotosocial/storage"
@@ -153,14 +153,14 @@ gotosocial:
        s3SecretKey: ""
        s3Bucket: ""
     statuses:
-      maxChars: 5000
-      cwMaxChars: 100
-      pollMaxOptions: 6
-      pollOptionMaxChars: 50
-      mediaMaxFiles: 6
+      maxChars: "5000"
+      cwMaxChars: "100"
+      pollMaxOptions: "6"
+      pollOptionMaxChars: "50"
+      mediaMaxFiles: "6"
     letsencrypt:
       enabled: false
-      port: 80
+      port: "80"
       certDir: "/gotosocial/storage/certs"
       emailAddress: ""
     tls:
@@ -182,7 +182,7 @@ gotosocial:
       adminGroups: []
     smtp:
       host: ""
-      port: 0
+      port: "0"
       userName: ""
       # password: ""
       # existingSecretName: ""
@@ -197,8 +197,8 @@ gotosocial:
       requestIdHeader: "X-Request-Id"
     advanced:
       cookiesSamesite: "lax"
-      rateLimitRequests: 300
-      throttlingMultiplier: 8
+      rateLimitRequests: "300"
+      throttlingMultiplier: "8"
       throttlingRetryAfter: "30s"
 
 postgresql:
