@@ -1,5 +1,23 @@
 apiVersion: v1
 entries:
+  element-web:
+  - apiVersion: v2
+    appVersion: v1.11.30
+    created: "2023-04-26T19:25:45.824393908Z"
+    description: 'Element (formerly known as Vector and Riot) is a Matrix web client
+      built using the Matrix React SDK. '
+    digest: 82c91f3a6926c1a9297f9c960d3f3aee56886973c7e3a25755dd647ae4a34259
+    home: https://github.com/vector-im/element-web/
+    icon: https://element.io/images/element-logo.svg
+    maintainers:
+    - email: dev+github@schoenwald.aero
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: element-web
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/element-web-0.2.9/element-web-0.2.9.tgz
+    version: 0.2.9
   elk-frontend:
   - apiVersion: v2
     appVersion: v0.8.0
@@ -276,4 +294,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/uptime-kuma-0.1.0/uptime-kuma-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-21T22:04:41.07697861Z"
+generated: "2023-04-26T19:25:45.825556488Z"
