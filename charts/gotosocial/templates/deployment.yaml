@@ -111,7 +111,7 @@ spec:
             claimName: {{ $fullName }}-data
         {{- end }}
         {{- if .Values.gotosocial.tmpfs.enabled }}
-        - name: cache-volume
+        - name: tmpfs
           emptyDir:
             sizeLimit: {{ .Values.gotosocial.tmpfs.size }}
         {{- end }}
