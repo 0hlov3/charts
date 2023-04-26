@@ -46,6 +46,9 @@ gotosocial:
     accessMode: "ReadWriteOnce"
     size: "10Gi"
     #storageClass: ""
+  tmpfs:
+    enabled: false
+    size: "1Gi"
   config:
     logLevel: "info"
     logDBQueries: false

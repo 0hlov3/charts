@@ -79,7 +79,6 @@ spec:
           {{- end }}
           {{- if .Values.gotosocial.config.smtp.existingSecretName }}
             - name: GTS_SMTP_PASSWORD
-              value: 
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.gotosocial.config.smtp.existingSecretName }}
@@ -94,6 +93,10 @@ spec:
               mountPath: "/gotosocial/storage/"
               readOnly: false
             {{- end }}
+            {{- if .Values.gotosocial.tmpfs.enabled }}
+            - name: tmpfs
+              mountPath: /tmp
+            {{- end }}
       volumes:
         - name: gotosocial-config
           secret:
@@ -106,6 +109,11 @@ spec:
         - name: gotosocial-data
           persistentVolumeClaim:
             claimName: {{ $fullName }}-data
+        {{- end }}
+        {{- if .Values.gotosocial.tmpfs.enabled }}
+        - name: cache-volume
+          emptyDir:
+            sizeLimit: {{ .Values.gotosocial.tmpfs.size }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
