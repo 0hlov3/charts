@@ -293,6 +293,23 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/joplin-server-0.1.7/joplin-server-0.1.7.tgz
     version: 0.1.7
+  semaphore:
+  - apiVersion: v2
+    appVersion: v1.0.0
+    created: "2023-04-26T19:57:00.997853851Z"
+    description: A Helm chart for Kubernetes to deploy semaphore
+    digest: dbc535b7a150849388d433c76d52218a2ccaaa3001267b608e50ddd852eef2ce
+    home: https://github.com/NickColley/semaphore
+    icon: https://user-images.githubusercontent.com/2445413/213867232-8bd90121-8812-446e-8c2f-d4000388d449.png
+    maintainers:
+    - email: dev+github@schoenwald.aero
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: semaphore
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/semaphore-0.1.2/semaphore-0.1.2.tgz
+    version: 0.1.2
   uptime-kuma:
   - apiVersion: v2
     appVersion: 1.21.2-alpine
@@ -310,4 +327,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/uptime-kuma-0.1.0/uptime-kuma-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-26T19:45:09.305828943Z"
+generated: "2023-04-26T19:57:00.997874652Z"
