@@ -122,6 +122,32 @@ entries:
           image: superseriousbusiness/gotosocial:0.8.1
     apiVersion: v2
     appVersion: 0.8.1
+    created: "2023-04-26T20:26:10.740528607Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~11.9.13
+    description: A Helm chart for Kubernetes to Deploy GoToSocial
+    digest: 81dd89a6c91f6a29b6ebb3316a3303d777720273600a8962d162a6be79d818da
+    home: https://github.com/superseriousbusiness/gotosocial
+    icon: https://docs.gotosocial.org/en/latest/assets/sloth.png
+    maintainers:
+    - email: dev+github@schoenwald.aero
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: gotosocial
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/gotosocial-0.4.4/gotosocial-0.4.4.tgz
+    version: 0.4.4
+  - annotations:
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/images: |-
+        - name: gotosocial
+          image: superseriousbusiness/gotosocial:0.8.1
+    apiVersion: v2
+    appVersion: 0.8.1
     created: "2023-04-26T20:22:45.642302768Z"
     dependencies:
     - condition: postgresql.enabled
@@ -353,4 +379,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/uptime-kuma-0.1.0/uptime-kuma-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-26T20:22:45.642347068Z"
+generated: "2023-04-26T20:26:10.740653514Z"
