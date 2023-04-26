@@ -1,0 +1,47 @@
+{{- if .Values.networkPolicy.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "element-web.fullname" . }}-default-deny
+spec:
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+        - podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: TCP
+        - port: 53
+          protocol: UDP
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: element-allow
+spec:
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+  ingress:
+    - {}
+  podSelector:
+    matchLabels:
+      {{- include "element-web.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+{{- end }}

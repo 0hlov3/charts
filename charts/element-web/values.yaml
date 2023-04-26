@@ -1,0 +1,119 @@
+# Default values for element-web.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  registry: docker.io
+  repository: vectorim/element-web
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+## Default server for the Element install. (Required)
+## This will configure the default_server_config block in the config.json
+## Ref: https://github.com/vector-im/element-web/blob/develop/config.sample.json
+##
+defaultServer:
+  url: 'https://matrix.example.com'
+  name: 'matrix.example.com'
+  # identity_url: 'https://vector.im'
+
+## Element configuration
+## Ref: https://github.com/vector-im/element-web/blob/develop/config.sample.json
+##
+config: {}
+
+## Configuration for mounting additional volumes into the application container.
+##
+extraVolumes: {}
+# - name: backgrounds
+#   persistentVolumeClaim:
+#     claimName: element-backgrounds
+extraVolumeMounts: {}
+# - name: backgrounds
+#   mountPath: /app/themes/element/img/backgrounds/
+
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+## Configures an application-specific service account.
+##
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+## Service configuration.
+##
+service:
+  type: ClusterIP
+  port: 80
+
+## Ingress configuration.
+##
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    # nginx.ingress.kubernetes.io/configuration-snippet: |
+    #   add_header X-Frame-Options SAMEORIGIN;
+    #   add_header X-Content-Type-Options nosniff;
+    #   add_header X-XSS-Protection "1; mode=block";
+    #   add_header Content-Security-Policy "frame-ancestors 'none'";
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: tls-element-general
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+networkPolicy:
+  enabled: false
