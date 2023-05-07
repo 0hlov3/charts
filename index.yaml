@@ -20,6 +20,22 @@ entries:
     version: 0.2.9
   elk-frontend:
   - apiVersion: v2
+    appVersion: v0.9.5
+    created: "2023-05-07T20:39:17.381133532Z"
+    description: A Helm chart for Kubernetes to deploy Elk in Kubernetes.
+    digest: 466f73438f257cf22a519275b27ad3ee03970cc94da7b76fd58000c53a3090b6
+    home: https://github.com/elk-zone/elk
+    icon: https://raw.githubusercontent.com/elk-zone/elk/main/public/logo.svg
+    maintainers:
+    - email: dev+github@schoenwald.aero
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: elk-frontend
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/elk-frontend-0.1.5/elk-frontend-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
     appVersion: v0.8.1
     created: "2023-04-26T19:45:09.305788441Z"
     description: A Helm chart for Kubernetes to deploy Elk in Kubernetes.
@@ -379,4 +395,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/uptime-kuma-0.1.0/uptime-kuma-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-26T20:26:10.740653514Z"
+generated: "2023-05-07T20:39:17.381162332Z"
