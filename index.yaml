@@ -361,6 +361,31 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/joplin-server-0.1.7/joplin-server-0.1.7.tgz
     version: 0.1.7
+  privatebin:
+  - annotations:
+      artifacthub.io/category: pasetbin
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 1.5.1
+    created: "2023-05-12T05:22:11.219023762Z"
+    description: PrivateBin is a minimalist, open source online pastebin where the
+      server has zero knowledge of pasted data.
+    digest: 78213b62909e4128e5b7c82005b5c72b1b00039036054a89a695c05a8c17b067
+    home: https://github.com/PrivateBin/PrivateBin
+    icon: https://privatebin.info/img/logo.png
+    keywords:
+    - paste
+    - pastebin
+    - self-destroy
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: privatebin
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/privatebin-0.1.0/privatebin-0.1.0.tgz
+    version: 0.1.0
   semaphore:
   - apiVersion: v2
     appVersion: v1.0.0
@@ -395,4 +420,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/uptime-kuma-0.1.0/uptime-kuma-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-07T20:39:17.381162332Z"
+generated: "2023-05-12T05:22:11.219053362Z"
