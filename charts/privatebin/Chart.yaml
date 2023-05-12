@@ -1,0 +1,19 @@
+apiVersion: v2
+name: privatebin
+description: PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data.
+icon: https://privatebin.info/img/logo.png
+home: https://github.com/PrivateBin/PrivateBin
+keywords:
+  - paste
+  - pastebin
+  - self-destroy
+type: application
+version: 0.1.0
+appVersion: "1.5.1"
+maintainers:
+  - name: fSocietySocial
+    email: dev@fsociety.social
+    url: https://fsociety.social
+annotations:
+  artifacthub.io/category: pasetbin
+  artifacthub.io/containsSecurityUpdates: false

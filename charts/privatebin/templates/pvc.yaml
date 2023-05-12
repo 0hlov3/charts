@@ -1,0 +1,15 @@
+{{- if .Values.persistence.enabled }}
+{{- $fullName := include "privatebin.fullname" . -}}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $fullName }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.capacity }}
+  storageClassName: {{ .Values.persistence.storageclassname | default "default" }}
+{{- end }}
