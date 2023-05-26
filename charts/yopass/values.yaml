@@ -12,9 +12,7 @@ image:
 
 yopass:
   listenAddress: 0.0.0.0
-  databaseBackend: memcached
   secretMaxLength: 10000
-  memcachedAddress: localhost:11211
 
 
 imagePullSecrets: []

@@ -32,9 +32,9 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           args:
             - "--address={{ .Values.yopass.listenAddress }}"
-            - "--database={{ .Values.yopass.databaseBackend }}"
+            - "--database=memcached"
             - "--max-length={{ .Values.yopass.secretMaxLength  }}"
-            - "--memcached={{ .Values.yopass.memcachedAddress  }}"
+            - "--memcached=localhost:11211"
             - "--port={{ .Values.service.port }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
@@ -66,12 +66,10 @@ spec:
             - name: memcached
               containerPort: 11211
           livenessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: 11211
           readinessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: 11211
       {{- with .Values.nodeSelector }}
       nodeSelector:
