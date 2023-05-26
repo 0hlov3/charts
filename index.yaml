@@ -491,6 +491,22 @@ entries:
   yopass:
   - apiVersion: v2
     appVersion: 11.5.1
+    created: "2023-05-26T23:45:41.892440421Z"
+    description: A Helm chart for Kubernetes to Deploy Yopass
+    digest: eacabdbd6ae914b675c5d9f9528c5fb37de512153fc5a36ea4eae40819c27825
+    home: https://github.com/jhaals/yopass
+    icon: https://user-images.githubusercontent.com/37777956/59544367-0867aa80-8f09-11e9-8d6a-02008e1bccc7.png
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: yopass
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.1/yopass-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 11.5.1
     created: "2023-05-26T23:37:42.334454835Z"
     description: A Helm chart for Kubernetes to Deploy Yopass
     digest: db1fd2de791e6ab70bee4a6aeed457af37089fb4bcd5f9fdae16da9c548030fb
@@ -505,4 +521,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-26T23:37:42.334497538Z"
+generated: "2023-05-26T23:45:41.892544323Z"
