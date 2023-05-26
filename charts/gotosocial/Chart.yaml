@@ -6,14 +6,14 @@ home: https://github.com/superseriousbusiness/gotosocial
 
 type: application
 # Chart Version
-version: "0.4.5"
+version: "0.4.6"
 # gotosocial version
 appVersion: "0.9.0"
 
 maintainers:
-  - name: 0hlov3
-    email: dev+github@schoenwald.aero
-    url: https://schoenwald.aero
+  - name: fSocietySocial
+    email: dev@fsociety.social
+    url: https://fsociety.social
 
 dependencies:
   - name: postgresql
