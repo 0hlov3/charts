@@ -457,6 +457,22 @@ entries:
     version: 0.1.2
   uptime-kuma:
   - apiVersion: v2
+    appVersion: 1.21.3-alpine
+    created: "2023-05-26T23:03:17.375579856Z"
+    description: A Helm chart for Kubernetes to Deploy uptime-kuma.
+    digest: 515cd66933cc72afa3ae314050fee18468b15acbca843b98b4c02cf151bd739b
+    home: https://github.com/louislam/uptime-kuma
+    icon: https://github.com/louislam/uptime-kuma/raw/master/public/icon.svg
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: uptime-kuma
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/uptime-kuma-0.1.1/uptime-kuma-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
     appVersion: 1.21.2-alpine
     created: "2023-04-19T19:23:10.39369367Z"
     description: A Helm chart for Kubernetes to Deploy uptime-kuma.
@@ -472,4 +488,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/uptime-kuma-0.1.0/uptime-kuma-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-26T22:52:58.215565465Z"
+generated: "2023-05-26T23:03:17.375618756Z"
