@@ -52,6 +52,7 @@ gotosocial:
   config:
     logLevel: "info"
     logDBQueries: false
+    logDBQueries: true
     applicationName: "gotosocial"
     landingPageUser: ""
     host: ""
@@ -198,11 +199,16 @@ gotosocial:
       address:  "localhost:514"
     observability:
       requestIdHeader: "X-Request-Id"
+      tracing:
+        enabled: false
+        transport: ""
+        insecureTransport: false
     advanced:
       cookiesSamesite: "lax"
       rateLimitRequests: "300"
       throttlingMultiplier: "8"
       throttlingRetryAfter: "30s"
+      advancedSenderMultiplier: 2
 
 postgresql:
   enabled: false

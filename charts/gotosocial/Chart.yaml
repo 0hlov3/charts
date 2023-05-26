@@ -6,9 +6,9 @@ home: https://github.com/superseriousbusiness/gotosocial
 
 type: application
 # Chart Version
-version: "0.4.4"
+version: "0.4.5"
 # gotosocial version
-appVersion: "0.8.1"
+appVersion: "0.9.0"
 
 maintainers:
   - name: 0hlov3
@@ -26,4 +26,4 @@ annotations:
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/images: |
     - name: gotosocial
-      image: superseriousbusiness/gotosocial:0.8.1
+      image: superseriousbusiness/gotosocial:0.9.0
