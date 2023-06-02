@@ -35,10 +35,49 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            - name: APP_PORT
-              value: {{ .Values.joplin.APP_PORT |quote }}
             - name: APP_BASE_URL
               value: "{{ .Values.joplin.APP_BASE_URL }}"
+            - name: APP_PORT
+              value: {{ .Values.joplin.APP_PORT |quote }}
+            {{- if .Values.joplin.mailer.enabled }}
+            - name: MAILER_ENABLED
+              value: "{{ .Values.joplin.mailer.enabled }}"
+            - name: MAILER_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.joplin.mailer.existingSecretName }}
+                  key: mailerHost
+            - name: MAILER_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.joplin.mailer.existingSecretName }}
+                  key: mailerport
+            - name: MAILER_SECURE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.joplin.mailer.existingSecretName }}
+                  key: mailerSecure
+            - name: MAILER_AUTH_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.joplin.mailer.existingSecretName }}
+                  key: mailerAuthUser
+            - name: MAILER_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.joplin.mailer.existingSecretName }}
+                  key: mailerAuthPassword
+            - name: MAILER_NOREPLY_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.joplin.mailer.existingSecretName }}
+                  key: mailerNoreplyName
+            - name: MAILER_NOREPLY_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.joplin.mailer.existingSecretName }}
+                  key: mailerNoreplyEmail
+            {{- end }}
             {{- if .Values.joplin.externalPostgres.enabled }}
             - name: DB_CLIENT
               value: "pg"
