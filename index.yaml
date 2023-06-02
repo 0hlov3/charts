@@ -426,6 +426,27 @@ entries:
     version: 0.3.7
   joplin-server:
   - apiVersion: v2
+    appVersion: 2.11.1-beta
+    created: "2023-06-02T19:59:18.416592562Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~11.9.13
+    description: This server allows you to sync any Joplin client
+    digest: bbabbe741dbd76364c30cb87705af091c4fda6d9857a5e151b24b90a84c29def
+    home: https://github.com/laurent22/joplin
+    icon: https://raw.githubusercontent.com/laurent22/joplin/dev/Assets/LinuxIcons/256x256.png
+    maintainers:
+    - email: dev+github@schoenwald.aero
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: joplin-server
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/joplin-server-0.1.8/joplin-server-0.1.8.tgz
+    version: 0.1.8
+  - apiVersion: v2
     appVersion: 2.10.10-beta
     created: "2023-04-20T21:10:26.997828378Z"
     dependencies:
@@ -554,4 +575,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-30T19:46:41.066254093Z"
+generated: "2023-06-02T19:59:18.41673926Z"
