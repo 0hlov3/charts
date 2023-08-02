@@ -68,7 +68,7 @@ gotosocial:
       maxOpenConnsMultiplier: "8"
       sqliteSynchronous: "NORMAL"
       sqliteCacheSize: "8MiB"
-      sqliteBusyTimeout: "5m"
+      sqliteBusyTimeout: "30m"
       visibilitySweepFreq: "1m"
       cache:
         enabled: false
@@ -78,7 +78,7 @@ gotosocial:
           accountMaxSize: "2000"
           accountTTl: "30m"
           accountSweepFreq: "1m"
-          blockMaxSize: "100"
+          blockMaxSize: "1000"
           blockTTl: "24h"
           blockSweepFreq: "1m"
           domainBlockMaxSize: "2000"
@@ -96,6 +96,15 @@ gotosocial:
           followRequestMaxSize: "2000"
           followRequestTTL: "30m"
           followRequestSweepFreq: "1m"
+          instanceMaxSize: "2000"
+          instanceTTL: "30m"
+          instanceSweepFreq: "1m"
+          listMaxSize: "2000"
+          listTTL: "30m"
+          listSweepFreq: "1m"
+          listEntryMaxSize: "2000"
+          listEntryTTL: "30m"
+          listEntrySweepFreq: "1m"
           mediaMaxSize: "1000"
           mediaTTL: "30m"
           mediaSweepFreq: "1m"
@@ -122,10 +131,11 @@ gotosocial:
           userSweepFreq: "1m"
           webfingerMaxSize: "250"
           webfingerTTL: "24h"
-          webfingerSweepFreq: "1m"
+          webfingerSweepFreq: "15m"
     web:
       templateBaseDir: "./web/template/" 
       assetBaseDir: "./web/assets/"
+      accountsCustomCssLength: "10000"
     instance:
       exposePeers: false
       exposeSuspended: false
@@ -203,6 +213,10 @@ gotosocial:
         enabled: false
         transport: ""
         insecureTransport: false
+    httpClient:
+      timeout: "10s"
+      allowIPs: []
+      blockIPs: []
     advanced:
       cookiesSamesite: "lax"
       rateLimitRequests: "300"
