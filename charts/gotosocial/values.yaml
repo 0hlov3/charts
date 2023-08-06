@@ -68,6 +68,7 @@ gotosocial:
       sqliteSynchronous: "NORMAL"
       sqliteCacheSize: "8MiB"
       sqliteBusyTimeout: "30m"
+      sqliteTmpdir: "/gotosocial/storage/"
       visibilitySweepFreq: "1m"
       cache:
         enabled: false
