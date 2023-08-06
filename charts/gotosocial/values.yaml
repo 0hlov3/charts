@@ -52,7 +52,6 @@ gotosocial:
   config:
     logLevel: "info"
     logDBQueries: false
-    logDBQueries: true
     applicationName: "gotosocial"
     landingPageUser: ""
     host: ""
