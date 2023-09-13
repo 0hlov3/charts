@@ -528,6 +528,27 @@ entries:
     version: 0.3.7
   joplin-server:
   - apiVersion: v2
+    appVersion: 2.12.1-beta
+    created: "2023-09-13T07:30:08.861448679Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~11.9.13
+    description: This server allows you to sync any Joplin client
+    digest: 566a6975805e0507c2da9c2c7014d9579dba7fbbf09328e8a7e9ba30dffaa56c
+    home: https://github.com/laurent22/joplin
+    icon: https://raw.githubusercontent.com/laurent22/joplin/dev/Assets/LinuxIcons/256x256.png
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: joplin-server
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/joplin-server-0.2.1/joplin-server-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
     appVersion: 2.11.2-beta
     created: "2023-07-03T01:45:16.926708882Z"
     dependencies:
@@ -767,4 +788,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-02T20:56:42.79209092Z"
+generated: "2023-09-13T07:30:08.86154278Z"
