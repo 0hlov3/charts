@@ -20,6 +20,7 @@ joplin:
     POSTGRES_USER: joplin
     POSTGRES_PORT: 5432
     POSTGRES_HOST: localhost
+    POSTGRES_SSL_MODE_NO_VERIFY: false
   mailer:
     enabled: false
     existingSecretName: joplin-mailer

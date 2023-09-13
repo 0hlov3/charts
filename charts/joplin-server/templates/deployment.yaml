@@ -78,7 +78,7 @@ spec:
                   name: {{ .Values.joplin.mailer.existingSecretName }}
                   key: mailerNoreplyEmail
             {{- end }}
-            {{- if .Values.joplin.externalPostgres.enabled }}
+            {{- if and (eq .Values.joplin.externalPostgres.enabled true) (eq .Values.joplin.externalPostgres.POSTGRES_SSL_MODE_NO_VERIFY false) }}
             - name: DB_CLIENT
               value: "pg"
             - name: POSTGRES_PASSWORD
@@ -91,6 +91,9 @@ spec:
               value: "{{ .Values.joplin.externalPostgres.POSTGRES_PORT }}"
             - name: POSTGRES_HOST
               value: "{{ .Values.joplin.externalPostgres.POSTGRES_HOST }}"
+            {{ else if and (eq .Values.joplin.externalPostgres.enabled true) (eq .Values.joplin.externalPostgres.POSTGRES_SSL_MODE_NO_VERIFY true) }}
+            - name: POSTGRES_CONNECTION_STRING
+              value: "postgresql://{{ .Values.joplin.externalPostgres.POSTGRES_USER }}:{{ .Values.joplin.externalPostgres.POSTGRES_PASSWORD }}@{{ .Values.joplin.externalPostgres.POSTGRES_HOST }}:{{ .Values.joplin.externalPostgres.POSTGRES_PORT }}/{{ .Values.joplin.externalPostgres.POSTGRES_DATABASE }}?sslmode=no-verify"
             {{- else if .Values.postgresql.enabled }}
             - name: DB_CLIENT
               value: "pg"
