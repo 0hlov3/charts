@@ -1,0 +1,53 @@
+{{- if .Values.networkpolicies.enabled }}
+{{ $fullName := include "cinnyapp.fullname" . }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ $fullName }}-default-deny
+  labels:
+    {{- include "cinnyapp.labels" . | nindent 4 }}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ $fullName }}-allow
+  labels:
+    {{- include "cinnyapp.labels" . | nindent 4 }}
+spec:
+  egress:
+    - ports:
+        - port: 53
+          protocol: TCP
+        - port: 53
+          protocol: UDP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+        - podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+  podSelector:
+    matchLabels:
+      {{- include "cinnyapp.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+{{- end }}

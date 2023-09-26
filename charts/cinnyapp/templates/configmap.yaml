@@ -1,0 +1,17 @@
+{{- if .Values.config.override }}
+{{ $fullName := include "cinnyapp.fullname" . }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cinnyapp.fullname" . }}
+data:
+  config.json: |-
+    {
+      "defaultHomeserver": {{ .Values.config.defaultHomeserver }},
+      {{- with .Values.config.homeserverList }}
+      "homeserverList": {{ . | toJson }},
+      {{- end }}
+      "allowCustomHomeservers": {{ .Values.config.allowCustomHomeservers }}
+    }
+{{- end }}
