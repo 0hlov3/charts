@@ -1,0 +1,231 @@
+{{ $fullName := include "matrix-synapse.fullname" . }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "matrix-synapse.labels" . | nindent 4 }}
+spec:
+  strategy:
+    type: Recreate
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "matrix-synapse.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "matrix-synapse.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "matrix-synapse.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.registry}}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              cat /synapse/secrets/*.yaml | \
+                sed -e "s/@@@RecaptchaPublicKey@@@/${SYNAPSE_RECAPTCHA_PUBLIC_KEY:-}/" \
+                    -e "s/@@@RecaptchaPrivateKey@@@/${SYNAPSE_RECAPTCHA_PRIVATE_KEY:-}/" \
+                    -e "s/@@@smtpHost@@@/${SYNAPSE_SMTP_HOST:-}/" \
+                    -e "s/@@@smtpPort@@@/${SYNAPSE_SMTP_PORT:-}/" \
+                    -e "s/@@@smtpUser@@@/${SYNAPSE_SMTP_USER:-}/" \
+                    -e "s/@@@smtpPassword@@@/${SYNAPSE_SMTP_PASS:-}/" \
+                    {{- if .Values.config.registrationSharedSecret.existingSecret }}
+                    -e "s/@@@registrationSharedSecret@@@/${REGISTRATION_SHARED_SECRET:-}/" \
+                    {{- end }}
+                    {{- if .Values.config.macaroonSecretKey.existingSecret }}
+                    -e "s/@@@macaroonSecretKey@@@/${MACAROON_SECRET_KEY:-}/" \
+                    {{- end }}
+                    {{- if .Values.externalPostgresql.enabled}}
+                    -e "s/@@@postgresUSER@@@/${SYNAPSE_POSTGRES_USER:-}/" \
+                    -e "s/@@@postgresPASSWORD@@@/${SYNAPSE_POSTGRES_PASSWORD:-}/" \
+                    {{- end }}
+                    {{- if .Values.redis.enabled }}
+                    -e "s/@@@redisPassword@@@/${SYNAPSE_REDIS_SECRET:-}/" \
+                    {{- end }}
+                       > /synapse/config/conf.d/secrets.yaml
+              {{- if .Values.synapse.extraCommands }}
+              {{ range .Values.synapse.extraCommands }}
+              {{ . }}
+              {{- end }}
+              {{- end }}
+              exec python -B -m synapse.app.homeserver \
+                          -c /synapse/config/homeserver.yaml \
+                          -c /synapse/config/conf.d/
+          env:
+            {{- if .Values.redis.enabled }}
+            - name: SYNAPSE_REDIS_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.redis.auth.existingSecretPasswordKey }}
+                  name: {{ .Values.redis.auth.existingSecret }}
+            {{- end }}
+            {{- if .Values.config.registrationSharedSecret.existingSecret }}
+            - name: REGISTRATION_SHARED_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: registration-shared-secret
+                  name: {{ .Values.config.registrationSharedSecret.existingSecret }}
+            {{- end }}
+            {{- if .Values.config.macaroonSecretKey.enabled }}
+            - name: MACAROON_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: macaroon-secret-key
+                  name: {{ .Values.config.macaroonSecretKey.existingSecret }}
+            {{- end }}
+            {{- if .Values.config.email.enabled }}
+            - name: SYNAPSE_SMTP_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.email.existingSecret }}
+                  key: smtp-host
+            - name: SYNAPSE_SMTP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.email.existingSecret }}
+                  key: smtp-port
+            - name: SYNAPSE_SMTP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.email.existingSecret }}
+                  key: smtp-user
+            - name: SYNAPSE_SMTP_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.email.existingSecret }}
+                  key: smtp-pass
+            {{- end }}
+            {{- if .Values.config.turn.enabled }}
+            - name: SYNAPSE_TURN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: turn-shared-secret
+                  name: {{ .Values.config.turn.existingSecret }}
+            {{- end }}
+            {{- if .Values.externalPostgresql.enabled }}
+            - name: SYNAPSE_POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: {{ .Values.externalPostgresql.existingSecret }}
+            - name: SYNAPSE_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: {{ .Values.externalPostgresql.existingSecret }}
+            {{- end }}
+            {{- if .Values.config.captcha.enabled }}
+            {{- if .Values.config.captcha.existingSecret }}
+            - name: SYNAPSE_RECAPTCHA_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: recaptcha-public-key
+                  name: {{ .Values.config.captcha.existingSecret }}
+            - name: SYNAPSE_RECAPTCHA_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: recaptcha-private-key
+                  name: {{ .Values.config.captcha.existingSecret }}
+            {{- end }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 8008
+              protocol: TCP
+            - name: replication
+              containerPort: 9093
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          volumeMounts:
+            - name: config
+              mountPath: /synapse/config/homeserver.yaml
+              subPath: homeserver.yaml
+            - name: configlog
+              mountPath: /synapse/config/log.yaml
+              subPath: log.yaml
+            - name: secrets
+              mountPath: /synapse/secrets
+            - name: secretconfig
+              mountPath: /synapse/config/conf.d/
+            - name: signingkey
+              mountPath: /synapse/keys/signing.key
+              subPath: signing.key
+            - name: mediastore
+              mountPath: /synapse/data
+            {{- if and .Values.sqlite.enabled not .Values.externalPostgresql.enabled }}
+            - name: sqlite
+              mountPath: /synapse/sqlite
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ $fullName }}
+        - name: configlog
+          configMap:
+            name: {{ $fullName }}-log
+        - name: secrets
+          secret:
+            secretName: {{ $fullName }}
+        - name: secretconfig
+          emptyDir: {}
+        - name: signingkey
+          secret:
+            secretName: {{ .Values.signingkey.existingSecret | default (include "matrix-synapse.workername" (dict "global" . "worker" "signingkey")) | quote }}
+            items:
+              - key: {{ .Values.signingkey.existingSecretKey | default "signing.key" | quote }}
+                path: signing.key
+        - name: mediastore
+          {{- if .Values.config.mediaStore.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ $fullName }}-mediastore
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        {{- if and .Values.sqlite.enabled not .Values.externalPostgresql.enabled }}
+        - name: sqlite
+          persistentVolumeClaim:
+            claimName: {{ $fullName }}-sqlite
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

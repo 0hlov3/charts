@@ -1,0 +1,31 @@
+{{- $fullName := include "matrix-synapse.fullname" . -}}
+{{- if .Values.metrics.serviceMonitor.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "matrix-synapse.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "matrix-synapse.labels" . | nindent 6 }}
+  endpoints:
+    - port: metrics
+      path: /_synapse/metrics
+{{- end }}
+{{- if .Values.metrics.prometheusRule.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: prometheus-operator-prometheus
+    role: synapse-rules
+  name: {{ $fullName }}
+spec:
+  groups:
+    - name: {{ $fullName }}
+      rules: {{- toYaml .Values.metrics.prometheusRule.rules | nindent 4 }}
+{{- end }}

@@ -1,0 +1,30 @@
+config:
+  serverName: timessenger.fsociety.social
+  publicBaseurl: https://timessenger.fsociety.social
+
+ingress:
+  enabled: true
+  className: "nginx-external"
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: timessenger.fsociety.social
+      paths:
+        - path: /_matrix/*
+          pathType: ImplementationSpecific
+        - path: /_synapse/client/*
+          pathType: ImplementationSpecific
+        - path: /.well-known/matrix/*
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: tls-synapse-general
+      hosts:
+        - timessenger.fsociety.social
+
+externalPostgresql:
+  enabled: true
+  host: ccc-postgresql.postgres-operator.svc.cluster.local
+  port: 5432
+  database: timessenger
+  existingSecret: synapse-postgresql-secret

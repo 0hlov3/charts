@@ -1,0 +1,16 @@
+apiVersion: v2
+name: matrix-synapse
+description: A Helm chart for Kubernetes, to deploy Matrix synapse.
+icon: https://avatars.githubusercontent.com/u/8418310?s=48&v=4
+home: https://github.com/matrix-org/synapse
+
+type: application
+# CHart Version
+version: 0.1.0
+# Matrix Synapse version
+appVersion: "v1.93.0"
+
+dependencies:
+  - name: redis
+    version: 18.1.1
+    repository: oci://registry-1.docker.io/bitnamicharts
