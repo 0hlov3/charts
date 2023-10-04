@@ -22,11 +22,12 @@ kubectl create secret --namespace synapse generic synapse-mail-secret \
   --from-literal=smtp-user=${MAILSERVER_USER} \
   --from-literal=smtp-pass=${MAILSERVER_PASSWORD}
 ```
-### PostgreSQL
+
+### Redis
 ```shell
 kubectl create secret --namespace synapse generic synapse-redis-secret --from-literal=redis-pass="$(openssl rand -hex 16)"
 ```
-### Redis
+### PostgreSQL
 ```shell
 kubectl create secret --namespace synapse generic synapse-postgresql-secret --from-literal=username="$(openssl rand -hex 16)" --from-literal=password="$(openssl rand -hex 16)"
 ```

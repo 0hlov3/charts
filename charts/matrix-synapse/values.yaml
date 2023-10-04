@@ -53,9 +53,12 @@ config:
   email:
     enabled: false
     existingSecret: synapse-mail-secret
+    forceTLS: true
     requireTransportSecurity: true
-    notif_from: matrix@example.com
-    client_base_url:
+    enableTLS: true
+    notifFrom: "Your Friendly %(app)s homeserver <noreply@example.com>"
+    enableNotifs: true
+    client_base_url: "http://localhost/riot"
   captcha:
     enabled: false
     existingSecret: synapse-captcha-secret
@@ -195,13 +198,14 @@ ingress:
   className: ""
   annotations: {}
     # kubernetes.io/ingress.class: nginx
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    # nginx.ingress.kubernetes.io/use-regex: "true"
     # kubernetes.io/tls-acme: "true"
     # nginx.ingress.kubernetes.io/configuration-snippet: |
     #   add_header X-Frame-Options "sameorigin";
     #   add_header X-Content-Type-Options nosniff;
     #   add_header Referrer-Policy 'same-origin';
     #   add_header Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()";
-  nginx.ingress.kubernetes.io/use-regex: "true"
   hosts:
     - host: chart-example.local
       paths:

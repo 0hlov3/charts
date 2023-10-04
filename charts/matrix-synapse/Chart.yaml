@@ -6,7 +6,7 @@ home: https://github.com/matrix-org/synapse
 
 type: application
 # CHart Version
-version: 0.1.0
+version: 0.1.1
 # Matrix Synapse version
 appVersion: "v1.93.0"
 
