@@ -52,6 +52,8 @@ gotosocial:
   config:
     logLevel: "info"
     logDBQueries: false
+    logClientIp: true
+    logTimestampFormat: "02/01/2006 15:04:05.000"
     applicationName: "gotosocial"
     landingPageUser: ""
     host: ""
@@ -79,6 +81,7 @@ gotosocial:
       deliverToSharedInboxes: "true"
       injectMastodonVersion: "false"
     instance:
+      federationMode: "blocklist"
       exposePeers: false
       exposeSuspended: false
       exposeSuspendedWeb: false
@@ -163,6 +166,7 @@ gotosocial:
     advanced:
       cookiesSamesite: "lax"
       rateLimitRequests: "300"
+      rateLimitExceptions: "[]"
       throttlingMultiplier: "8"
       throttlingRetryAfter: "30s"
       advancedSenderMultiplier: 2
