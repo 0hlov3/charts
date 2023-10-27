@@ -166,7 +166,7 @@ gotosocial:
       throttlingMultiplier: "8"
       throttlingRetryAfter: "30s"
       advancedSenderMultiplier: 2
-
+      advancedCspExtraUris: []
 postgresql:
   enabled: false
   image:
