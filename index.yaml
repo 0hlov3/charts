@@ -231,6 +231,27 @@ entries:
     - https://github.com/fSocietySocial/charts/releases/download/etherpad-0.1.0/etherpad-0.1.0.tgz
     version: 0.1.0
   gotosocial:
+  - apiVersion: v2
+    appVersion: 0.11.0
+    created: "2023-10-27T06:15:42.637437142Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~11.9.13
+    description: A Helm chart for Kubernetes to Deploy GoToSocial
+    digest: adec958fae81d7d5f37b2a8a561e3434bd1f6ac82b9736959073f2c6871c1476
+    home: https://github.com/superseriousbusiness/gotosocial
+    icon: https://docs.gotosocial.org/en/latest/assets/sloth.png
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: gotosocial
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/gotosocial-0.4.10/gotosocial-0.4.10.tgz
+    version: 0.4.10
   - annotations:
       artifacthub.io/containsSecurityUpdates: "false"
       artifacthub.io/images: |-
@@ -670,6 +691,23 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/joplin-server-0.1.7/joplin-server-0.1.7.tgz
     version: 0.1.7
+  matrix-synapse:
+  - apiVersion: v2
+    appVersion: v1.93.0
+    created: "2023-10-27T06:15:42.865040722Z"
+    dependencies:
+    - name: redis
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 18.1.1
+    description: A Helm chart for Kubernetes, to deploy Matrix synapse.
+    digest: f6df39d3376522c87555cd73a39d3dac5c3f91c3dbd694d099c958c6fb6e68da
+    home: https://github.com/matrix-org/synapse
+    icon: https://avatars.githubusercontent.com/u/8418310?s=48&v=4
+    name: matrix-synapse
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/matrix-synapse-0.1.1/matrix-synapse-0.1.1.tgz
+    version: 0.1.1
   privatebin:
   - annotations:
       artifacthub.io/category: pasetbin
@@ -842,4 +880,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2023-09-26T19:39:10.666644949Z"
+generated: "2023-10-27T06:15:42.865221423Z"
