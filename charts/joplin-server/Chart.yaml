@@ -11,9 +11,9 @@ maintainers:
 
 type: application
 # ChartVersion
-version: "0.2.2"
+version: "0.2.3"
 # AppVersion
-appVersion: "2.12.1-beta"
+appVersion: "2.13.2-beta"
 
 dependencies:
   - name: postgresql
