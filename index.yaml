@@ -232,6 +232,27 @@ entries:
     version: 0.1.0
   gotosocial:
   - apiVersion: v2
+    appVersion: 0.12.0
+    created: "2023-10-27T06:39:03.750799214Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~11.9.13
+    description: A Helm chart for Kubernetes to Deploy GoToSocial
+    digest: 34a8c62c2b93a6c030f99a760bdf269855b1f6788b160866484f3e714367cae2
+    home: https://github.com/superseriousbusiness/gotosocial
+    icon: https://docs.gotosocial.org/en/latest/assets/sloth.png
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: gotosocial
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/gotosocial-0.4.12/gotosocial-0.4.12.tgz
+    version: 0.4.12
+  - apiVersion: v2
     appVersion: 0.11.1
     created: "2023-10-27T06:27:51.877280434Z"
     dependencies:
@@ -901,4 +922,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2023-10-27T06:27:51.877546232Z"
+generated: "2023-10-27T06:39:03.751079417Z"
