@@ -36,7 +36,7 @@ config:
   # compression: "zlib"
   expire:
     default: "1week"
-  formatterOptions:
+  formatter_options:
     plaintext: "Plain Text"
     syntaxhighlighting: "Source Code"
     markdown: "Markdown"
