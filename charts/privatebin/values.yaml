@@ -13,7 +13,6 @@ image:
 
 config:
   # The following values are used to configure the privatebin container
-  #
   name: "PrivateBin"
   basepath: "https://privatebin.example.com/"
   discussion: true
@@ -37,7 +36,7 @@ config:
   # compression: "zlib"
   expire:
     default: "1week"
-  formatter_options:
+  formatterOptions:
     plaintext: "Plain Text"
     syntaxhighlighting: "Source Code"
     markdown: "Markdown"

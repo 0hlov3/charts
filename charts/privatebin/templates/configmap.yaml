@@ -132,9 +132,9 @@ data:
     never = 0
     [formatter_options]
     ; Set available formatters, their order and their labels
-    plaintext = "{{ .Values.config.formatter_options.plaintext }}"
-    syntaxhighlighting = "{{ .Values.config.formatter_options.syntaxhighlighting }}"
-    markdown = "{{ .Values.config.formatter_options.markdown }}"
+    plaintext = "{{ .Values.config.formatterOptions.plaintext }}"
+    syntaxhighlighting = "{{ .Values.config.formatterOptions.syntaxhighlighting }}"
+    markdown = "{{ .Values.config.formatterOptions.markdown }}"
     [traffic]
     ; time limit between calls from the same IP address in seconds
     ; Set this to 0 to disable rate limiting.
