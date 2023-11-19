@@ -143,7 +143,9 @@ data:
     ; from the rate-limit. Invalid IPs will be ignored. If multiple values are to
     ; be exempted, the list needs to be comma separated. Leave unset to disable
     ; exemptions.
-    ; exempted = "1.2.3.4,10.10.10/24"
+    {{- if .Values.config.traffic.exempted }}
+    exempted = "{{ .Values.config.traffic.exempted }}"
+    {{- end }}
     ; (optional) If you want only some source IP addresses (v4 or v6) or subnets
     ; (CIDR) to be allowed to create pastes, set these here. Invalid IPs will be
     ; ignored. If multiple values are to be exempted, the list needs to be comma

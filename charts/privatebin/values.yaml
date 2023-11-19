@@ -42,6 +42,7 @@ config:
     markdown: "Markdown"
   traffic:
     limit: 10
+    exempted: "172,10.10.10/24"
 
 persistence:
   enabled: false
@@ -63,14 +64,13 @@ serviceAccount:
 
 podAnnotations: {}
 
-podSecurityContext: {}
-  # fsGroup: 2000
+podSecurityContext:
+  fsGroup: 82
 
 securityContext:
   runAsNonRoot: true
   runAsUser: 65534
   runAsGroup: 82
-  fsGroup: 82
   readOnlyRootFilesystem: true
 
 service:

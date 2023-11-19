@@ -8,7 +8,7 @@ keywords:
   - pastebin
   - self-destroy
 type: application
-version: 0.1.4
+version: 0.1.5
 appVersion: "1.6.0"
 maintainers:
   - name: fSocietySocial
