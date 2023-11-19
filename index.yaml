@@ -868,6 +868,30 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.6.0
+    created: "2023-11-19T19:25:34.396280439Z"
+    description: PrivateBin is a minimalist, open source online pastebin where the
+      server has zero knowledge of pasted data.
+    digest: 8a92ef00170767dbc58b0be72cf248ac840e8ee9ceb397f1760ecfe13bff0d3e
+    home: https://github.com/PrivateBin/PrivateBin
+    icon: https://privatebin.info/img/logo.png
+    keywords:
+    - paste
+    - pastebin
+    - self-destroy
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: privatebin
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/privatebin-0.1.2/privatebin-0.1.2.tgz
+    version: 0.1.2
+  - annotations:
+      artifacthub.io/category: pasetbin
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 1.6.0
     created: "2023-11-19T19:18:41.740546483Z"
     description: PrivateBin is a minimalist, open source online pastebin where the
       server has zero knowledge of pasted data.
@@ -1090,4 +1114,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-19T19:18:41.740640919Z"
+generated: "2023-11-19T19:25:34.396378281Z"
