@@ -8,8 +8,8 @@ keywords:
   - pastebin
   - self-destroy
 type: application
-version: 0.1.0
-appVersion: "1.5.1"
+version: 0.1.1
+appVersion: "1.6.0"
 maintainers:
   - name: fSocietySocial
     email: dev@fsociety.social

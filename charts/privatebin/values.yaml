@@ -5,10 +5,49 @@
 replicaCount: 1
 
 image:
-  repository: nginx
+  registry: docker.io
+  repository: privatebin/nginx-fpm-alpine
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
+
+config:
+  # The following values are used to configure the privatebin container
+  #
+  name: "PrivateBin"
+  basepath: "https://privatebin.example.com/"
+  discussion: true
+  opendiscussion: false
+  password: true
+  fileupload: false
+  burnafterreadingselected: false
+  defaultformatter: plaintext
+  syntaxhighlightingtheme: sons-of-obsidian
+  sizelimit: 10485760
+  template: bootstrap
+  languageselection: false
+  # languagedefault: en
+  # urlshortener: "https://shortener.example.com/api?link="
+  # qrcode: true
+  # email: true
+  # icon: none
+  # cspheader: "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self'     'unsafe-eval'; style-src 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self' data: blob:; media-src blob:; object-src     blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads"
+  # zerobincompatibility: false
+  # httpwarning: true
+  # compression: "zlib"
+  expire:
+    default: "1week"
+  formatter_options:
+    plaintext: "Plain Text"
+    syntaxhighlighting: "Source Code"
+    markdown: "Markdown"
+  traffic:
+    limit: 10
+
+persistence:
+  enabled: false
+  capacity: 1Gi
+  # storageclassname: default
 
 imagePullSecrets: []
 nameOverride: ""
@@ -28,31 +67,31 @@ podAnnotations: {}
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 65534
+  runAsGroup: 82
+  fsGroup: 82
+  readOnlyRootFilesystem: true
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8080
 
 ingress:
   enabled: false
   className: ""
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
     # kubernetes.io/tls-acme: "true"
+    # kubernetes.io/ingress.class: nginx
   hosts:
     - host: chart-example.local
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls: []
-  #  - secretName: chart-example-tls
+  #  - secretName: tls-privatebin-general
   #    hosts:
   #      - chart-example.local
 
