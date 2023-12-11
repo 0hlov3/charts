@@ -67,6 +67,23 @@ entries:
     version: 0.1.0
   element-web:
   - apiVersion: v2
+    appVersion: v1.11.51
+    created: "2023-12-11T21:19:06.076084771Z"
+    description: 'Element (formerly known as Vector and Riot) is a Matrix web client
+      built using the Matrix React SDK. '
+    digest: a22de87d085fc1c32e073a1a109071f91232a60ad6c2ff31ea2ef4c83169a4fe
+    home: https://github.com/vector-im/element-web/
+    icon: https://element.io/images/element-logo.svg
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: element-web
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/element-web-0.3.4/element-web-0.3.4.tgz
+    version: 0.3.4
+  - apiVersion: v2
     appVersion: v1.11.47
     created: "2023-10-27T09:42:05.07320026Z"
     description: 'Element (formerly known as Vector and Riot) is a Matrix web client
@@ -1234,4 +1251,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2023-12-11T21:10:09.650241822Z"
+generated: "2023-12-11T21:19:06.076219261Z"
