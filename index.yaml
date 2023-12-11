@@ -2,6 +2,22 @@ apiVersion: v1
 entries:
   cinnyapp:
   - apiVersion: v2
+    appVersion: v3.1.0
+    created: "2023-12-11T21:09:48.086185753Z"
+    description: A Helm chart for Kubernetes, to deploy cinnyapp.
+    digest: 86a98d385779594f88c5d25fbe7036a4db80b797c5986f53ec7a89e96648e7bd
+    home: https://github.com/cinnyapp/cinny
+    icon: https://cinny.in/assets/cinny.svg
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: cinnyapp
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/cinnyapp-0.1.2/cinnyapp-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
     appVersion: v3.0.0
     created: "2023-10-27T09:37:21.777733033Z"
     description: A Helm chart for Kubernetes, to deploy cinnyapp.
@@ -1202,4 +1218,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-19T20:02:46.464844552Z"
+generated: "2023-12-11T21:09:48.086392649Z"
