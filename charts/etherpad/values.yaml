@@ -13,9 +13,9 @@ image:
 etherpad:
   general:
     # The name of the instance
-    title: Etherpad
+    title: "Etherpad"
     # favicon default name, or a fully specified URL to your own favicon
-    favicon: favicon.ico
+    favicon: "null"
     # The default text of a pad
     defaultPadText: |
       Welcome to Etherpad! This pad text is synchronized as you type, so that everyone viewing this page sees the same text. This allows you to collaborate seamlessly on documents! Get involved with Etherpad at https://etherpad.org
@@ -30,7 +30,7 @@ etherpad:
         secretName: etherpad
         secretKey: admin-password
     # the password for the first user user (leave unspecified if you do not want to create it)
-    # userPassword:
+    userPassword: ""
   padOptions:
     NoColors: false
     showControls: true
@@ -43,6 +43,7 @@ etherpad:
     alwaysShowChat: false
     chatAndUsers: false
     lang: en-gb
+    lowercasePadIDs: false
   shortcuts:
     # focus on the File Menu and/or editbar
     enabledAltF9: true
@@ -94,6 +95,11 @@ etherpad:
     logLevel: INFO
     # Privacy: disable IP logging
     disableIPLogging: false
+  cookie:
+    keyRotationInterval: "86400000"
+    sameSite: "Lax"
+    sessionLifetime: "864000000"
+    sessionRefreshInterval: "86400000"
   advanced:
     # hide/show the settings.json in admin page
     showSettingsInAdminPage: true
@@ -151,6 +157,16 @@ etherpad:
     dumpOnUncleanExit: false
     # Expose Etherpad version in the web interface and in the Server http header. Do not enable on production machines.
     exposeVersion: false
+
+externalPostgresql:
+  enabled: false
+  existingSecret: ""
+  username: "etherpad"
+  password: "etherpad"
+  database: "etherpad"
+  host: "etherpad.example.com"
+  port: "5432"
+  useConnectionString: false
 
 # https://github.com/bitnami/charts/tree/main/bitnami/postgresql
 postgresql:

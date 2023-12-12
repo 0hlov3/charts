@@ -33,9 +33,9 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: TITLE
-              value: {{ .Values.etherpad.general.title }}
+              value: "{{ .Values.etherpad.general.title }}"
             - name: FAVICON
-              value: {{ .Values.etherpad.general.favicon }}
+              value: "{{ .Values.etherpad.general.favicon }}"
             - name: DEFAULT_PAD_TEXT
               value: {{ .Values.etherpad.general.defaultPadText }}
             - name: IP
@@ -52,7 +52,7 @@ spec:
             - name: ADMIN_PASSWORD
               value: {{ .Values.etherpad.general.admin.password }}
             {{- end }}
-            {{- if .Values.etherpad.general.userPassword }}
+            {{- if ne .Values.etherpad.general.userPassword "" }}
             - name: USER_PASSWORD
               value: {{  .Values.etherpad.general.userPassword }}
             {{- end }}
@@ -130,6 +130,14 @@ spec:
               value: {{ .Values.etherpad.logging.logLevel }}
             - name: DISABLE_IP_LOGGING
               value: {{ .Values.etherpad.logging.disableIPLogging |quote }}
+            - name: COOKIE_KEY_ROTATION_INTERVAL
+              value: "{{ .Values.etherpad.cookie.keyRotationInterval }}"
+            - name: COOKIE_SAME_SITE
+              value: "{{ .Values.etherpad.cookie.sameSite }}"
+            - name: COOKIE_SESSION_LIFETIME
+              value: "{{ .Values.etherpad.cookie.sessionLifetime }}"
+            - name: COOKIE_SESSION_REFRESH_INTERVAL
+              value: "{{ .Values.etherpad.cookie.sessionRefreshInterval }}"
             - name: HOW_SETTINGS_IN_ADMIN_PAGE
               value: {{ .Values.etherpad.advanced.showSettingsInAdminPage |quote }}
             - name: TRUST_PROXY
@@ -186,7 +194,40 @@ spec:
               value: {{ .Values.etherpad.advanced.dumpOnUncleanExit |quote }}
             - name: EXPOSE_VERSION
               value: {{ .Values.etherpad.advanced.exposeVersion |quote }}
-            {{- if .Values.postgresql.enabled }}
+            - name: LOWER_CASE_PAD_IDS
+              value: "{{ .Values.etherpad.padOptions.lowercasePadIDs }}"
+            {{- if .Values.externalPostgresql.enabled }}
+            {{- if eq .Values.externalPostgresql.useConnectionString true }}
+            - name: DB_SETTINGS
+              value: "postgres://${DB_USER}:${DB_PASS}@{{ .Values.externalPostgresql.host }}:{{ .Values.externalPostgresql.port }}/{{ .Values.externalPostgresql.database}}?sslmode=prefer"
+            {{- else }}
+            - name: DB_TYPE
+              value: postgres
+            - name: DB_HOST
+              value: "{{ .Values.externalPostgresql.host }}"
+            - name: DB_PORT
+              value: "{{ .Values.externalPostgresql.port }}"
+            - name: DB_NAME
+              value: "{{ .Values.externalPostgresql.database }}"
+            {{- end }}
+            {{- if ne .Values.externalPostgresql.existingSecret "" }}
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.externalPostgresql.existingSecret }}
+                  key: username
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.externalPostgresql.existingSecret }}
+                  key: password
+            {{- else }}
+            - name: DB_USER
+              value: {{ .Values.externalPostgresql.username }}
+            - name: DB_PASS
+              value: {{ .Values.externalPostgresql.password }}
+            {{- end }}
+            {{- else if .Values.postgresql.enabled }}
             - name: DB_TYPE
               value: postgres
             - name: DB_HOST
