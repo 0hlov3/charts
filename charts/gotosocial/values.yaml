@@ -5,6 +5,7 @@
 replicaCount: 1
 
 image:
+  registry: docker.io
   repository: superseriousbusiness/gotosocial
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
