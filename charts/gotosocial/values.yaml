@@ -81,6 +81,7 @@ gotosocial:
       deliverToSharedInboxes: "true"
       injectMastodonVersion: "false"
     instance:
+      languages: []
       federationMode: "blocklist"
       exposePeers: false
       exposeSuspended: false
@@ -98,6 +99,8 @@ gotosocial:
       descriptionMinChars: "0"
       descriptionMaxChars: "500"
       mediaRemoteCacheDays: "7"
+      mediaCleanupFrom: "00:00"
+      mediaCleanupEvery: "24h"
       emojiLocalMaxSize: "51200"
       emojiRemoteMaxSize: "102400"
     storage:
@@ -158,6 +161,11 @@ gotosocial:
         enabled: false
         transport: ""
         insecureTransport: false
+      metrics:
+        enabled: false
+        authEnabled: false
+        authUsername: ""
+        authPassword: ""
     httpClient:
       timeout: "10s"
       allowIPs: []
