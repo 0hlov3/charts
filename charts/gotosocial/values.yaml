@@ -160,7 +160,8 @@ gotosocial:
       requestIdHeader: "X-Request-Id"
       tracing:
         enabled: false
-        transport: ""
+        transport: "grpc"
+        endpoint: ""
         insecureTransport: false
       metrics:
         enabled: false
@@ -180,6 +181,7 @@ gotosocial:
       throttlingRetryAfter: "30s"
       advancedSenderMultiplier: 2
       advancedCspExtraUris: []
+      advancedHeaderFilterMode: ""
 postgresql:
   enabled: false
   image:
