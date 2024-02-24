@@ -20,6 +20,7 @@ persistence:
   enabled: true
   size: 1Gi
   accessMode: ReadWriteOnce
+  storageClass: ""
 
 imagePullSecrets: []
 nameOverride: ""
