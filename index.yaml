@@ -187,6 +187,22 @@ entries:
     version: 0.2.9
   elk-frontend:
   - apiVersion: v2
+    appVersion: v0.12.1
+    created: "2024-03-11T10:14:37.832066429Z"
+    description: A Helm chart for Kubernetes to deploy Elk in Kubernetes.
+    digest: bdc97825c4763b1848c94cdccffcfb8bbd43bd9c5e205981eb0c064e57ce7bd9
+    home: https://github.com/elk-zone/elk
+    icon: https://raw.githubusercontent.com/elk-zone/elk/main/public/logo.svg
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: elk-frontend
+    type: application
+    urls:
+    - https://github.com/fSocietySocial/charts/releases/download/elk-frontend-0.2.12/elk-frontend-0.2.12.tgz
+    version: 0.2.12
+  - apiVersion: v2
     appVersion: v0.11.0
     created: "2024-02-24T21:41:38.073818589Z"
     description: A Helm chart for Kubernetes to deploy Elk in Kubernetes.
@@ -1523,4 +1539,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2024-02-24T22:05:08.569829209Z"
+generated: "2024-03-11T10:14:37.832198235Z"
