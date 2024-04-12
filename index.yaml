@@ -66,6 +66,27 @@ entries:
     - https://github.com/fSocietySocial/charts/releases/download/cinnyapp-0.1.0/cinnyapp-0.1.0.tgz
     version: 0.1.0
   element-web:
+  - annotations:
+      artifacthub.io/alternativeName: element
+      artifacthub.io/category: skip-prediction
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: v1.11.64
+    created: "2024-04-12T21:59:03.294377209Z"
+    description: 'Element (formerly known as Vector and Riot) is a Matrix web client
+      built using the Matrix React SDK. '
+    digest: faeada72d04cabd3b454c3fbf1bf1d0f52868f282a2943f295e999044d2bc0a8
+    home: https://github.com/vector-im/element-web/
+    icon: https://element.io/images/element-logo.svg
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: element-web
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/element-web-0.3.8/element-web-0.3.8.tgz
+    version: 0.3.8
   - apiVersion: v2
     appVersion: v1.11.61
     created: "2024-03-24T15:32:41.960921836Z"
@@ -1615,4 +1636,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2024-03-31T06:15:30.423315221Z"
+generated: "2024-04-12T21:59:03.294535745Z"
