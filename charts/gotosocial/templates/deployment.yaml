@@ -48,20 +48,11 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           startupProbe:
-            httpGet:
-              path: /
-              port: gotosocial
-            failureThreshold: 60
-            periodSeconds: 10
+            {{- toYaml .Values.startupProbe | nindent 12 }}
           livenessProbe:
-            httpGet:
-              path: /
-              port: gotosocial
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
-            httpGet:
-              path: /
-              port: gotosocial
-            failureThreshold: 5
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:

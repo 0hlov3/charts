@@ -261,6 +261,22 @@ securityContext:
   runAsUser: 1000
   runAsGroup: 1000
 
+startupProbe:
+  httpGet:
+    path: /
+    port: gotosocial
+  failureThreshold: 60
+  periodSeconds: 10
+livenessProbe:
+  httpGet:
+    path: /
+    port: gotosocial
+readinessProbe:
+  httpGet:
+    path: /
+    port: gotosocial
+  failureThreshold: 5
+
 nodeSelector: {}
 
 tolerations: []
