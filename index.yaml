@@ -1624,6 +1624,23 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/semaphore-0.1.2/semaphore-0.1.2.tgz
     version: 0.1.2
+  synapse-admin:
+  - apiVersion: v2
+    appVersion: 0.10.1
+    created: "2024-06-14T05:59:52.808869003Z"
+    description: A Helm chart for Kubernetes to deploy awesometechnologies synapse-admin.
+    digest: 314adb614a2158ce39aa38474ae6f16c5fa1c9016fcd196ef15324122e989136
+    home: https://github.com/Awesome-Technologies/synapse-admin
+    icon: https://avatars.githubusercontent.com/u/37705501
+    maintainers:
+    - email: dev+github@schoenwald.aero
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: synapse-admin
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/synapse-admin-0.1.0/synapse-admin-0.1.0.tgz
+    version: 0.1.0
   thelounge:
   - apiVersion: v2
     appVersion: 4.4.1
@@ -1815,4 +1832,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-05T18:10:24.31676986Z"
+generated: "2024-06-14T05:59:52.809036835Z"
