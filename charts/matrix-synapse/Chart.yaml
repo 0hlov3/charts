@@ -6,9 +6,9 @@ home: https://github.com/matrix-org/synapse
 
 type: application
 # CHart Version
-version: 0.1.1
+version: 0.1.2
 # Matrix Synapse version
-appVersion: "v1.93.0"
+appVersion: "v1.97.0"
 
 dependencies:
   - name: redis
