@@ -12,5 +12,5 @@ appVersion: "v1.110.0"
 
 dependencies:
   - name: redis
-    version: 18.1.1
+    version: 19.6.1
     repository: oci://registry-1.docker.io/bitnamicharts
