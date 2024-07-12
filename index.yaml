@@ -1489,6 +1489,22 @@ entries:
     version: 0.1.7
   matrix-synapse:
   - apiVersion: v2
+    appVersion: v1.110.0
+    created: "2024-07-12T22:48:40.11358101Z"
+    dependencies:
+    - name: redis
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 19.6.1
+    description: A Helm chart for Kubernetes, to deploy Matrix synapse.
+    digest: 752ee63d549d44e71ee5a8b06692c5c99bc78e37c7b970a98a2eab24317b195c
+    home: https://github.com/matrix-org/synapse
+    icon: https://avatars.githubusercontent.com/u/8418310?s=48&v=4
+    name: matrix-synapse
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/matrix-synapse-0.1.6/matrix-synapse-0.1.6.tgz
+    version: 0.1.6
+  - apiVersion: v2
     appVersion: v1.109.0
     created: "2024-06-26T11:47:47.655009731Z"
     dependencies:
@@ -1938,4 +1954,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2024-06-27T05:15:32.271762372Z"
+generated: "2024-07-12T22:48:40.113709921Z"
