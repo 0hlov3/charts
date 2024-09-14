@@ -47,7 +47,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args: ["--config-path", "/config/config.yaml"]
           ports:
-            - name: gotosocial
+            - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           startupProbe:
