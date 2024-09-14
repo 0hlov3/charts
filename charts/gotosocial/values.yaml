@@ -151,7 +151,7 @@ externalPostgresql:
   ## Password key to be retrieved from existing secret
   password: ""
   ## The name of an existing secret with postgresql credentials
-  existingSecret: postgres-secrets
+  existingSecret: ""
   ## Password key to be retrieved from existing secret
   existingSecretPasswordKey: postgres-password
   ## TLS Mode
