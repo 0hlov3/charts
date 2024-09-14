@@ -2,6 +2,8 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+refactoringAccepted: "yes"
+
 replicaCount: 1
 
 image:
@@ -51,84 +53,34 @@ gotosocial:
     enabled: false
     size: "1Gi"
   config:
-    logLevel: "info"
-    logDBQueries: false
-    logClientIp: true
-    logTimestampFormat: "02/01/2006 15:04:05.000"
     applicationName: "gotosocial"
-    landingPageUser: ""
     host: ""
     accountDomain: ""
     protocol: "https"
     bindAddress: "0.0.0.0"
     trustedProxies:
+      - "::1"
       - "10.0.0.0/8"
       - "172.16.0.0/12"
       - "192.168.0.0/16"
-    db:
-      sqliteAddress: "/gotosocial/storage/sqlite.db"
+    db: # general db config, for postgres or sqlite specific config scroll down.
       maxOpenConnsMultiplier: "8"
-      sqliteSynchronous: "NORMAL"
-      sqliteCacheSize: "8MiB"
-      sqliteBusyTimeout: "30m"
-      sqliteTmpdir: "/gotosocial/storage/"
-      visibilitySweepFreq: "1m"
       cache:
         memoryTarget: "100MiB"
-    web:
-      templateBaseDir: "./web/template/" 
-      assetBaseDir: "./web/assets/"
-      accountsCustomCssLength: "10000"
-      deliverToSharedInboxes: "true"
-      injectMastodonVersion: "false"
-    instance:
-      languages: []
-      federationMode: "blocklist"
-      exposePeers: false
-      exposeSuspended: false
-      exposeSuspendedWeb: false
-      exposePublicTimeline: false
-      deliverToSharedInboxes: true
-    accounts:
-      registrationOpen: true
-      approvalRequired: true
-      reasonRequired: true
-      allowCustomCSS: false
-    media:
-      imageMaxSize: "10485760"
-      videoMaxSize: "41943040"
-      descriptionMinChars: "0"
-      descriptionMaxChars: "500"
-      mediaRemoteCacheDays: "7"
-      mediaCleanupFrom: "00:00"
-      mediaCleanupEvery: "24h"
-      emojiLocalMaxSize: "51200"
-      emojiRemoteMaxSize: "102400"
     storage:
       backend: "local"
       localBasePath: "/gotosocial/storage"
       s3:
        enabled: false
-       s3Endpoint: ""
-       s3Proxy: false
-       s3UseSSL: true
-       s3AccessKey: ""
-       s3SecretKey: ""
-       s3Bucket: ""
-    statuses:
-      maxChars: "5000"
-      cwMaxChars: "100"
-      pollMaxOptions: "6"
-      pollOptionMaxChars: "50"
-      mediaMaxFiles: "6"
-    letsencrypt:
-      enabled: false
-      port: "80"
-      certDir: "/gotosocial/storage/certs"
-      emailAddress: ""
-    tls:
-      certificateChain: ""
-      certificateKey: ""
+       endpoint: ""
+       proxy: false
+       useSSL: true
+       accessKey: ""
+       secretKey: ""
+       # If this is set, accessKey, secretKey will not take place
+       # Needs the S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY keys.
+       existingSecret: ""
+       bucket: ""
     oidc:
       enabled: false
       idpName: ""
@@ -147,41 +99,18 @@ gotosocial:
       host: ""
       port: "0"
       userName: ""
-      # password: ""
-      # existingSecretName: ""
-      # existingSecretKey: ""
+      password: ""
+      existingSecretName: ""
+      existingSecretKey: ""
       from: ""
       discloseRecipients: false
-    syslog:
-      enabled: false
-      protocol: "udp"
-      address:  "localhost:514"
-    observability:
-      requestIdHeader: "X-Request-Id"
-      tracing:
-        enabled: false
-        transport: "grpc"
-        endpoint: ""
-        insecureTransport: false
-      metrics:
-        enabled: false
-        authEnabled: false
-        authUsername: ""
-        authPassword: ""
-    httpClient:
-      timeout: "10s"
-      allowIPs: []
-      blockIPs: []
-      tlsInsecureSkipVerify: false
-    advanced:
-      cookiesSamesite: "lax"
-      rateLimitRequests: "300"
-      rateLimitExceptions: "[]"
-      throttlingMultiplier: "8"
-      throttlingRetryAfter: "30s"
-      advancedSenderMultiplier: 2
-      advancedCspExtraUris: []
-      advancedHeaderFilterMode: ""
+  extraConfig:
+    # logLevel: "info"
+    #  metrics:
+    #    enabled: false
+    #    authEnabled: false
+    #    authUsername: ""
+    #    authPassword: ""
 
 initContainers: []
   # - name: init-myservice
@@ -215,21 +144,29 @@ postgresql:
 
 externalPostgresql:
   enabled: false
-  # host: postgres
-  # port: 5432
+  host: postgres.postgres.svc.local
+  port: 5432
   ## The name of an existing secret with postgresql credentials
-  # username: GoToSocial
+  username: ""
   ## Password key to be retrieved from existing secret
-  # password: GoToSocial
+  password: ""
   ## The name of an existing secret with postgresql credentials
-  # existingSecret: postgres-secrets
+  existingSecret: postgres-secrets
   ## Password key to be retrieved from existing secret
-  # existingSecretPasswordKey: postgres-password
+  existingSecretPasswordKey: postgres-password
   ## TLS Mode
-  # tls_mode: disable
+  tls_mode: disable
   ## CA Cert to use when tls mode is in required state
-  # ca_cert:
+  ca_cert: ""
   database: GoToSocial
+
+sqLite:
+  address: "/gotosocial/storage/sqlite.db"
+  journalMode: "WAL"
+  synchronous: "NORMAL"
+  cacheSize: "8MiB"
+  busyTimeout: "30m"
+  tmpdir: "" # "/gotosocial/storage/"
 
 imagePullSecrets: []
 nameOverride: ""
