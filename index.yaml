@@ -1862,6 +1862,22 @@ entries:
     version: 0.1.0
   uptime-kuma:
   - apiVersion: v2
+    appVersion: 1.23.14-alpine
+    created: "2024-10-03T16:41:57.844295969Z"
+    description: A Helm chart for Kubernetes to Deploy uptime-kuma.
+    digest: c111c7a638c0c6d4ed1a0a5358dc2270524693514fc09543c5ec994d3bb78b36
+    home: https://github.com/louislam/uptime-kuma
+    icon: https://github.com/louislam/uptime-kuma/raw/master/public/icon.svg
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: uptime-kuma
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/uptime-kuma-0.1.8/uptime-kuma-0.1.8.tgz
+    version: 0.1.8
+  - apiVersion: v2
     appVersion: 1.23.13-alpine
     created: "2024-06-23T13:11:49.440748398Z"
     description: A Helm chart for Kubernetes to Deploy uptime-kuma.
@@ -2070,4 +2086,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2024-10-03T16:38:48.317956414Z"
+generated: "2024-10-03T16:41:57.844471356Z"
