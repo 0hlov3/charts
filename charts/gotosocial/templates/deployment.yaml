@@ -2,9 +2,6 @@
 {{- $podAnnotations := .Values.podAnnotations }}
 {{- $secretAnnotation := dict "checksum/secrets" (include (print $.Template.BasePath "/secrets.yaml") . | sha256sum) }}
 {{- $newPodAnnotations := merge $podAnnotations $secretAnnotation }}
-{{- if eq .Values.refactoringAccepted "" }}
-{{- fail "The Chart was refactored, please Check the README and the values.yaml" . }}
-{{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment

@@ -2,8 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-refactoringAccepted: "yes"
-
 replicaCount: 1
 
 image:
