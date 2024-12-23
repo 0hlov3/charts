@@ -2,130 +2,259 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+## @skip replicaCount GoToSocial replicaCount
 replicaCount: 1
 
+## @section GoToSocial parameters
 image:
+  ## @param image.registry GoToSocial image registry
   registry: docker.io
+  ## @param image.repository GoToSocial image repository
   repository: superseriousbusiness/gotosocial
+  ## @param image.pullPolicy GoToSocial image pull policy
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
+  ## @skip image.tag GoToSocial image tag (immutable tags are recommended)
   tag: ""
-
-service:
-  type: ClusterIP
-  port: 8080
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-    # cert-manager.io/cluster-issuer: "letsencrypt"
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: tls-gotosocial-general
-  #    hosts:
-  #      - chart-example.local
-
-resources:
-  limits:
-    cpu: 500m
-    memory: 512Mi
-  requests:
-    cpu: 500m
-    memory: 512Mi
+## @param imagePullSecrets GoToSocial image pull secrets
+imagePullSecrets: []
 
 gotosocial:
   strategy:
+    ## @param gotosocial.strategy.type GoToSocial deployment strategy type, should be Recreate if ReadWriteMany not enabled.
     type: Recreate
   persistence:
+    ## @param gotosocial.persistence.enabled Enable persistence using a PersistentVolumeClaim
     enabled: false
+    ## @param gotosocial.persistence.accessMode Persistent Volume Access Modes
     accessMode: "ReadWriteOnce"
+    ## @param gotosocial.persistence.size Persistent Volume Size
     size: "10Gi"
     #storageClass: ""
-    # use an existing persistent volume claim
+    ## @param gotosocial.persistence.existingClaim use an existing persistent volume claim instead of creating one
     existingClaim: ""
   tmpfs:
+    ## @param gotosocial.tmpfs.enabled Enable tmpfs using an emptyDir
     enabled: false
+    ## @param gotosocial.tmpfs.size emptyDir Size
     size: "1Gi"
   config:
+    ## @param gotosocial.config.applicationName Application name to use internally.
     applicationName: "gotosocial"
+    ## @param gotosocial.config.host Hostname that this server will be reachable at.
     host: ""
+    ## @param gotosocial.config.accountDomain Domain to use when federating profiles.
     accountDomain: ""
+    ## @param gotosocial.config.protocol Protocol over which the server is reachable from the outside world.
     protocol: "https"
+    ## @param gotosocial.config.bindAddress Address to bind the GoToSocial server to.
     bindAddress: "0.0.0.0"
+    ## @param gotosocial.config.trustedProxies Array of string. CIDRs or IP addresses of proxies that should be trusted when determining real client IP from behind a reverse proxy.
     trustedProxies:
       - "::1"
       - "10.0.0.0/8"
       - "172.16.0.0/12"
       - "192.168.0.0/16"
     db: # general db config, for postgres or sqlite specific config scroll down.
+      ## @param gotosocial.config.db.maxOpenConnsMultiplier Number to multiply by CPU count to set permitted total of open database connections (in-use and idle).
       maxOpenConnsMultiplier: "8"
       cache:
+        ## @param gotosocial.config.db.cache.memoryTarget cache.memory-target sets a target limit that the application will try to keep it's caches within.
         memoryTarget: "100MiB"
     storage:
+      ## @param gotosocial.config.storage.backend Type of storage backend to use.
       backend: "local"
+      ## @param gotosocial.config.storage.localBasePath Directory to use as a base path for storing files.
       localBasePath: "/gotosocial/storage"
       s3:
+       ## @param gotosocial.config.storage.s3.enabled Enables s3 support in Config
        enabled: false
+       ## @param gotosocial.config.storage.s3.endpoint API endpoint of the S3 compatible service.
        endpoint: ""
+       ## @param gotosocial.config.storage.s3.proxy Set this to true if data stored in S3 should be proxied through GoToSocial instead of forwarding the request to a presigned URL.
        proxy: false
+       ## @param gotosocial.config.storage.s3.useSSL Use SSL for S3 connections.
        useSSL: true
+       ## @param gotosocial.config.storage.s3.accessKey Access key part of the S3 credentials.
        accessKey: ""
+       ## @param gotosocial.config.storage.s3.secretKey Secret key part of the S3 credentials.
        secretKey: ""
-       # If this is set, accessKey, secretKey will not take place
-       # Needs the S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY keys.
+       ## @param gotosocial.config.storage.s3.existingSecret If this is set, accessKey, secretKey will not take place, Needs the S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY keys.
        existingSecret: ""
+       ## @param gotosocial.config.storage.s3.bucket Name of the storage bucket.
        bucket: ""
     oidc:
+      ## @param gotosocial.config.oidc.enabled Enable authentication with external OIDC provider.
       enabled: false
+      ## @param gotosocial.config.oidc.idpName Name of the oidc idp (identity provider). This will be shown to users when they log in.
       idpName: ""
+      ## @param gotosocial.config.oidc.skipVerification Skip the normal verification flow of tokens returned from the OIDC provider, ie., don't check the expiry or signature.
       skipVerification: ""
+      ## @param gotosocial.config.oidc.issuer The OIDC issuer URI. This is where GtS will redirect users to for login.
       issuer: ""
+      ## @param gotosocial.config.oidc.clientID The ID for this client as registered with the OIDC provider.
       clientID: ""
+      ## @param gotosocial.config.oidc.clientSecret The secret for this client as registered with the OIDC provider.
       clientSecret: ""
+      ## @param gotosocial.config.oidc.oidcScopes Scopes to request from the OIDC provider.
       oidcScopes:
         - "openid"
         - "email"
         - "profile"
         - "groups"
+      ## @param gotosocial.config.oidc.linkExisting Link OIDC authenticated users to existing ones based on their email address.
       linkExisting: false
+      ## @param gotosocial.config.oidc.adminGroups If the returned ID token contains a 'groups' claim that matches one of the groups in oidc-admin-groups ...
       adminGroups: []
     smtp:
+      ## @param gotosocial.config.smtp.host The hostname of the smtp server you want to use.
       host: ""
+      ## @param gotosocial.config.smtp.port Port to use to connect to the smtp server.
       port: "0"
+      ## @param gotosocial.config.smtp.userName  Username to use when authenticating with the smtp server.
       userName: ""
+      ## @param gotosocial.config.smtp.password Password to use when authenticating with the smtp server.
       password: ""
+      ## @param gotosocial.config.smtp.existingSecretName Existing Secret for the gotosocial.smtp.password (e.g. gts-smtp-secret)
       existingSecretName: ""
+      ## @param gotosocial.config.smtp.existingSecretKey Existing SecretKey for the gotosocial.smtp.password (e.g. password)
       existingSecretKey: ""
+      ## @param gotosocial.config.smtp.from From address for sent emails.
       from: ""
+      ## @param gotosocial.config.smtp.discloseRecipients If true, when an email is sent that has multiple recipients, each recipient...
       discloseRecipients: false
+  ## @param gotosocial.extraConfig Set ExtraConfig from https://github.com/superseriousbusiness/gotosocial/blob/main/example/config.yaml here.
   extraConfig:
-    # logLevel: "info"
-    #  metrics:
-    #    enabled: false
-    #    authEnabled: false
-    #    authUsername: ""
-    #    authPassword: ""
+    # accounts-reason-required: true
+    # accounts-allow-custom-css: true
+    # media-remote-cache-days: 90
+    # instance-languages: ["de", "en"]
+    # metrics-enabled: true
 
+## @param initContainers Add additional init containers
 initContainers: []
   # - name: init-myservice
   #   image: busybox:1.28
   #   command: ['sh', '-c', "until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
 
+resources:
+  limits:
+    ## @param resources.limits.cpu Set container limits for CPU.
+    cpu: 500m
+    ## @param resources.limits.memory Set container limits for memory.
+    memory: 512Mi
+  requests:
+    ## @param resources.requests.cpu Set container requests for CPU.
+    cpu: 500m
+    ## @param resources.requests.memory Set container requests for memory.
+    memory: 512Mi
+
+serviceAccount:
+  ## @param serviceAccount.create whether a service account should be created
+  create: true
+  ## @param serviceAccount.annotations Annotations to add to the service account
+  annotations: {}
+  ## @param serviceAccount.name The name of the service account to use, if not set and create is true, a name is generated using the fullname template
+  name: ""
+## @param podAnnotations Pod annotations
+podAnnotations: {}
+
+podSecurityContext:
+  ## @param podSecurityContext.runAsUser Security Context runAsUser
+  runAsUser: 1000
+  ## @param podSecurityContext.runAsGroup Security Context runAsGroup
+  runAsGroup: 1000
+  ## @param podSecurityContext.fsGroup Security Context fsGroup
+  fsGroup: 1000
+
+securityContext:
+  capabilities:
+    ## @param securityContext.capabilities.drop List of capabilities to be dropped
+    drop:
+      - ALL
+  ## @param securityContext.readOnlyRootFilesystem Set primary container's Security Context readOnlyRootFilesystem
+  readOnlyRootFilesystem: true
+  ## @param securityContext.allowPrivilegeEscalation Set primary container's Security Context allowPrivilegeEscalation
+  allowPrivilegeEscalation: false
+  ## @param securityContext.runAsNonRoot Set Controller container's Security Context runAsNonRoot
+  runAsNonRoot: true
+  ## @param securityContext.runAsUser Security Context runAsUser
+  runAsUser: 1000
+  ## @param securityContext.runAsGroup Security Context runAsGroup
+  runAsGroup: 1000
+
+startupProbe:
+  httpGet:
+    ## @param startupProbe.httpGet.path Path to access on the HTTP server
+    path: /
+    ## @param startupProbe.httpGet.port Port for startupProbe
+    port: http
+  ## @param startupProbe.failureThreshold Failure threshold for startupProbe
+  failureThreshold: 60
+  ## @param startupProbe.periodSeconds Period seconds for startupProbe
+  periodSeconds: 10
+livenessProbe:
+  httpGet:
+    ## @param livenessProbe.httpGet.path Path to access on the HTTP server
+    path: /
+    ## @param livenessProbe.httpGet.port Port for livenessProbe
+    port: http
+readinessProbe:
+  httpGet:
+    ## @param readinessProbe.httpGet.path Path to access on the HTTP server
+    path: /
+    ## @param readinessProbe.httpGet.port Port for readinessProbe
+    port: http
+  ## @param readinessProbe.failureThreshold Failure threshold for readinessProbe
+  failureThreshold: 5
+
+## @section Traffic Exposure Parameters
+service:
+  ## @param service.type GoToSocial Service type
+  type: ClusterIP
+  ## @param service.port GoToSocial service port
+  port: 8080
+
+ingress:
+  ## @param ingress.enabled Enable ingress record generation for GoToSocial
+  enabled: false
+  ## @param ingress.className IngressClass that will be used to implement the Ingress
+  className: ""
+  ## @param ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+  annotations: {}
+    # cert-manager.io/cluster-issuer: "letsencrypt"
+    # kubernetes.io/tls-acme: "true"
+    # ingress.kubernetes.io/proxy-body-size: 12m
+    # nginx.ingress.kubernetes.io/proxy-body-size: 12m
+  # ingress.hosts An array with additional arbitrary host and paths that may need to be added to the ingress under the main host
+  hosts:
+    ## @skip  ingress.hosts[0]
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  ## @param ingress.tls TLS configuration
+  tls: []
+  #  - secretName: tls-gotosocial-general
+  #    hosts:
+  #      - chart-example.local
+
+## @section Database Config
 postgresql:
+  ## @param postgresql.enabled Enables Deployment of an old Bitnami PostgreSQL Chart (deprecated)
   enabled: false
   image:
+    ## @param postgresql.image.pullPolicy Enables Deployment of an old Bitnami PostgreSQL Chart (deprecated)
     pullPolicy: Always
   auth:
+    ## @param postgresql.auth.username Name for a custom user to create
     username: "gotosocial"
     # password:
+    ## @param postgresql.auth.database Name for a custom database to create
     database: "gotosocial"
+    ## @param postgresql.auth.existingSecret Name of existing secret to use for PostgreSQL credentials
     existingSecret: gts-postgresql-secret
+  ## @skip postgresql.primary GoToSocial replicaCount
   primary:
     persistence:
       enabled: true
@@ -139,83 +268,54 @@ postgresql:
       limits:
         cpu: 250m
         memory: 512Mi
+  ## @skip postgresql.volumePermissions GoToSocial replicaCount
   volumePermissions:
     enabled: false
 
 externalPostgresql:
+  ## @param externalPostgresql.enabled Enables externalPostgresql.
   enabled: false
+  ## @param externalPostgresql.host Database host
   host: postgres.postgres.svc.local
+  ## @param externalPostgresql.port Database port number
   port: 5432
-  ## The name of an existing secret with postgresql credentials
+  ## @param externalPostgresql.username Non-root username for GoToSocial
   username: ""
-  ## Password key to be retrieved from existing secret
+  ## @param externalPostgresql.password Password for the non-root username for GoToSocial
   password: ""
-  ## The name of an existing secret with postgresql credentials
+  ## @param externalPostgresql.existingSecret Name of an existing secret resource containing the database credentials
   existingSecret: ""
-  ## Password key to be retrieved from existing secret
+  ## @param externalPostgresql.existingSecretPasswordKey Name of an existing secret key containing the database credentials
   existingSecretPasswordKey: postgres-password
-  ## TLS Mode
+  ## @param externalPostgresql.tls_mode TLS Mode
   tls_mode: disable
-  ## CA Cert to use when tls mode is in required state
+  ## @param externalPostgresql.ca_cert CA Cert to use when tls mode is in required state
   ca_cert: ""
+  ## @param externalPostgresql.database GoToSocial database name
   database: GoToSocial
 
 sqLite:
+  ## @param sqLite.address For Sqlite, this should be the path to your sqlite database file. Eg., /opt/gotosocial/sqlite.db.
   address: "/gotosocial/storage/sqlite.db"
+  ## @param sqLite.journalMode SQLite journaling mode
   journalMode: "WAL"
+  ## @param sqLite.synchronous SQLite synchronous mode.
   synchronous: "NORMAL"
+  ## @param sqLite.cacheSize SQlite cache size.
   cacheSize: "8MiB"
+  ## @param sqLite.busyTimeout SQlite busy timeout.
   busyTimeout: "30m"
+  ## @skip sqLite.tmpdir GoToSocial sqlite tmpdir
   tmpdir: "" # "/gotosocial/storage/"
 
-imagePullSecrets: []
+## @section Additional Config
+## @param nameOverride String to partially override common.names.fullname
 nameOverride: ""
+## @param fullnameOverride String to fully override common.names.fullname
 fullnameOverride: ""
-
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
-podAnnotations: {}
-
-podSecurityContext:
-  runAsUser: 1000
-  runAsGroup: 1000
-  fsGroup: 1000
-
-securityContext:
-  capabilities:
-    drop:
-      - ALL
-  readOnlyRootFilesystem: true
-  allowPrivilegeEscalation: false
-  runAsNonRoot: true
-  runAsUser: 1000
-  runAsGroup: 1000
-
-startupProbe:
-  httpGet:
-    path: /
-    port: http
-  failureThreshold: 60
-  periodSeconds: 10
-livenessProbe:
-  httpGet:
-    path: /
-    port: http
-readinessProbe:
-  httpGet:
-    path: /
-    port: http
-  failureThreshold: 5
-
+## @param nodeSelector Node labels for pod assignment
 nodeSelector: {}
-
+## @param tolerations Tolerations for pod assignment
 tolerations: []
-
+## @param affinity Affinity for pod assignment
 affinity: {}

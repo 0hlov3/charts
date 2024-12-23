@@ -54,3 +54,130 @@ kubectl exec -ti $CONTAINER_ID -- /gotosocial/gotosocial --config-path /config/c
 ```shell
 kubectl exec -ti $CONTAINER_ID -- /gotosocial/gotosocial --config-path /config/config.yaml admin account promote --username $USERNAME
 ```
+
+## Parameters
+
+### GoToSocial parameters
+
+| Name                                          | Description                                                                                                                           | Value                                                   |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `image.registry`                              | GoToSocial image registry                                                                                                             | `docker.io`                                             |
+| `image.repository`                            | GoToSocial image repository                                                                                                           | `superseriousbusiness/gotosocial`                       |
+| `image.pullPolicy`                            | GoToSocial image pull policy                                                                                                          | `Always`                                                |
+| `imagePullSecrets`                            | GoToSocial image pull secrets                                                                                                         | `[]`                                                    |
+| `gotosocial.strategy.type`                    | GoToSocial deployment strategy type, should be Recreate if ReadWriteMany not enabled.                                                 | `Recreate`                                              |
+| `gotosocial.persistence.enabled`              | Enable persistence using a PersistentVolumeClaim                                                                                      | `false`                                                 |
+| `gotosocial.persistence.accessMode`           | Persistent Volume Access Modes                                                                                                        | `ReadWriteOnce`                                         |
+| `gotosocial.persistence.size`                 | Persistent Volume Size                                                                                                                | `10Gi`                                                  |
+| `gotosocial.persistence.existingClaim`        | use an existing persistent volume claim instead of creating one                                                                       | `""`                                                    |
+| `gotosocial.tmpfs.enabled`                    | Enable tmpfs using an emptyDir                                                                                                        | `false`                                                 |
+| `gotosocial.tmpfs.size`                       | emptyDir Size                                                                                                                         | `1Gi`                                                   |
+| `gotosocial.config.applicationName`           | Application name to use internally.                                                                                                   | `gotosocial`                                            |
+| `gotosocial.config.host`                      | Hostname that this server will be reachable at.                                                                                       | `""`                                                    |
+| `gotosocial.config.accountDomain`             | Domain to use when federating profiles.                                                                                               | `""`                                                    |
+| `gotosocial.config.protocol`                  | Protocol over which the server is reachable from the outside world.                                                                   | `https`                                                 |
+| `gotosocial.config.bindAddress`               | Address to bind the GoToSocial server to.                                                                                             | `0.0.0.0`                                               |
+| `gotosocial.config.trustedProxies`            | Array of string. CIDRs or IP addresses of proxies that should be trusted when determining real client IP from behind a reverse proxy. | `["::1","10.0.0.0/8","172.16.0.0/12","192.168.0.0/16"]` |
+| `gotosocial.config.db.maxOpenConnsMultiplier` | Number to multiply by CPU count to set permitted total of open database connections (in-use and idle).                                | `8`                                                     |
+| `gotosocial.config.db.cache.memoryTarget`     | cache.memory-target sets a target limit that the application will try to keep it's caches within.                                     | `100MiB`                                                |
+| `gotosocial.config.storage.backend`           | Type of storage backend to use.                                                                                                       | `local`                                                 |
+| `gotosocial.config.storage.localBasePath`     | Directory to use as a base path for storing files.                                                                                    | `/gotosocial/storage`                                   |
+| `gotosocial.config.storage.s3.enabled`        | Enables s3 support in Config                                                                                                          | `false`                                                 |
+| `gotosocial.config.storage.s3.endpoint`       | API endpoint of the S3 compatible service.                                                                                            | `""`                                                    |
+| `gotosocial.config.storage.s3.proxy`          | Set this to true if data stored in S3 should be proxied through GoToSocial instead of forwarding the request to a presigned URL.      | `false`                                                 |
+| `gotosocial.config.storage.s3.useSSL`         | Use SSL for S3 connections.                                                                                                           | `true`                                                  |
+| `gotosocial.config.storage.s3.accessKey`      | Access key part of the S3 credentials.                                                                                                | `""`                                                    |
+| `gotosocial.config.storage.s3.secretKey`      | Secret key part of the S3 credentials.                                                                                                | `""`                                                    |
+| `gotosocial.config.storage.s3.existingSecret` | If this is set, accessKey, secretKey will not take place, Needs the S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY keys.                   | `""`                                                    |
+| `gotosocial.config.storage.s3.bucket`         | Name of the storage bucket.                                                                                                           | `""`                                                    |
+| `gotosocial.config.oidc.enabled`              | Enable authentication with external OIDC provider.                                                                                    | `false`                                                 |
+| `gotosocial.config.oidc.idpName`              | Name of the oidc idp (identity provider). This will be shown to users when they log in.                                               | `""`                                                    |
+| `gotosocial.config.oidc.skipVerification`     | Skip the normal verification flow of tokens returned from the OIDC provider, ie., don't check the expiry or signature.                | `""`                                                    |
+| `gotosocial.config.oidc.issuer`               | The OIDC issuer URI. This is where GtS will redirect users to for login.                                                              | `""`                                                    |
+| `gotosocial.config.oidc.clientID`             | The ID for this client as registered with the OIDC provider.                                                                          | `""`                                                    |
+| `gotosocial.config.oidc.clientSecret`         | The secret for this client as registered with the OIDC provider.                                                                      | `""`                                                    |
+| `gotosocial.config.oidc.oidcScopes`           | Scopes to request from the OIDC provider.                                                                                             | `["openid","email","profile","groups"]`                 |
+| `gotosocial.config.oidc.linkExisting`         | Link OIDC authenticated users to existing ones based on their email address.                                                          | `false`                                                 |
+| `gotosocial.config.oidc.adminGroups`          | If the returned ID token contains a 'groups' claim that matches one of the groups in oidc-admin-groups ...                            | `[]`                                                    |
+| `gotosocial.config.smtp.host`                 | The hostname of the smtp server you want to use.                                                                                      | `""`                                                    |
+| `gotosocial.config.smtp.port`                 | Port to use to connect to the smtp server.                                                                                            | `0`                                                     |
+| `gotosocial.config.smtp.userName`             | Username to use when authenticating with the smtp server.                                                                             | `""`                                                    |
+| `gotosocial.config.smtp.password`             | Password to use when authenticating with the smtp server.                                                                             | `""`                                                    |
+| `gotosocial.config.smtp.existingSecretName`   | Existing Secret for the gotosocial.smtp.password (e.g. gts-smtp-secret)                                                               | `""`                                                    |
+| `gotosocial.config.smtp.existingSecretKey`    | Existing SecretKey for the gotosocial.smtp.password (e.g. password)                                                                   | `""`                                                    |
+| `gotosocial.config.smtp.from`                 | From address for sent emails.                                                                                                         | `""`                                                    |
+| `gotosocial.config.smtp.discloseRecipients`   | If true, when an email is sent that has multiple recipients, each recipient...                                                        | `false`                                                 |
+| `gotosocial.extraConfig`                      | Set ExtraConfig from https://github.com/superseriousbusiness/gotosocial/blob/main/example/config.yaml here.                           | `nil`                                                   |
+| `initContainers`                              | Add additional init containers                                                                                                        | `[]`                                                    |
+| `resources.limits.cpu`                        | Set container limits for CPU.                                                                                                         | `500m`                                                  |
+| `resources.limits.memory`                     | Set container limits for memory.                                                                                                      | `512Mi`                                                 |
+| `resources.requests.cpu`                      | Set container requests for CPU.                                                                                                       | `500m`                                                  |
+| `resources.requests.memory`                   | Set container requests for memory.                                                                                                    | `512Mi`                                                 |
+| `serviceAccount.create`                       | whether a service account should be created                                                                                           | `true`                                                  |
+| `serviceAccount.annotations`                  | Annotations to add to the service account                                                                                             | `{}`                                                    |
+| `serviceAccount.name`                         | The name of the service account to use, if not set and create is true, a name is generated using the fullname template                | `""`                                                    |
+| `podAnnotations`                              | Pod annotations                                                                                                                       | `{}`                                                    |
+| `podSecurityContext.runAsUser`                | Security Context runAsUser                                                                                                            | `1000`                                                  |
+| `podSecurityContext.runAsGroup`               | Security Context runAsGroup                                                                                                           | `1000`                                                  |
+| `podSecurityContext.fsGroup`                  | Security Context fsGroup                                                                                                              | `1000`                                                  |
+| `securityContext.capabilities.drop`           | List of capabilities to be dropped                                                                                                    | `["ALL"]`                                               |
+| `securityContext.readOnlyRootFilesystem`      | Set primary container's Security Context readOnlyRootFilesystem                                                                       | `true`                                                  |
+| `securityContext.allowPrivilegeEscalation`    | Set primary container's Security Context allowPrivilegeEscalation                                                                     | `false`                                                 |
+| `securityContext.runAsNonRoot`                | Set Controller container's Security Context runAsNonRoot                                                                              | `true`                                                  |
+| `securityContext.runAsUser`                   | Security Context runAsUser                                                                                                            | `1000`                                                  |
+| `securityContext.runAsGroup`                  | Security Context runAsGroup                                                                                                           | `1000`                                                  |
+| `startupProbe.httpGet.path`                   | Path to access on the HTTP server                                                                                                     | `/`                                                     |
+| `startupProbe.httpGet.port`                   | Port for startupProbe                                                                                                                 | `http`                                                  |
+| `startupProbe.failureThreshold`               | Failure threshold for startupProbe                                                                                                    | `60`                                                    |
+| `startupProbe.periodSeconds`                  | Period seconds for startupProbe                                                                                                       | `10`                                                    |
+| `livenessProbe.httpGet.path`                  | Path to access on the HTTP server                                                                                                     | `/`                                                     |
+| `livenessProbe.httpGet.port`                  | Port for livenessProbe                                                                                                                | `http`                                                  |
+| `readinessProbe.httpGet.path`                 | Path to access on the HTTP server                                                                                                     | `/`                                                     |
+| `readinessProbe.httpGet.port`                 | Port for readinessProbe                                                                                                               | `http`                                                  |
+| `readinessProbe.failureThreshold`             | Failure threshold for readinessProbe                                                                                                  | `5`                                                     |
+
+### Traffic Exposure Parameters
+
+| Name                  | Description                                                                                                                      | Value       |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `service.type`        | GoToSocial Service type                                                                                                          | `ClusterIP` |
+| `service.port`        | GoToSocial service port                                                                                                          | `8080`      |
+| `ingress.enabled`     | Enable ingress record generation for GoToSocial                                                                                  | `false`     |
+| `ingress.className`   | IngressClass that will be used to implement the Ingress                                                                          | `""`        |
+| `ingress.annotations` | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. | `{}`        |
+| `ingress.tls`         | TLS configuration                                                                                                                | `[]`        |
+
+### Database Config
+
+| Name                                           | Description                                                                                       | Value                           |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------- |
+| `postgresql.enabled`                           | Enables Deployment of an old Bitnami PostgreSQL Chart (deprecated)                                | `false`                         |
+| `postgresql.image.pullPolicy`                  | Enables Deployment of an old Bitnami PostgreSQL Chart (deprecated)                                | `Always`                        |
+| `postgresql.auth.username`                     | Name for a custom user to create                                                                  | `gotosocial`                    |
+| `postgresql.auth.database`                     | Name for a custom database to create                                                              | `gotosocial`                    |
+| `postgresql.auth.existingSecret`               | Name of existing secret to use for PostgreSQL credentials                                         | `gts-postgresql-secret`         |
+| `externalPostgresql.enabled`                   | Enables externalPostgresql.                                                                       | `false`                         |
+| `externalPostgresql.host`                      | Database host                                                                                     | `postgres.postgres.svc.local`   |
+| `externalPostgresql.port`                      | Database port number                                                                              | `5432`                          |
+| `externalPostgresql.username`                  | Non-root username for GoToSocial                                                                  | `""`                            |
+| `externalPostgresql.password`                  | Password for the non-root username for GoToSocial                                                 | `""`                            |
+| `externalPostgresql.existingSecret`            | Name of an existing secret resource containing the database credentials                           | `""`                            |
+| `externalPostgresql.existingSecretPasswordKey` | Name of an existing secret key containing the database credentials                                | `postgres-password`             |
+| `externalPostgresql.tls_mode`                  | TLS Mode                                                                                          | `disable`                       |
+| `externalPostgresql.ca_cert`                   | CA Cert to use when tls mode is in required state                                                 | `""`                            |
+| `externalPostgresql.database`                  | GoToSocial database name                                                                          | `GoToSocial`                    |
+| `sqLite.address`                               | For Sqlite, this should be the path to your sqlite database file. Eg., /opt/gotosocial/sqlite.db. | `/gotosocial/storage/sqlite.db` |
+| `sqLite.journalMode`                           | SQLite journaling mode                                                                            | `WAL`                           |
+| `sqLite.synchronous`                           | SQLite synchronous mode.                                                                          | `NORMAL`                        |
+| `sqLite.cacheSize`                             | SQlite cache size.                                                                                | `8MiB`                          |
+| `sqLite.busyTimeout`                           | SQlite busy timeout.                                                                              | `30m`                           |
+
+### Additional Config
+
+| Name               | Description                                        | Value |
+| ------------------ | -------------------------------------------------- | ----- |
+| `nameOverride`     | String to partially override common.names.fullname | `""`  |
+| `fullnameOverride` | String to fully override common.names.fullname     | `""`  |
+| `nodeSelector`     | Node labels for pod assignment                     | `{}`  |
+| `tolerations`      | Tolerations for pod assignment                     | `[]`  |
+| `affinity`         | Affinity for pod assignment                        | `{}`  |
