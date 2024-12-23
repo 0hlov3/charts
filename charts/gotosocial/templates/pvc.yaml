@@ -1,4 +1,4 @@
-{{- if .Values.gotosocial.persistence.enabled }}
+{{- if and .Values.gotosocial.persistence.enabled (eq .Values.gotosocial.persistence.existingClaim "") -}}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

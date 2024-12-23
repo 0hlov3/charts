@@ -133,7 +133,7 @@ spec:
         {{- if .Values.gotosocial.persistence.enabled }}
         - name: gotosocial-data
           persistentVolumeClaim:
-            claimName: {{ $fullName }}-data
+            claimName: {{ include "gotosocial.volume.claimName" . }}
         {{- end }}
         {{- if .Values.gotosocial.tmpfs.enabled }}
         - name: tmpfs
