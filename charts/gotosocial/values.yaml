@@ -123,7 +123,7 @@ gotosocial:
       from: ""
       ## @param gotosocial.config.smtp.discloseRecipients If true, when an email is sent that has multiple recipients, each recipient...
       discloseRecipients: false
-  ## @param gotosocial.extraConfig Set ExtraConfig from https://github.com/superseriousbusiness/gotosocial/blob/main/example/config.yaml here.
+  ## @param gotosocial.extraConfig Set ExtraConfig from [gotosocial/config.yaml](https://github.com/superseriousbusiness/gotosocial/blob/main/example/config.yaml) here.
   extraConfig:
     # accounts-reason-required: true
     # accounts-allow-custom-css: true
