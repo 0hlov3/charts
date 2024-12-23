@@ -47,6 +47,8 @@ gotosocial:
     accessMode: "ReadWriteOnce"
     size: "10Gi"
     #storageClass: ""
+    # use an existing persistent volume claim
+    existingClaim: ""
   tmpfs:
     enabled: false
     size: "1Gi"
@@ -188,7 +190,7 @@ podSecurityContext:
 
 securityContext:
   capabilities:
-    drop: 
+    drop:
       - ALL
   readOnlyRootFilesystem: true
   allowPrivilegeEscalation: false
