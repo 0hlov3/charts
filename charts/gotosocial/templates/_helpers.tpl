@@ -76,3 +76,14 @@ Set postgres host
 {{- template "gotosocial.postgresql.fullname" . -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create Volumeclaim Name
+*/}}
+{{- define "gotosocial.volume.claimName" -}}
+{{- if and .Values.gotosocial.persistence.enabled (ne .Values.gotosocial.persistence.existingClaim "") -}}
+{{ .Values.gotosocial.persistence.existingClaim }}
+{{- else -}}
+{{ printf "%s-%s" (include "gotosocial.fullname" .) "data" }}
+{{- end -}}
+{{- end -}}
