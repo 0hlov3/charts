@@ -709,6 +709,27 @@ entries:
   gotosocial:
   - apiVersion: v2
     appVersion: 0.17.3
+    created: "2024-12-23T21:24:10.975468203Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~11.9.13
+    description: A Helm chart for Kubernetes to Deploy GoToSocial
+    digest: 947c56ce7f4a6ece5cb9a072416768fa921ea2234e931eae2983351ee06b9806
+    home: https://github.com/superseriousbusiness/gotosocial
+    icon: https://docs.gotosocial.org/en/latest/assets/sloth.png
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: gotosocial
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/gotosocial-0.5.0/gotosocial-0.5.0.tgz
+    version: 0.5.0
+  - apiVersion: v2
+    appVersion: 0.17.3
     created: "2024-12-12T12:29:17.033245258Z"
     dependencies:
     - condition: postgresql.enabled
@@ -1946,6 +1967,22 @@ entries:
     version: 0.1.0
   uptime-kuma:
   - apiVersion: v2
+    appVersion: 1.23.16-debian
+    created: "2024-12-23T21:24:11.078945017Z"
+    description: A Helm chart for Kubernetes to Deploy uptime-kuma.
+    digest: 6c738fad8a1d183f9d3efb595bb50a972a32f285b63efcac5addadd91274fa8e
+    home: https://github.com/louislam/uptime-kuma
+    icon: https://github.com/louislam/uptime-kuma/raw/master/public/icon.svg
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: uptime-kuma
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/uptime-kuma-0.2.1/uptime-kuma-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
     appVersion: 1.23.15-debian
     created: "2024-10-03T20:15:57.955454393Z"
     description: A Helm chart for Kubernetes to Deploy uptime-kuma.
@@ -2202,4 +2239,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2024-12-12T12:32:43.675134904Z"
+generated: "2024-12-23T21:24:11.079411001Z"
