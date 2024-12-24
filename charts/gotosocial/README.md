@@ -40,6 +40,35 @@ kubectl exec -ti $CONTAINER_ID -- /gotosocial/gotosocial --config-path /config/c
 kubectl exec -ti $CONTAINER_ID -- /gotosocial/gotosocial --config-path /config/config.yaml admin account promote --username $USERNAME
 ```
 
+## Known Limitations
+### Rate Limiting
+
+If your GoToSocial instance frequently exceeds rate limits, it may be due to NAT or load balancers that do not preserve client IPs. In such cases, all incoming requests are seen as originating from the same IP, causing rate limiting issues. For detailed information, refer to the [official documentation](https://docs.gotosocial.org/en/latest/api/ratelimiting/).
+
+#### Solution
+
+1. **Preserve Source IPs (Kubernetes):**  
+   When using a `LoadBalancer` or `NodePort` service type, set `externalTrafficPolicy` to `Local` in your Service specification to preserve client IPs:
+
+   ```yaml
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: gotosocial
+   spec:
+     type: LoadBalancer
+     externalTrafficPolicy: Local
+   ```
+
+2. Disable Rate Limiting (if IP preservation is not possible):
+   If client IPs cannot be preserved due to NAT, disable rate limiting by adding the following to your Helm values:
+
+   ```yaml
+   gotosocial:
+     extraConfig:
+       advanced-rate-limit-requests: 0
+   ```
+
 ## Parameters
 
 ### GoToSocial parameters
