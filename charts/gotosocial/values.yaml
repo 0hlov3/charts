@@ -234,6 +234,16 @@ ingress:
     # kubernetes.io/tls-acme: "true"
     # ingress.kubernetes.io/proxy-body-size: 12m
     # nginx.ingress.kubernetes.io/proxy-body-size: 12m
+    # nginx.ingress.kubernetes.io/server-snippet: |
+    #   location /livez {
+    #     return 404;
+    #   }
+    #   location /readyz {
+    #     return 404;
+    #   }
+    #   location /metrics {
+    #     return 404;
+    #   }
   # ingress.hosts An array with additional arbitrary host and paths that may need to be added to the ingress under the main host
   hosts:
     ## @skip  ingress.hosts[0]
