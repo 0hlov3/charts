@@ -106,6 +106,12 @@ gotosocial:
       linkExisting: false
       ## @param gotosocial.config.oidc.adminGroups If the returned ID token contains a 'groups' claim that matches one of the groups in oidc-admin-groups ...
       adminGroups: []
+      ## @param gotosocial.config.oidc.existingSecretName Use an existing kubernetes Secret for issuer, clientID, and clientSecret. If set, ignores oidc.issuer, odic.clientID, and oidc.clientSecret.
+      existingSecretName: ""
+      existingSecretKeys:
+        issuer: ""
+        clientID: ""
+        clientSecret: ""
     smtp:
       ## @param gotosocial.config.smtp.host The hostname of the smtp server you want to use.
       host: ""
