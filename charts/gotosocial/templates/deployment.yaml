@@ -102,12 +102,33 @@ spec:
           ###############
           # SMTP Config #
           ###############
-          {{- if ne .Values.gotosocial.config.smtp.existingSecretName "" }}
+          {{- if and .Values.gotosocial.config.smtp.existingSecretName .Values.gotosocial.config.smtp.existingSecretKeys.host }}
+            - name: GTS_SMTP_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.gotosocial.config.smtp.existingSecretName }}
+                  key: {{ .Values.gotosocial.config.smtp.existingSecretKeys.host }}
+          {{- end }}
+          {{- if and .Values.gotosocial.config.smtp.existingSecretName .Values.gotosocial.config.smtp.existingSecretKeys.port }}
+            - name: GTS_SMTP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.gotosocial.config.smtp.existingSecretName }}
+                  key: {{ .Values.gotosocial.config.smtp.existingSecretKeys.port }}
+          {{- end }}
+          {{- if and .Values.gotosocial.config.smtp.existingSecretName .Values.gotosocial.config.smtp.existingSecretKeys.username }}
+            - name: GTS_SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.gotosocial.config.smtp.existingSecretName }}
+                  key: {{ .Values.gotosocial.config.smtp.existingSecretKeys.username }}
+          {{- end }}
+          {{- if and .Values.gotosocial.config.smtp.existingSecretName .Values.gotosocial.config.smtp.existingSecretKeys.password }}
             - name: GTS_SMTP_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.gotosocial.config.smtp.existingSecretName }}
-                  key: {{ .Values.gotosocial.config.smtp.existingSecretKey }}
+                  key: {{ .Values.gotosocial.config.smtp.existingSecretKeys.password }}
           {{- end }}
           volumeMounts:
             - name: gotosocial-config

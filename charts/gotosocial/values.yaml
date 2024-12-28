@@ -117,8 +117,12 @@ gotosocial:
       password: ""
       ## @param gotosocial.config.smtp.existingSecretName Existing Secret for the gotosocial.smtp.password (e.g. gts-smtp-secret)
       existingSecretName: ""
-      ## @param gotosocial.config.smtp.existingSecretKey Existing SecretKey for the gotosocial.smtp.password (e.g. password)
-      existingSecretKey: ""
+      ## @param gotosocial.config.smtp.existingSecretKeys Existing SecretKey for the gotosocial.smtp.host/port/username/password
+      existingSecretKeys:
+        host: ""
+        port: ""
+        username: ""
+        password: ""
       ## @param gotosocial.config.smtp.from From address for sent emails.
       from: ""
       ## @param gotosocial.config.smtp.discloseRecipients If true, when an email is sent that has multiple recipients, each recipient...
