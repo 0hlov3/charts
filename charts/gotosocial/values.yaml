@@ -38,6 +38,8 @@ gotosocial:
     enabled: false
     ## @param gotosocial.tmpfs.size emptyDir Size
     size: "1Gi"
+  ## @param gotosocial.extraEnv additional environment variables to pass to the gotosocial deployment
+  extraEnv: []
   config:
     ## @param gotosocial.config.applicationName Application name to use internally.
     applicationName: "gotosocial"
