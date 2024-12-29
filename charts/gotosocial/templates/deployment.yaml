@@ -125,6 +125,9 @@ spec:
             - name: tmpfs
               mountPath: /tmp
             {{- end }}
+            {{- with .Values.gotosocial.extraVolumeMounts }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
       volumes:
         - name: gotosocial-config
           secret:
@@ -142,6 +145,9 @@ spec:
         - name: tmpfs
           emptyDir:
             sizeLimit: {{ .Values.gotosocial.tmpfs.size }}
+        {{- end }}
+        {{- with .Values.gotosocial.extraVolumes }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
