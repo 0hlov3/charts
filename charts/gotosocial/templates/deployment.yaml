@@ -56,7 +56,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-          {{- range .Values.gotosocial.extraEnv }}
+          {{- with .Values.gotosocial.extraEnv }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
           ###################
