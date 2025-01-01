@@ -56,9 +56,6 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-          {{- with .Values.gotosocial.extraEnv }}
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
           ###################
           # Database Config #
           ###################
@@ -112,6 +109,12 @@ spec:
                   name: {{ .Values.gotosocial.config.smtp.existingSecretName }}
                   key: {{ .Values.gotosocial.config.smtp.existingSecretKey }}
           {{- end }}
+          #############
+          # ExtraEnv ##
+          #############
+          {{- with .Values.gotosocial.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: gotosocial-config
               mountPath: "/config/"
@@ -133,9 +136,6 @@ spec:
           secret:
             secretName: {{ $fullName }}
             optional: false
-            #items:
-            #- key: "config.yaml"
-            #  path: "config.yaml"
         {{- if .Values.gotosocial.persistence.enabled }}
         - name: gotosocial-data
           persistentVolumeClaim:
