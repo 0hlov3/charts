@@ -112,21 +112,21 @@ spec:
           ###############
           # OIDC config #
           ###############
-          {{- if and .Values.gotosocial.config.oidc.existingSecretKeys.issuer .Values.gotosocial.config.oidc.existingSecretName }}
+          {{- if and (ne .Values.gotosocial.config.oidc.existingSecretKeys.issuer "") (ne .Values.gotosocial.config.oidc.existingSecretName "") }}
             - name: GTS_OIDC_ISSUER
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.gotosocial.config.oidc.existingSecretName }}
                   key: {{ .Values.gotosocial.config.oidc.existingSecretKeys.issuer }}
           {{- end }}
-          {{- if and .Values.gotosocial.config.oidc.existingSecretKeys.clientID .Values.gotosocial.config.oidc.existingSecretName }}
+          {{- if and (ne .Values.gotosocial.config.oidc.existingSecretKeys.clientID "") (ne .Values.gotosocial.config.oidc.existingSecretName "") }}
             - name: GTS_OIDC_CLIENT_ID
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.gotosocial.config.oidc.existingSecretName }}
                   key: {{ .Values.gotosocial.config.oidc.existingSecretKeys.clientID }}
           {{- end }}
-          {{- if and .Values.gotosocial.config.oidc.existingSecretKeys.clientSecret .Values.gotosocial.config.oidc.existingSecretName }}
+          {{- if and (ne .Values.gotosocial.config.oidc.existingSecretKeys.clientSecret "") (ne .Values.gotosocial.config.oidc.existingSecretName "") }}
             - name: GTS_OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
