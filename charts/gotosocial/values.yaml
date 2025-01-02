@@ -38,6 +38,12 @@ gotosocial:
     enabled: false
     ## @param gotosocial.tmpfs.size emptyDir Size
     size: "1Gi"
+  ## @param gotosocial.extraEnv additional environment variables to pass to the gotosocial deployment
+  extraEnv: []
+  ## @param gotosocial.extraVolumes additional volumes to pass to the gotosocial deployment
+  extraVolumes: []
+  ## @param gotosocial.extraVolumeMounts additional volume mounts to pass to the gotosocial deployment
+  extraVolumeMounts: []
   config:
     ## @param gotosocial.config.applicationName Application name to use internally.
     applicationName: "gotosocial"
@@ -109,8 +115,11 @@ gotosocial:
       ## @param gotosocial.config.oidc.existingSecretName Use an existing kubernetes Secret for issuer, clientID, and clientSecret. If set, ignores oidc.issuer, odic.clientID, and oidc.clientSecret.
       existingSecretName: ""
       existingSecretKeys:
+        ## @param gotosocial.config.oidc.existingSecretKeys.issuer The secretKey for the issuer.
         issuer: ""
+        ## @param gotosocial.config.oidc.existingSecretKeys.clientID The secretKey for the clientID.
         clientID: ""
+        ## @param gotosocial.config.oidc.existingSecretKeys.clientSecret The secretKey for the clientSecret.
         clientSecret: ""
     smtp:
       ## @param gotosocial.config.smtp.host The hostname of the smtp server you want to use.

@@ -133,26 +133,32 @@ spec:
           ###############
           # OIDC config #
           ###############
-          {{- if and .Values.gotosocial.config.oidc.existingSecretKeys.issuer .Values.gotosocial.config.oidc.existingSecretName }}
+          {{- if and (ne .Values.gotosocial.config.oidc.existingSecretKeys.issuer "") (ne .Values.gotosocial.config.oidc.existingSecretName "") }}
             - name: GTS_OIDC_ISSUER
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.gotosocial.config.oidc.existingSecretName }}
                   key: {{ .Values.gotosocial.config.oidc.existingSecretKeys.issuer }}
           {{- end }}
-          {{- if and .Values.gotosocial.config.oidc.existingSecretKeys.clientID .Values.gotosocial.config.oidc.existingSecretName }}
+          {{- if and (ne .Values.gotosocial.config.oidc.existingSecretKeys.clientID "") (ne .Values.gotosocial.config.oidc.existingSecretName "") }}
             - name: GTS_OIDC_CLIENT_ID
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.gotosocial.config.oidc.existingSecretName }}
                   key: {{ .Values.gotosocial.config.oidc.existingSecretKeys.clientID }}
           {{- end }}
-          {{- if and .Values.gotosocial.config.oidc.existingSecretKeys.clientSecret .Values.gotosocial.config.oidc.existingSecretName }}
+          {{- if and (ne .Values.gotosocial.config.oidc.existingSecretKeys.clientSecret "") (ne .Values.gotosocial.config.oidc.existingSecretName "") }}
             - name: GTS_OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.gotosocial.config.oidc.existingSecretName }}
                   key: {{ .Values.gotosocial.config.oidc.existingSecretKeys.clientSecret }}
+          {{- end }}
+          #############
+          # ExtraEnv ##
+          #############
+          {{- with .Values.gotosocial.extraEnv }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
             - name: gotosocial-config
@@ -167,14 +173,14 @@ spec:
             - name: tmpfs
               mountPath: /tmp
             {{- end }}
+            {{- with .Values.gotosocial.extraVolumeMounts }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
       volumes:
         - name: gotosocial-config
           secret:
             secretName: {{ $fullName }}
             optional: false
-            #items:
-            #- key: "config.yaml"
-            #  path: "config.yaml"
         {{- if .Values.gotosocial.persistence.enabled }}
         - name: gotosocial-data
           persistentVolumeClaim:
@@ -184,6 +190,9 @@ spec:
         - name: tmpfs
           emptyDir:
             sizeLimit: {{ .Values.gotosocial.tmpfs.size }}
+        {{- end }}
+        {{- with .Values.gotosocial.extraVolumes }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
