@@ -71,6 +71,27 @@ entries:
       artifacthub.io/category: skip-prediction
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
+    appVersion: v1.11.89
+    created: "2025-01-07T22:41:31.113654435Z"
+    description: 'Element (formerly known as Vector and Riot) is a Matrix web client
+      built using the Matrix React SDK. '
+    digest: 76a9aeb81516cc1b47d39d21b44378f6401088970fd223025f86f468d98d464b
+    home: https://github.com/vector-im/element-web/
+    icon: https://element.io/images/element-logo.svg
+    maintainers:
+    - email: dev@fsociety.social
+      name: fSocietySocial
+      url: https://fsociety.social
+    name: element-web
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/element-web-0.4.3/element-web-0.4.3.tgz
+    version: 0.4.3
+  - annotations:
+      artifacthub.io/alternativeName: element
+      artifacthub.io/category: skip-prediction
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
     appVersion: v1.11.87
     created: "2024-12-12T12:32:43.674799767Z"
     description: 'Element (formerly known as Vector and Riot) is a Matrix web client
@@ -2323,4 +2344,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-07T22:06:05.047470564Z"
+generated: "2025-01-07T22:41:31.113994378Z"
