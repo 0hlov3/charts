@@ -125,15 +125,24 @@ gotosocial:
       ## @param gotosocial.config.smtp.host The hostname of the smtp server you want to use.
       host: ""
       ## @param gotosocial.config.smtp.port Port to use to connect to the smtp server.
-      port: "0"
+      port: ""
       ## @param gotosocial.config.smtp.userName  Username to use when authenticating with the smtp server.
       userName: ""
       ## @param gotosocial.config.smtp.password Password to use when authenticating with the smtp server.
       password: ""
       ## @param gotosocial.config.smtp.existingSecretName Existing Secret for the gotosocial.smtp.password (e.g. gts-smtp-secret)
       existingSecretName: ""
-      ## @param gotosocial.config.smtp.existingSecretKey Existing SecretKey for the gotosocial.smtp.password (e.g. password)
-      existingSecretKey: ""
+      ## gotosocial.config.smtp.existingSecretKeys Existing SecretKey for the gotosocial.smtp.host/port/username/password
+      ## Keys in this object map to the corresponding fields in the specified Secret, allowing sensitive data to be referenced securely.
+      existingSecretKeys:
+        ## @param gotosocial.config.smtp.existingSecretKeys.host The key in the specified Secret containing the SMTP server hostname.
+        host: ""
+        ## @param gotosocial.config.smtp.existingSecretKeys.port The key in the specified Secret containing the SMTP server port.
+        port: ""
+        ## @param gotosocial.config.smtp.existingSecretKeys.username The key in the specified Secret containing the username for SMTP authentication.
+        username: ""
+        ## @param gotosocial.config.smtp.existingSecretKeys.password The key in the specified Secret containing the password for SMTP authentication.
+        password: ""
       ## @param gotosocial.config.smtp.from From address for sent emails.
       from: ""
       ## @param gotosocial.config.smtp.discloseRecipients If true, when an email is sent that has multiple recipients, each recipient...
