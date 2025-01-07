@@ -2,6 +2,9 @@
 {{- $podAnnotations := .Values.podAnnotations }}
 {{- $secretAnnotation := dict "checksum/secrets" (include (print $.Template.BasePath "/secrets.yaml") . | sha256sum) }}
 {{- $newPodAnnotations := merge $podAnnotations $secretAnnotation }}
+{{- if and .Values.gotosocial.config.smtp.existingSecretName (ne .Values.gotosocial.config.smtp.existingSecretName "") }}
+{{- fail "Breaking change in version 1.0.0: 'existingSecretName' is no longer supported. Please refer to https://github.com/0hlov3/charts/pull/16 for migration steps." }}
+{{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment
