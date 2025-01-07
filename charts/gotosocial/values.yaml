@@ -125,7 +125,7 @@ gotosocial:
       ## @param gotosocial.config.smtp.host The hostname of the smtp server you want to use.
       host: ""
       ## @param gotosocial.config.smtp.port Port to use to connect to the smtp server.
-      port: "0"
+      port: ""
       ## @param gotosocial.config.smtp.userName  Username to use when authenticating with the smtp server.
       userName: ""
       ## @param gotosocial.config.smtp.password Password to use when authenticating with the smtp server.
