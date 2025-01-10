@@ -219,6 +219,13 @@ externalPostgresql:
       ## Default: ""
       password: ""
 
+############################
+## @section Redis/Dragonfly WiP Don't USE right NOW!
+###########################
+dragonfly:
+  ## @param dragonfly.enabled Enables Deployment of dragonflyDB as Redis replacement [WiP]
+  enabled: false
+
 ###################
 ## @section General
 ###################

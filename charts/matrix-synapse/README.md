@@ -189,10 +189,16 @@ register_new_matrix_user http://localhost:8008 -c /synapse/config/homeserver.yam
 | `externalPostgresql.password`                     | Password of the database to use.                                                   | `""`                                      |
 | `externalPostgresql.existingSecret.name`          | Name of an existing Kubernetes secret containing database credentials.             | `""`                                      |
 | `externalPostgresql.existingSecret.keys.host`     | Key for the host in the existing secret.                                           | `""`                                      |
-| `externalPostgresql.existingSecret.keys.port`     | Key for the port in the existing secret.                                           | `nil`                                     |
+| `externalPostgresql.existingSecret.keys.port`     | Key for the port in the existing secret.                                           | `""`                                      |
 | `externalPostgresql.existingSecret.keys.database` | Key for the port in the existing secret.                                           | `""`                                      |
 | `externalPostgresql.existingSecret.keys.username` | Key for the username in the existing secret.                                       | `""`                                      |
 | `externalPostgresql.existingSecret.keys.password` | Key for the password in the existing secret.                                       | `""`                                      |
+
+### Redis/Dragonfly WiP Don't USE right NOW!
+
+| Name                | Description                                                  | Value   |
+| ------------------- | ------------------------------------------------------------ | ------- |
+| `dragonfly.enabled` | Enables Deployment of dragonflyDB as Redis replacement [WiP] | `false` |
 
 ### General
 
@@ -214,7 +220,7 @@ register_new_matrix_user http://localhost:8008 -c /synapse/config/homeserver.yam
 | `securityContext.runAsNonRoot`      | Set containers Security Context runAsNonRoot                                                                                     | `true`      |
 | `securityContext.runAsUser`         | Set containers Security Context runAsUser                                                                                        | `1000`      |
 | `service.type`                      | Sets the Service Type.                                                                                                           | `ClusterIP` |
-| `service.port`                      | Sets the Service port.                                                                                                           | `80`        |
+| `service.port`                      | Sets the Service port.                                                                                                           | `8008`      |
 | `ingress.enabled`                   | Enable ingress record generation for Keycloak                                                                                    | `false`     |
 | `ingress.className`                 | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)                                                    | `""`        |
 | `ingress.annotations`               | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. | `{}`        |
@@ -223,13 +229,13 @@ register_new_matrix_user http://localhost:8008 -c /synapse/config/homeserver.yam
 
 ### Synapse signing Key config
 
-| Name                                         | Description                                                   | Value                |
-| -------------------------------------------- | ------------------------------------------------------------- | -------------------- |
-| `signingkey.job.enabled`                     | Enables the signinkeyjob to create a SigningKey if nor exists | `true`               |
-| `signingkey.job.storeSecretImage.registry`   | The Kubectl Image Registry to for storing the singinKey       | `docker.io`          |
-| `signingkey.job.storeSecretImage.repository` | The Kubectl Image Rposiory to for storing the singinKey       | `chainguard/kubectl` |
-| `signingkey.job.storeSecretImage.tag`        | The Kubectl Image Tag to for storing the singinKey            | `latest`             |
-| `signingkey.job.storeSecretImage.pullPolicy` | The Kubectl Image pullPolicy                                  | `IfNotPresent`       |
-| `signingkey.existingSecret`                  | The Secret of the SinginKey if Exists                         | `""`                 |
-| `signingkey.existingSecretKey`               | The Secret Key of the SinginKey where the key is stored       | `""`                 |
-| `signingkey.resources`                       | Resources of the SigningKeyJob Containers                     | `{}`                 |
+| Name                                         | Description                                                   | Value             |
+| -------------------------------------------- | ------------------------------------------------------------- | ----------------- |
+| `signingkey.job.enabled`                     | Enables the signinkeyjob to create a SigningKey if nor exists | `false`           |
+| `signingkey.job.storeSecretImage.registry`   | The Kubectl Image Registry to for storing the singinKey       | `docker.io`       |
+| `signingkey.job.storeSecretImage.repository` | The Kubectl Image Rposiory to for storing the singinKey       | `bitnami/kubectl` |
+| `signingkey.job.storeSecretImage.tag`        | The Kubectl Image Tag to for storing the singinKey            | `latest`          |
+| `signingkey.job.storeSecretImage.pullPolicy` | The Kubectl Image pullPolicy                                  | `IfNotPresent`    |
+| `signingkey.existingSecret`                  | The Secret of the SinginKey if Exists                         | `""`              |
+| `signingkey.existingSecretKey`               | The Secret Key of the SinginKey where the key is stored       | `""`              |
+| `signingkey.resources`                       | Resources of the SigningKeyJob Containers                     | `{}`              |
