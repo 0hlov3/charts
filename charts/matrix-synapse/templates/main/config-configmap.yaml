@@ -1,0 +1,97 @@
+{{ $fullName := include "matrix-synapse.fullname" . }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "matrix-synapse.labels" . | nindent 4 }}
+data:
+  homeserver.yaml: |-
+    #######################################################################
+    ## NOTE:                                                             ##
+    ## Secrets are stored in separate configs to better fit K8s concepts ##
+    #######################################################################
+    ######################################################################################################
+    ## Server                                                                                           ##
+    ## https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#server ##
+    ######################################################################################################
+    server_name: {{ required "You need to specify a config.server_name for Example synapse.example.com or example.com " .Values.config.server.server_name | quote }}
+    public_baseurl: {{ .Values.config.server.public_baseurl | default (printf "https://%s" (.Values.config.server.public_baseurl | default .Values.config.server.server_name)) | quote }}
+    pid_file: /homeserver.pid
+    {{- if ne .Values.config.server.web_client_location "" }}
+    web_client_location: {{ .Values.config.server.web_client_location }}
+    {{- end }}
+    serve_server_wellknown: {{ .Values.config.server.serve_server_wellknown }}
+    ## Ports ##
+    listeners:
+      - port: 8008
+        tls: false
+        bind_addresses: ["::","0.0.0.0"]
+        type: http
+        x_forwarded: true
+        resources:
+          - names:
+              - client
+              - federation
+            compress: false
+      {{- if .Values.config.metrics.enable_metrics }}
+      - port: 9090
+        tls: false
+        bind_addresses: ["::","0.0.0.0"]
+        type: http
+        resources:
+          - names: [metrics]
+            compress: false
+      {{- end }}
+      - port: 9093
+        tls: false
+        bind_addresses: ["::","0.0.0.0"]
+        type: http
+        resources:
+          - names: [replication]
+            compress: false
+    {{- if .Values.extraListeners }}
+      {{ .Values.extraListeners | toYaml | nindent 6 }}
+    {{- end }}
+    #######################################################################################################
+    ## Logging                                                                                           ##
+    ## https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#logging ##
+    #######################################################################################################
+    log_config: "/synapse/config/log.yaml"
+    ###########################################################################################################
+    ## Media Store                                                                                           ##
+    ## https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#media-store ##
+    ###########################################################################################################
+    enable_media_repo: {{ .Values.config.mediaStore.enable_media_repo }}
+    media_store_path: "/synapse/data/media"
+    uploads_path: "/synapse/data/uploads"
+    #######################################################################################################
+    ## Metrics                                                                                           ##
+    ## https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#metrics ##
+    #######################################################################################################
+    {{- if .Values.config.metrics.enable_metrics }}
+    enable_metrics: {{ .Values.config.metrics.enable_metrics }}
+    {{- end }}
+    report_stats: {{ .Values.config.metrics.report_stats }}
+    {{- if .Values.config.registration.enable_registration }}
+    ############################################################################################################
+    ## Registration                                                                                           ##
+    ## https://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html#registration ##
+    ############################################################################################################
+    enable_registration: {{ .Values.config.registration.enable_registration }}
+    enable_registration_without_verification: {{ .Values.config.registration.enable_registration_without_verification }}
+    {{- end }}
+    ############################################################################################################
+    ## Signing Keys                                                                                           ##
+    ## https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#signing-keys ##
+    ############################################################################################################
+    signing_key_path: "/synapse/keys/signing.key"
+    trusted_key_servers: {{- .Values.config.signingKeys.trusted_key_servers | toYaml | nindent 6 }}
+    suppress_key_server_warning : {{ .Values.config.signingKeys.suppress_key_server_warning}}
+    {{- with .Values.extraConfig }}
+    ##################
+    ## Extra config ##
+    ##################
+    {{ . | toYaml | nindent 4 }}
+    {{- end }}

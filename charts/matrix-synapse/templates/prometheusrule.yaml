@@ -1,0 +1,16 @@
+{{- if and .Values.config.metrics.enable_metrics .Values.config.metrics.prometheusRule.enabled  }}
+{{ $fullName := include "matrix-synapse.fullname" . }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    {{- include "matrix-synapse.labels" . | nindent 4 }}
+    prometheus: prometheus-operator-prometheus
+    role: synapse-rules
+  name: {{ $fullName }}
+spec:
+  groups:
+    - name: {{ $fullName }}
+      rules: {{- toYaml .Values.config.metrics.prometheusRule.rules | nindent 4 }}
+{{- end }}

@@ -1,0 +1,208 @@
+{{- include "matrix-synapse.checkdatabaseenabled" . }}
+{{- $fullName := include "matrix-synapse.fullname" . }}
+{{ $registrationSharedSecret := include "matrix-synapse.registration_shared_secret" . }}
+{{ $macaroonSecretKey := include "matrix-synapse.macaroon_secret_key" . }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "matrix-synapse.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "matrix-synapse.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "matrix-synapse.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "matrix-synapse.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          command:
+            - sh
+            - -c
+            - |
+              cat /synapse/secrets/*.yaml | \
+                sed \
+                    {{- if .Values.config.server.email.enabled }}
+                    -e "s/@@@SMTPHOST@@@/${SYNAPSE_SMTP_HOST:-}/" \
+                    -e "s/@@@SMTPPORT@@@/${SYNAPSE_SMTP_PORT:-}/" \
+                    -e "s/@@@SMTPUSER@@@/${SYNAPSE_SMTP_USER:-}/" \
+                    -e "s/@@@SMTPPASSWORD@@@/${SYNAPSE_SMTP_PASS:-}/" \
+                    {{- end }}
+                    {{- if .Values.externalPostgresql.enabled }}
+                    -e "s/@@@POSTGRESUSER@@@/${SYNAPSE_POSTGRES_USER:-}/" \
+                    -e "s/@@@POSTGRESPASSWORD@@@/${SYNAPSE_POSTGRES_PASSWORD:-}/" \
+                    -e "s/@@@POSTGRESDATABASE@@@/${SYNAPSE_POSTGRES_DATABASE:-}/" \
+                    -e "s/@@@POSTGRESHOST@@@/${SYNAPSE_POSTGRES_HOST:-}/" \
+                    -e "s/@@@POSTGRESPORT@@@/${SYNAPSE_POSTGRES_PORT:-}/" \
+                    {{- end }}
+                    {{- if ne $registrationSharedSecret "false" }}
+                    -e "s/@@@REGISTRATIONSHAREDSECRET@@@/${SYNAPSE_REGISTRATION_SHARED_SECRET:-}/" \
+                    {{- end }}
+                    {{- if ne $macaroonSecretKey "false" }}
+                    -e "s/@@@MACAROONSECRETKEY@@@/${SYNAPSE_MACAROON_SECRET_KEY:-}/" \
+                    {{- end }}
+                       > /synapse/config/conf.d/secrets.yaml
+              {{- if .Values.extraCommands }}
+              {{ range .Values.extraCommands }}
+              {{ . }}
+              {{- end }}
+              {{- end }}
+              exec python -B -m synapse.app.homeserver \
+                          -c /synapse/config/homeserver.yaml \
+                          -c /synapse/config/conf.d/
+          env:
+            ############
+            ### email ##
+            ############
+            {{- if .Values.config.server.email.enabled }}
+            - name: SYNAPSE_SMTP_HOST
+              {{- include "matrix-synapse.smtp_host" . | nindent 14 }}
+            - name: SYNAPSE_SMTP_PORT
+              {{- include "matrix-synapse.smtp_port" . | nindent 14 }}
+            - name: SYNAPSE_SMTP_USER
+              {{- include "matrix-synapse.smtp_user" . | nindent 14 }}
+            - name: SYNAPSE_SMTP_PASS
+              {{- include "matrix-synapse.smtp_pass" . | nindent 14 }}
+            {{- end }}
+            ##############
+            ## Database ##
+            ##############
+            {{- if .Values.externalPostgresql.enabled }}
+            - name: SYNAPSE_POSTGRES_HOST
+              {{- include "matrix-synapse.postgres_host" . | nindent 14 }}
+            - name: SYNAPSE_POSTGRES_PORT
+              {{- include "matrix-synapse.postgres_port" . | nindent 14 }}
+            - name: SYNAPSE_POSTGRES_DATABASE
+              {{- include "matrix-synapse.postgres_database" . | nindent 14 }}
+            - name: SYNAPSE_POSTGRES_USER
+              {{- include "matrix-synapse.postgres_username" . | nindent 14 }}
+            - name: SYNAPSE_POSTGRES_PASSWORD
+              {{- include "matrix-synapse.postgres_password" . | nindent 14 }}
+            {{- end }}
+            ##################
+            ## Registration ##
+            ##################
+            {{- if ne $registrationSharedSecret "false" }}
+            - name: SYNAPSE_REGISTRATION_SHARED_SECRET
+              {{- include "matrix-synapse.registration_shared_secret" . | nindent 14 }}
+            {{- end }}
+            #######################
+            ## API Configuration ##
+            #######################
+            {{- if ne $macaroonSecretKey "false" }}
+            - name: SYNAPSE_MACAROON_SECRET_KEY
+              {{- include "matrix-synapse.macaroon_secret_key" . | nindent 14 }}
+            {{- end }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8008
+              protocol: TCP
+            - name: replication
+              containerPort: 9093
+              protocol: TCP
+            {{- if .Values.config.metrics.enable_metrics }}
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+            {{- end }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /synapse/config/homeserver.yaml
+              subPath: homeserver.yaml
+            - name: secretconfig
+              mountPath: /synapse/secrets
+            - name: mergedconfig
+              mountPath: /synapse/config/conf.d/
+            - name: logconfig
+              mountPath: /synapse/config/log.yaml
+              subPath: log.yaml
+            - name: signingkey
+              mountPath: /synapse/keys/signing.key
+              subPath: signing.key
+            - name: mediastore
+              mountPath: /synapse/data
+            {{- if and .Values.sqlite.enabled (not .Values.externalPostgresql.enabled) }}
+            - name: sqlite
+              mountPath: /synapse/sqlite
+            {{- end }}
+          {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ $fullName }}
+        - name: secretconfig
+          secret:
+            secretName: {{ $fullName }}
+        - name: mergedconfig
+          emptyDir: {}
+        - name: logconfig
+          configMap:
+            name: {{ $fullName }}-log
+        - name: signingkey
+          secret:
+            secretName: {{ .Values.signingkey.existingSecret | default (include "matrix-synapse.signingKeyFullName" .) | quote }}
+            items:
+              - key: {{ .Values.signingkey.existingSecretKey | default "signing.key" | quote }}
+                path: signing.key
+        - name: mediastore
+          {{- if .Values.config.mediaStore.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ $fullName }}-mediastore
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        {{- if and .Values.sqlite.enabled (not .Values.externalPostgresql.enabled) }}
+        - name: sqlite
+          {{- if .Values.sqlite.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ $fullName }}-sqlite
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        {{- end }}
+      {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

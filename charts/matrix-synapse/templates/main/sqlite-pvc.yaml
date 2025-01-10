@@ -1,0 +1,19 @@
+{{ if and .Values.sqlite.enabled (not .Values.externalPostgresql.enabled) }}
+{{ $fullName := include "matrix-synapse.fullname" . }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $fullName }}-sqlite
+  labels:
+    {{- include "matrix-synapse.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.sqlite.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.sqlite.persistence.size }}
+  {{- if ne .Values.sqlite.persistence.storageClassName "" }}
+  storageClassName: "{{ .Values.sqlite.persistence.storageClassName }}"
+  {{- end }}
+{{- end }}

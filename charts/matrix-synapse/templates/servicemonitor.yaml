@@ -1,0 +1,17 @@
+{{- if and .Values.config.metrics.enable_metrics .Values.config.metrics.serviceMonitor.enabled  }}
+{{ $fullName := include "matrix-synapse.fullname" . }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "matrix-synapse.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "matrix-synapse.labels" . | nindent 6 }}
+  endpoints:
+    - port: metrics
+      path: /_synapse/metrics
+  {{- end }}

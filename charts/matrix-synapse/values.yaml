@@ -1,0 +1,410 @@
+# Default values for matrix-synapse.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+#########################
+## @section Synapse Image
+#########################
+# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
+image:
+  ## @param  image.registry Global Docker image registry
+  registry: ghcr.io
+  ## @param image.repository Global Docker registry secret names as an array
+  repository: element-hq/synapse
+  ## @param image.pullPolicy default image pullPolicy
+  # This sets the pull policy for images.
+  pullPolicy: IfNotPresent
+  ## @param image.tag default image tag
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+##########################
+## @section Synapse Config
+##########################
+config:
+  server:
+    ## @param config.server.server_name This sets the public-facing domain of the server e.g. matrix.org or localhost:8080.
+    server_name: ""
+    ## @param config.server.public_baseurl The public-facing base URL that clients use to access this Homeserver (not including _matrix/...). This is the same URL a user might enter into the 'Custom Homeserver URL' field on their client.
+    public_baseurl: ""
+    ## @param config.server.web_client_location The absolute URL to the web client which / will redirect to. Defaults to none.
+    web_client_location: ""
+    ## @param config.server.serve_server_wellknown By default, other servers will try to reach our server on port 8448, which can be inconvenient in some environments.
+    serve_server_wellknown: false
+    email:
+      ## @param config.server.email.enabled Enabled the rendering of the emailconfig
+      enabled: false
+      ## @param config.server.email.smtp_host The hostname of the outgoing SMTP server to use.
+      smtp_host: ""
+      ## @param config.server.email.smtp_port The port on the mail server for outgoing SMTP.
+      smtp_port: ""
+      ## @param config.server.email.smtp_user Username for authentication to the SMTP server
+      smtp_user: ""
+      ## @param config.server.email.smtp_pass password for authentication to the SMTP server
+      smtp_pass: ""
+      existingSecret:
+        ## @param config.server.email.existingSecret.name the name for the SMTP Secret Configuration
+        name: ""
+        keys:
+          ## @param config.server.email.existingSecret.keys.smtp_host The secret key of the smtp_host overrides smtp_host.
+          smtp_host: ""
+          ## @param config.server.email.existingSecret.keys.smtp_port The secret key of the smtp_port overrides smtp_port.
+          smtp_port: ""
+          ## @param config.server.email.existingSecret.keys.smtp_user The secret key of the smtp_user overrides smtp_user.
+          smtp_user: ""
+          ## @param config.server.email.existingSecret.keys.smtp_pass The secret key of the smtp_pass overrides smtp_pass.
+          smtp_pass: ""
+      ## @param config.server.email.force_tls By default, Synapse connects over plain text and then optionally upgrades to TLS via STARTTLS.
+      force_tls: ""
+      ## @param config.server.email.require_transport_security Set to true to require TLS transport security for SMTP.
+      require_transport_security: ""
+      ## @param config.server.email.enable_tls By default, if the server supports TLS, it will be used, and the server must present a certificate that is valid for 'smtp_host'.
+      enable_tls: ""
+      ## @param config.server.email.notif_from defines the "From" address to use when sending emails. It must be set if email sending is enabled.
+      notif_from: ""
+      ## @param config.server.email.enable_notifs Set to true to allow users to receive e-mail notifications.
+      enable_notifs: ""
+      ## @param config.server.email.client_base_url Custom URL for client links within the email notifications.
+      client_base_url: ""
+  mediaStore:
+    ## @param config.mediaStore.enable_media_repo Enable the media store service in the Synapse master. Defaults to true.
+    enable_media_repo: true
+    persistence:
+      ## @param config.mediaStore.persistence.enabled Enable persistence mediaStore, if false refers to emptyDir (not recommendet).
+      enabled: true
+      ## @param config.mediaStore.persistence.size Defines the Size of Peristant volume for Media.
+      size: 2Gi
+      ## @param config.mediaStore.persistence.accessMode Enable persistence for SQLite data.
+      accessMode: ReadWriteOnce
+      ## @param config.mediaStore.persistence.storageClassName If empty uses the default storageClass.
+      storageClassName: ""
+  # ToDo: Implement logic
+  #captcha:
+  #  recaptcha_public_key: ""
+  #  recaptcha_private_key: ""
+  #  existingSecret:
+  #    name: ""
+  #    keys:
+  #      recaptcha_public_key: ""
+  #      recaptcha_private_key: ""
+  metrics:
+    ## @param config.metrics.enable_metrics Set to true to enable collection and rendering of performance metrics. Defaults to false.
+    enable_metrics: false
+    ## @param config.metrics.report_stats Whether or not to report homeserver usage statistics. This is originally set when generating the config.
+    report_stats: "false"
+    serviceMonitor:
+      ## @param config.metrics.serviceMonitor.enabled If the serviceMonitor should be deployed.
+      enabled: false
+    prometheusRule:
+      ## @param config.metrics.prometheusRule.enabled If the PrometheusRule should be deployed.
+      enabled: false
+      ## @param config.metrics.prometheusRule.rules Prometheus Rules to deploy.
+      rules: []
+        # This is just an Example how to create a Rule
+        # - alert: federationSoftFailed
+        #   expr: synapse_federation_soft_failed_events_total < 0
+        #   for: 15m
+        #   labels:
+        #     severity: warning
+        #   annotations:
+        #     summary: ""
+        #     description: "VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+  registration:
+    ## @param config.registration.enable_registration Enable registration for new users. Defaults to false.
+    enable_registration: false
+    ## @param config.registration.enable_registration_without_verification Enable registration without email or captcha verification.
+    enable_registration_without_verification: false
+    ## @param config.registration.registration_shared_secret Enable registration without email or captcha verification.
+    registration_shared_secret: ""
+    existingSecret:
+      ## @param config.registration.existingSecret.name Enable registration without email or captcha verification.
+      name: ""
+      keys:
+        ## @param config.registration.existingSecret.keys.registration_shared_secret Enable registration without email or captcha verification.
+        registration_shared_secret: ""
+  apiConfiguration:
+    ## @param config.apiConfiguration.macaroon_secret_key A secret which is used to sign access token for guest users, short-term login token used during SSO logins (OIDC or SAML2) and token used for unsubscribing from email notifications.
+    macaroon_secret_key: ""
+    existingSecret:
+      ## @param config.apiConfiguration.existingSecret.name
+      name: ""
+      keys:
+        ## @param config.apiConfiguration.existingSecret.keys.macaroon_secret_key
+        macaroon_secret_key: ""
+  signingKeys:
+    ## @param config.signingKeys.trusted_key_servers The trusted servers to download signing keys from.
+    trusted_key_servers: []
+      # - "matrix.org"
+    ## @param config.signingKeys.suppress_key_server_warning Set the following to true to disable the warning that is emitted when the trusted_key_servers include 'matrix.org'.
+    suppress_key_server_warning: false
+## @param extraListeners Configure Extra listeners if needed.
+extraListeners: []
+## @param extraConfig Provide custom Synapse configurations in this section.
+extraConfig: {}
+## @param extraCommands Extra commands to run when starting Synapse
+## - 'apt-get update -yqq && apt-get install patch -yqq'
+## - 'patch -d/usr/local/lib/python3.7/site-packages/synapse -p2 < /synapse/patches/something.patch'
+extraCommands: []
+
+##############################
+## @section Synapse Log Config
+##############################
+logConfig:
+  ## @param logConfig.useStructuredLogging If Synapseshould use structured logging
+  useStructuredLogging: false
+  ## @param logConfig.logLevel The Loglevel of Synapse
+  logLevel: "INFO"
+  ## @param logConfig.extraLoggers Configure extra loggers
+  extraLoggers: {}
+
+########################################
+## @section Synapse Database Configuration
+## Configure the database settings for Synapse.
+## This section includes options for SQLite
+## and external PostgreSQL.
+########################################
+sqlite:
+  ## @param sqlite.enabled Enable SQLite as the database backend.
+  ## Default: false
+  enabled: false
+  persistence:
+    ## @param sqlite.persistence.enabled Enable persistence for SQLite data, if false refers to emptyDir (not recommendet).
+    ## Default: false
+    enabled: true
+    ## @param sqlite.persistence.size Persistent Volume size for SQLite data.
+    ## Default: 5Gi
+    size: 2Gi
+    ## @param sqlite.persistence.accessMode Access mode for the Persistent Volume.
+    ## Default: ReadWriteOnce
+    accessMode: ReadWriteOnce
+    ## @param sqlite.persistence.storageClassName If empty uses the default storageClass.
+    storageClassName: ""
+
+externalPostgresql:
+  ## @param externalPostgresql.enabled Enable external PostgreSQL as the database backend.
+  ## Default: false
+  enabled: false
+  ## @param externalPostgresql.host Hostname of the external PostgreSQL database.
+  ## Default: postgresql.postgresql.svc.cluster.local
+  host: postgresql.postgresql.svc.cluster.local
+  ## @param externalPostgresql.port Port for the external PostgreSQL database.
+  ## Default: 5432
+  port: "5432"
+  ## @param externalPostgresql.database Name of the database to use.
+  ## Default: synapse
+  database: synapse
+  ## @param externalPostgresql.username Username of the database to use.
+  ## Default: synapse
+  username: ""
+  ## @param externalPostgresql.password Password of the database to use.
+  ## Default: synapse
+  password: ""
+  existingSecret:
+    ## @param externalPostgresql.existingSecret.name Name of an existing Kubernetes secret containing database credentials.
+    ## Default: ""
+    name: ""
+    keys:
+      ## @param externalPostgresql.existingSecret.keys.host Key for the host in the existing secret.
+      ## Default: ""
+      host: ""
+      ## @param externalPostgresql.existingSecret.keys.port Key for the port in the existing secret.
+      ## Default: ""
+      port: ""
+      ## @param externalPostgresql.existingSecret.keys.database Key for the port in the existing secret.
+      ## Default: ""
+      database: ""
+      ## @param externalPostgresql.existingSecret.keys.username Key for the username in the existing secret.
+      ## Default: ""
+      username: ""
+      ## @param externalPostgresql.existingSecret.keys.password Key for the password in the existing secret.
+      ## Default: ""
+      password: ""
+
+###################
+## @section General
+###################
+## @param imagePullSecrets Global registry secret names as an array
+## This is for the secretes for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+imagePullSecrets: []
+## @param nameOverride String to partially override common.names.fullname
+# This is to override the chart name.
+nameOverride: ""
+## @param fullnameOverride String to fully override common.names.fullname
+fullnameOverride: ""
+
+# This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
+serviceAccount:
+  ## @param serviceAccount.create Specifies whether a ServiceAccount should be created
+  # Specifies whether a service account should be created
+  create: true
+  ## @param serviceAccount.automount Automount service account token for the server service account
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: false
+  ## @param serviceAccount.annotations Additional custom annotations for the ServiceAccount
+  # Annotations to add to the service account
+  annotations: {}
+  ## @param serviceAccount.name The name of the ServiceAccount to use.
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+## @param podAnnotations Annotations for pods
+# This is for setting Kubernetes Annotations to a Pod.
+# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+podAnnotations: {}
+## @param podLabels Labels for pods
+# This is for setting Kubernetes Labels to a Pod.
+# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+podLabels: {}
+
+podSecurityContext:
+  ## @param podSecurityContext.fsGroup Set pod's Security Context fsGroup
+  fsGroup: 1000
+  ## @param podSecurityContext.runAsGroup Set pod's Security Context runAsGroup
+  runAsGroup: 1000
+  ## @param podSecurityContext.runAsUser Set pod's Security Context runAsUser
+  runAsUser: 1000
+
+securityContext:
+  capabilities:
+    ## @param securityContext.capabilities.drop List of capabilities to be dropped
+    drop:
+      - ALL
+  # readOnlyRootFilesystem: true
+  ## @param securityContext.runAsNonRoot Set containers Security Context runAsNonRoot
+  runAsNonRoot: true
+  ## @param securityContext.runAsUser Set containers Security Context runAsUser
+  runAsUser: 1000
+
+# This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
+service:
+  ## @param service.type Sets the Service Type.
+  # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+  type: ClusterIP
+  # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
+  ## @param service.port Sets the Service port.
+  port: 8008
+
+# This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
+ingress:
+  ## @param ingress.enabled Enable ingress record generation for Keycloak
+  enabled: false
+  ## @param ingress.className IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  className: ""
+  ## @param ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    # nginx.ingress.kubernetes.io/use-regex: "true"
+    # kubernetes.io/tls-acme: "true"
+    # nginx.ingress.kubernetes.io/configuration-snippet: |
+    #   add_header X-Frame-Options "sameorigin";
+    #   add_header X-Content-Type-Options nosniff;
+    #   add_header Referrer-Policy 'same-origin';
+    #   add_header Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()";
+  ## @skip ingress.hosts
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /_matrix/
+          pathType: ImplementationSpecific
+        - path: /_synapse/client/
+          pathType: ImplementationSpecific
+        - path: /.well-known/matrix/
+          pathType: ImplementationSpecific
+        # - path: /_synapse/admin/
+        # - path: /
+        #   pathType: ImplementationSpecific
+  ## @param ingress.tls Enable TLS configuration for the hostname defined at ingress.hostname parameter
+  ## TLS certificates will be retrieved from a TLS secret with name: {{- printf "%s-tls" .Values.ingress.hostname }}
+  ## You can use the ingress.secrets parameter to create this TLS secret or relay on cert-manager to create it
+  ## e.g:
+  tls: []
+  #  - secretName: tls-synapse-general
+  #    hosts:
+  #      - chart-example.local
+
+## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads) 	{}
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+## @skip livenessProbe
+# This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  failureThreshold: 3
+## @skip readinessProbe
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  failureThreshold: 3
+
+## @skip autoscaling
+# This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+## @skip volumes
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+## @skip volumeMounts
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+## @skip nodeSelector
+nodeSelector: {}
+## @skip tolerations
+tolerations: []
+## @skip affinity
+affinity: {}
+
+###############################################################
+## @section Synapse signing Key config
+## The source of the signing key used by Synapse in federation.
+###############################################################
+signingkey:
+  job:
+    ## @param signingkey.job.enabled Enables the signinkeyjob to create a SigningKey if nor exists
+    enabled: false
+    storeSecretImage:
+      ## @param signingkey.job.storeSecretImage.registry The Kubectl Image Registry to for storing the singinKey
+      registry: docker.io
+      ## @param signingkey.job.storeSecretImage.repository The Kubectl Image Rposiory to for storing the singinKey
+      ## Chainguard image does not work, cause of missing sh
+      repository: bitnami/kubectl
+      ## @param signingkey.job.storeSecretImage.tag The Kubectl Image Tag to for storing the singinKey
+      tag: latest
+      ## @param signingkey.job.storeSecretImage.pullPolicy The Kubectl Image pullPolicy
+      pullPolicy: IfNotPresent
+  ## @param signingkey.existingSecret The Secret of the SinginKey if Exists
+  existingSecret: ""
+  ## @param signingkey.existingSecretKey The Secret Key of the SinginKey where the key is stored
+  existingSecretKey: ""
+  ## @param signingkey.resources Resources of the SigningKeyJob Containers
+  resources: {}

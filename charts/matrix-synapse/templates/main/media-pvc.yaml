@@ -1,0 +1,19 @@
+{{- if .Values.config.mediaStore.persistence.enabled }}
+{{ $fullName := include "matrix-synapse.fullname" . }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $fullName }}-mediastore
+  labels:
+    {{- include "matrix-synapse.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.config.mediaStore.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.config.mediaStore.persistence.size }}
+  {{- if ne .Values.config.mediaStore.persistence.storageClassName "" }}
+  storageClassName: "{{ .Values.config.mediaStore.persistence.storageClassName }}"
+  {{- end }}
+{{- end }}
