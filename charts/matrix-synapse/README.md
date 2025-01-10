@@ -99,12 +99,15 @@ externalPostgresql:
 ```
 
 ## Create first User
-
+After deploying your Chart you may want to create the first USer/Admin, for theat check the containers in your Release Namespace:
+```shell
+kubectl get pods -n synapse
+```
 Exec into the Container
 ```shell
-kubectl exec -ti synapse-test-matrix-synapse-6bf9c79fd5-kqggb -n synapse-test -- /bin/bash
+kubectl exec -n synapse -ti matrix-synapse-* -- /bin/bash
 ```
-Register you first user.
+Register you first user when you are logged in to your container.
 ```shell
 register_new_matrix_user http://localhost:8008 -c /synapse/config/homeserver.yaml -c /synapse/config/conf.d/secrets.yaml 
 ```
