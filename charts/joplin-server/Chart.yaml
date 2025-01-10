@@ -11,7 +11,7 @@ maintainers:
 
 type: application
 # ChartVersion
-version: "0.2.8"
+version: "0.2.9"
 # AppVersion
 appVersion: "2.14.1-beta"
 

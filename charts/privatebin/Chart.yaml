@@ -8,7 +8,7 @@ keywords:
   - pastebin
   - self-destroy
 type: application
-version: 0.1.5
+version: 0.1.6
 appVersion: "1.6.0"
 maintainers:
   - name: 0hlov3
