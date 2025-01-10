@@ -17,6 +17,7 @@ maintainers:
   - name: 0hlov3
     email: dev@privatetrace.io
     url: https://schoenwald.aero
+
 # Sources for the application, such as repositories or documentation.
 sources:
   - https://github.com/element-hq/synapse
