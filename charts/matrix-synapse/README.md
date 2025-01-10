@@ -25,13 +25,13 @@ Installation
 
 ## 1. Add the Helm Repository
 ```shell
-helm repo add 0hlov3 https://schoenwald.aero
-helm repo update
+helm repo add schoenwald https://charts.schoenwald.aero
+helm repo update schoenwald
 
 ```
 ## 2. Install the Chart
 ```shell
-helm install synapse 0hlov3/matrix-synapse --namespace synapse --create-namespace
+helm install matrix-synapse schoenwald/matrix-synapse --namespace synapse --create-namespace
 ```
 ## 3. Provide Custom Values
 Create a values.yaml file to override default values:
@@ -44,10 +44,13 @@ sqlite:
   enabled: true
 externalPostgresql:
   enabled: false
+signingkey:
+  job:
+    enabled: true
 ```
 Install the chart using the custom values:
 ```shell
-helm install synapse 0hlov3/matrix-synapse -f values.yaml
+helm install matrix-synapse 0hlov3/matrix-synapse -f values.yaml
 ```
 
 ## Configuration
@@ -96,13 +99,29 @@ externalPostgresql:
 ```
 
 ## Create first User
+
 Exec into the Container
 ```shell
-k exec -ti synapse-test-matrix-synapse-6bf9c79fd5-kqggb -n synapse-test -- /bin/bash
+kubectl exec -ti synapse-test-matrix-synapse-6bf9c79fd5-kqggb -n synapse-test -- /bin/bash
 ```
 Register you first user.
 ```shell
 register_new_matrix_user http://localhost:8008 -c /synapse/config/homeserver.yaml -c /synapse/config/conf.d/secrets.yaml 
+```
+
+## ArgoCD
+When you are using Argocd it you may should set
+```yaml
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: signingkey-matrix-synapse
+      jsonPointers:
+        - /data
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true
 ```
 
 ## Parameters
