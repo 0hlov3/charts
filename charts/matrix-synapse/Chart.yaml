@@ -6,7 +6,7 @@ home: https://github.com/element-hq/synapse
 type: application
 
 # Chart version should follow semantic versioning: https://semver.org/
-version: 1.0.6
+version: 1.0.7
 
 # Application version reflects the specific release of the application.
 # Use quotes to preserve formatting.
@@ -37,3 +37,4 @@ dependencies:
   - name: dragonfly
     version: "v1.26.0"
     repository: "oci://ghcr.io/dragonflydb/dragonfly/helm"
+    condition: dragonfly.enabled
