@@ -20,9 +20,9 @@ kubectl create secret generic gts-postgresql-secret \
 ```
 ### Deploy Helm Chart
 ```shell
-helm repo add fsociety https://charts.fsociety.social
-helm repo update
-helm upgrade --install gotosocial fsociety/gotosocial \
+helm repo add schoenwald https://charts.schoenwald.aero
+helm repo update schoenwald
+helm upgrade --install gotosocial schoenwald/gotosocial \
   --namespace gotosocial --create-namespace \
   --set gotosocial.config.host='domain.tld' \
   --set gotosocial.config.accountDomain='domain.tld'

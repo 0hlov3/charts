@@ -2,13 +2,13 @@
 
 ## Add the Chart
 ```shell
-helm repo add fsociety https://charts.fsociety.social
-helm repo update fsociety
+helm repo add schoenwald https://charts.schoenwald.aero
+helm repo update schoenwald
 ```
 
 ## Show version
 ```shell
-helm search repo fsociety/joplin-server
+helm search repo schoenwald/joplin-server
 ```
 
 ## Create Namespace
@@ -30,5 +30,5 @@ k create secret generic joplin-mailer \
 
 ### Deploy
 ```shell
-helm upgrade --install joplin fsociety/joplin-server --namespace joplin --create-namespace
+helm upgrade --install joplin schoenwald/joplin-server --namespace joplin --create-namespace
 ```

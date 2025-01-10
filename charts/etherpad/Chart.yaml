@@ -25,9 +25,9 @@ version: 0.1.7
 appVersion: "2.1.0"
 
 maintainers:
-  - name: fSocietySocial
-    email: dev@fsociety.social
-    url: https://fsociety.social
+  - name: 0hlov3
+    email: dev@privatetrace.io
+    url: https://schoenwald.aero
 
 dependencies:
   - name: postgresql

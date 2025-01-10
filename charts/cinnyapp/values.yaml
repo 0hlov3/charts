@@ -12,7 +12,7 @@ image:
 config:
   override: false
   homeserverList:
-    - matrix.fsociety.social
+    - matrix.privatetrace.io
     - converser.eu
     - envs.net
     - halogen.city

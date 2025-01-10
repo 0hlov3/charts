@@ -27,9 +27,9 @@ version: 0.4.3
 appVersion: "v1.11.89"
 
 maintainers:
-  - name: fSocietySocial
-    email: dev@fsociety.social
-    url: https://fsociety.social
+  - name: 0hlov3
+    email: dev@privatetrace.io
+    url: https://schoenwald.aero
 
 annotations:
   artifacthub.io/alternativeName: element

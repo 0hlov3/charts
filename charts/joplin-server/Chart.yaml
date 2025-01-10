@@ -5,9 +5,9 @@ home: https://github.com/laurent22/joplin
 icon: https://raw.githubusercontent.com/laurent22/joplin/dev/Assets/LinuxIcons/256x256.png
 
 maintainers:
-  - name: fSocietySocial
-    email: dev@fsociety.social
-    url: https://fsociety.social
+  - name: 0hlov3
+    email: dev@privatetrace.io
+    url: https://schoenwald.aero
 
 type: application
 # ChartVersion
