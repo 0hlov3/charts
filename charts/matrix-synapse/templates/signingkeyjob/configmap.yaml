@@ -6,6 +6,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ $name }}-scripts
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
   labels:
     {{- include "matrix-synapse.signingKeylabels" . | nindent 4 }}
 data:

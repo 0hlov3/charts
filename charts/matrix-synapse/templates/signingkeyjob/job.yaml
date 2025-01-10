@@ -6,6 +6,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ $name }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
   labels:
     {{- include "matrix-synapse.signingKeylabels" . | nindent 4 }}
 spec:

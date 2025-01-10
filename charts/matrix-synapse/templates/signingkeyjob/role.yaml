@@ -6,6 +6,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: {{ $name }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
   labels:
     {{- include "matrix-synapse.signingKeylabels" . | nindent 4 }}
 rules:
