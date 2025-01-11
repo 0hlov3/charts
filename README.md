@@ -2,7 +2,7 @@
 [![pages-build-deployment](https://github.com/0hlov3/charts/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/0hlov3/charts/actions/workflows/pages/pages-build-deployment)
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/schoenwald)](https://artifacthub.io/packages/search?repo=schoenwald)
 
-# Schoenwald Helm Charts
+# 0hlov3s Helm Charts
 
 Effortlessly deploy your favorite applications with Helm! This repository contains a collection of Helm charts for various applications and personal use, ranging from favorites to experimental setups. Whether you’re just starting out or are a seasoned Helm user, maybe there's something here for you.
 
