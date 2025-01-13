@@ -8,12 +8,9 @@ keywords:
   - pastebin
   - self-destroy
 type: application
-version: 0.1.6
+version: 0.1.7
 appVersion: "1.6.0"
 maintainers:
   - name: 0hlov3
     email: dev@privatetrace.io
     url: https://schoenwald.aero
-annotations:
-  artifacthub.io/category: pasetbin
-  artifacthub.io/containsSecurityUpdates: false
