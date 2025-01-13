@@ -2190,6 +2190,27 @@ entries:
     - https://github.com/fSocietySocial/charts/releases/download/matrix-synapse-0.1.1/matrix-synapse-0.1.1.tgz
     version: 0.1.1
   privatebin:
+  - apiVersion: v2
+    appVersion: 1.6.0
+    created: "2025-01-13T10:02:12.466861813Z"
+    description: PrivateBin is a minimalist, open source online pastebin where the
+      server has zero knowledge of pasted data.
+    digest: 004fb26f193897a4026d7ab2b3e1767743f14323cb4ede89b44846c415993ff3
+    home: https://github.com/PrivateBin/PrivateBin
+    icon: https://privatebin.info/img/logo.png
+    keywords:
+    - paste
+    - pastebin
+    - self-destroy
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: privatebin
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/privatebin-0.1.7/privatebin-0.1.7.tgz
+    version: 0.1.7
   - annotations:
       artifacthub.io/category: pasetbin
       artifacthub.io/containsSecurityUpdates: "false"
@@ -2759,4 +2780,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-10T16:05:16.460793642Z"
+generated: "2025-01-13T10:02:12.467374009Z"
