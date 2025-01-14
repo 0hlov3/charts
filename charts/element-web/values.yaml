@@ -25,6 +25,8 @@ defaultServer:
 ##
 config: {}
 
+env:
+  ELEMENT_WEB_PORT: 8080
 ## Configuration for mounting additional volumes into the application container.
 ##
 extraVolumes: {}
@@ -53,16 +55,16 @@ serviceAccount:
 
 podAnnotations: {}
 
-podSecurityContext: {}
-  # fsGroup: 2000
+podSecurityContext:
+  fsGroup: 1000
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  runAsNonRoot: true
+  runAsUser: 1000
   # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
 
 ## Service configuration.
 ##
