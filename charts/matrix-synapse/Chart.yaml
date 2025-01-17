@@ -35,6 +35,6 @@ keywords:
 # Dependencies required for this chart to work. Semantic version ranges allow flexibility.
 dependencies:
   - name: dragonfly
-    version: "v1.26.0"
+    version: "v1.26.1"
     repository: "oci://ghcr.io/dragonflydb/dragonfly/helm"
     condition: dragonfly.enabled
