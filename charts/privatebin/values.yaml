@@ -2,28 +2,47 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+## @skip replicaCount
 replicaCount: 1
 
+## @section PrivateBin parameters
 image:
+  ## @param image.registry PrivateBin image registry
   registry: docker.io
+  ## @param image.repository PrivateBin image repository
   repository: privatebin/nginx-fpm-alpine
+  ## @param image.pullPolicy PrivateBin image pullPolicy
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
+  ## @param image.tag PrivateBin image tag (immutable tags are recommended)
   tag: ""
 
+## @section PrivateBin config parameters
 config:
   # The following values are used to configure the privatebin container
+  ## @param config.name (optional) set a project name to be displayed on the website
   name: "PrivateBin"
+  ## @param config.basepath The full URL, with the domain name and directories that point to the PrivateBin files, including an ending slash (/). This URL is essential to allow Opengraph images to be displayed on social networks.
   basepath: "https://privatebin.example.com/"
+  ## @param config.discussion enable or disable the discussion feature, defaults to true
   discussion: true
+  ## @param config.opendiscussion preselect the discussion feature, defaults to false
   opendiscussion: false
+  ## @param config.password enable or disable the password feature, defaults to true
   password: true
+  ## @param config.fileupload enable or disable the file upload feature, defaults to false
   fileupload: false
+  ## @param config.burnafterreadingselected preselect the burn-after-reading feature, defaults to false
   burnafterreadingselected: false
+  ## @param config.defaultformatter which display mode to preselect by default, defaults to "plaintext"
   defaultformatter: plaintext
+  ## @param config.syntaxhighlightingtheme (optional) set a syntax highlighting theme, as found in css/prettify/
   syntaxhighlightingtheme: sons-of-obsidian
+  ## @param config.sizelimit size limit per paste or comment in bytes, defaults to 10 Mebibytes
   sizelimit: 10485760
+  ## @param config.template template to include, default is "bootstrap" (tpl/bootstrap.php), also available are "page" (tpl/page.php), the classic ZeroBin style and several bootstrap variants: "bootstrap-dark", "bootstrap-compact", "bootstrap-page", which can be combined with "-dark" and "-compact" for "bootstrap-dark-page" and finally "bootstrap-compact-page" - previews at: https://privatebin.info/screenshots.html
   template: bootstrap
+  ## @param config.languageselection by default PrivateBin will guess the visitors language based on the browsers settings. Optionally you can enable the language selection menu, which uses a session cookie to store the choice until the browser is closed.
   languageselection: false
   # languagedefault: en
   # urlshortener: "https://shortener.example.com/api?link="
@@ -35,65 +54,97 @@ config:
   # httpwarning: true
   # compression: "zlib"
   expire:
+    ## @param config.expire.default expire value that is selected per default
     default: "1week"
   formatter_options:
+    ## @param config.formatter_options.plaintext Set available formatters, their order and their labels
     plaintext: "Plain Text"
+    ## @param config.formatter_options.syntaxhighlighting Set available formatters, their order and their labels
     syntaxhighlighting: "Source Code"
+    ## @param config.formatter_options.markdown Set available formatters, their order and their labels
     markdown: "Markdown"
   traffic:
+    ## @param config.traffic.limit time limit between calls from the same IP address in seconds Set this to 0 to disable rate limiting.
     limit: 10
+    ## @param config.traffic.exempted (optional) Set IPs addresses (v4 or v6) or subnets (CIDR) which are exempted from the rate-limit. Invalid IPs will be ignored. If multiple values are to  be exempted, the list needs to be comma separated. Leave unset to disable 
     exempted: "172,10.10.10/24"
 
 persistence:
+  ## @param persistence.enabled Enable persistence using a PersistentVolumeClaim
   enabled: false
+  ## @param persistence.capacity Persistent Volume Size
   capacity: 1Gi
   # storageclassname: default
 
+## @section Additional Config
+
+## @param imagePullSecrets image pull secrets
 imagePullSecrets: []
+## @param nameOverride String to partially override common.names.fullname
 nameOverride: ""
+## @param fullnameOverride String to fully override common.names.fullname
 fullnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
+  ## @param serviceAccount.create whether a service account should be created
   create: true
   # Annotations to add to the service account
+  ## @param serviceAccount.annotations Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
+  ## @param serviceAccount.name The name of the service account to use, if not set and create is true, a name is generated using the fullname template
   name: ""
 
+## @param podAnnotations Pod annotations
 podAnnotations: {}
 
 podSecurityContext:
+  ## @param podSecurityContext.fsGroup Security Context fsGroup
   fsGroup: 82
 
 securityContext:
+  ## @param securityContext.runAsNonRoot Set Controller container's Security Context runAsNonRoot
   runAsNonRoot: true
+  ## @param securityContext.runAsUser Security Context runAsUser
   runAsUser: 65534
-  runAsGroup: 82
+  ## @param securityContext.runAsGroup Security Context runAsGroup
+  runAsGroup: 82i
+  ## @param securityContext.readOnlyRootFilesystem Set primary container's Security Context readOnlyRootFilesystem
   readOnlyRootFilesystem: true
 
 service:
+  ## @param service.type service type
   type: ClusterIP
+  ## @param service.port service port
   port: 8080
 
 ingress:
+  ## @param ingress.enabled Enable ingress record generation
   enabled: false
+  ## @param ingress.className IngressClass that will be used to implement the Ingress
   className: ""
+  ## @param ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
   annotations: {}
     # cert-manager.io/cluster-issuer: letsencrypt-prod
     # kubernetes.io/tls-acme: "true"
     # kubernetes.io/ingress.class: nginx
+  # ingress.hosts An array with additional arbitrary host and paths that may need to be added to the ingress under the main host
   hosts:
+    ## @skip  ingress.hosts[0]
     - host: chart-example.local
       paths:
         - path: /
           pathType: ImplementationSpecific
+  ## @param ingress.tls TLS configuration
   tls: []
   #  - secretName: tls-privatebin-general
   #    hosts:
   #      - chart-example.local
 
+
+## @skip resources
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -106,6 +157,7 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+## @skip autoscaling
 autoscaling:
   enabled: false
   minReplicas: 1
@@ -113,8 +165,9 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
+## @skip nodeSelector
 nodeSelector: {}
-
+## @param tolerations Tolerations for pod assignment
 tolerations: []
-
+## @param affinity Affinity for pod assignment
 affinity: {}
