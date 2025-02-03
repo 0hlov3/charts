@@ -1,3 +1,37 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json"
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Update Docker images in Helm values.yaml and Chart.yaml",
+  "regexManagers": [
+    {
+      "description": "Update Docker image references in Chart.yaml",
+      "fileMatch": ["^charts/.*/Chart\\.yaml$"],
+      "matchStrings": [
+        "appVersion:\\s*'?(?<currentValue>[^']+)'?"
+      ],
+      "depNameTemplate": "{{parentDir}}",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "description": "Update multiple Docker images in values.yaml",
+      "fileMatch": ["^charts/.*/values\\.yaml$"],
+      "matchStrings": [
+        "image:\\s*\\n\\s*repository:\\s*(?<depName>[^\\s]+)\\n\\s*tag:\\s*(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Use semantic commits for Docker updates",
+      "matchManagers": ["regex"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps"
+    },
+    {
+      "description": "Require approval for major updates",
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true,
+      "automerge": false
+    }
+  ]
 }
