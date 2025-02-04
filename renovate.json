@@ -13,7 +13,7 @@
         "appVersion:\\s*['\"]?(?<currentValue>[^'\"]+)['\"]?"
       ],
       "depNameTemplate": "{{parentDir}}",
-      "datasourceTemplate": "docker"
+      "datasourceTemplate": "helm-values"
     }
   ],
   "packageRules": [
