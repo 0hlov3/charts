@@ -7,43 +7,25 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Extract appVersion from Chart.yaml",
-      "fileMatch": [
-        "^charts/.*/Chart\\.yaml$"
-      ],
+      "description": "Update appVersion in Chart.yaml based on Docker image version",
+      "fileMatch": ["^charts/.*/Chart\\.yaml$"],
       "matchStrings": [
-        "appVersion:\\s*'?(?<currentValue>[^']+)'?"
+        "appVersion:\\s*['\"]?(?<currentValue>[^'\"]+)['\"]?"
       ],
       "depNameTemplate": "{{parentDir}}",
-      "datasourceTemplate": "docker"
-    },
-    {
-      "customType": "regex",
-      "description": "Find first Docker image in values.yaml",
-      "fileMatch": [
-        "^charts/.*/values\\.yaml$"
-      ],
-      "matchStrings": [
-        "image:\\s*\\n\\s*registry:\\s*['\"]?(?<registry>[^'\"]*)['\"]?\\s*\\n\\s*repository:\\s*['\"]?(?<depName>[^'\"]+)['\"]?"
-      ],
-      "currentValueTemplate": "{{ lookup 'Chart.yaml' 'appVersion' }}",
       "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
     {
       "description": "Use semantic commits for Docker updates",
-      "matchManagers": [
-        "custom.regex"
-      ],
+      "matchManagers": ["custom.regex"],
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps"
     },
     {
       "description": "Require approval for major updates",
-      "matchUpdateTypes": [
-        "major"
-      ],
+      "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true,
       "automerge": false
     }
