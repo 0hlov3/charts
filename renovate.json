@@ -1,13 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "Update Docker images in Helm values.yaml and Chart.yaml",
+  "extends": [
+    "local>renovatebot/.github"
+  ],
+  "assignees": ["0hlov3"],
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Update Docker image references in Chart.yaml",
-      "fileMatch": [
-        "^charts/.*/Chart\\.yaml$"
-      ],
+      "description": "Extract appVersion from Chart.yaml for Docker image",
+      "fileMatch": ["^charts/.*/Chart\\.yaml$"],
       "matchStrings": [
         "appVersion:\\s*'?(?<currentValue>[^']+)'?"
       ],
@@ -16,31 +18,25 @@
     },
     {
       "customType": "regex",
-      "description": "Update multiple Docker images in values.yaml",
-      "fileMatch": [
-        "^charts/.*/values\\.yaml$"
-      ],
+      "description": "Extract first Docker image from values.yaml",
+      "fileMatch": ["^charts/.*/values\\.yaml$"],
       "matchStrings": [
-        "image:\\s*\\n\\s*repository:\\s*['\"]?(?<depName>[^'\"\\s]+)['\"]?\\s*\\n\\s*tag:\\s*['\"]?(?<currentValue>[^'\"\\s]+)['\"]?",
-        "image:\\s*\\n\\s*repository:\\s*(?<depName>[^\\s]+)\\n\\s*tag:\\s*(?<currentValue>[^\\s]+)"
+        "image:\\s*\\n\\s*registry:\\s*['\"]?(?<registry>[^'\"]*)['\"]?\\s*\\n\\s*repository:\\s*['\"]?(?<depName>[^'\"]+)['\"]?"
       ],
+      "currentValueTemplate": "{{ lookup 'Chart.yaml' 'appVersion' }}",
       "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
     {
       "description": "Use semantic commits for Docker updates",
-      "matchManagers": [
-        "custom.regex"
-      ],
+      "matchManagers": ["regex", "custom"],
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps"
     },
     {
       "description": "Require approval for major updates",
-      "matchUpdateTypes": [
-        "major"
-      ],
+      "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true,
       "automerge": false
     }
