@@ -1,14 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "Update Docker images in Helm values.yaml and Chart.yaml",
-  "extends": [
-    "local>renovatebot/.github"
-  ],
   "assignees": ["0hlov3"],
-  "customManagers": [
+  "regexManagers": [
     {
-      "customType": "regex",
-      "description": "Extract appVersion from Chart.yaml for Docker image",
+      "description": "Extract appVersion from Chart.yaml",
       "fileMatch": ["^charts/.*/Chart\\.yaml$"],
       "matchStrings": [
         "appVersion:\\s*'?(?<currentValue>[^']+)'?"
@@ -17,8 +13,7 @@
       "datasourceTemplate": "docker"
     },
     {
-      "customType": "regex",
-      "description": "Extract first Docker image from values.yaml",
+      "description": "Find first Docker image in values.yaml",
       "fileMatch": ["^charts/.*/values\\.yaml$"],
       "matchStrings": [
         "image:\\s*\\n\\s*registry:\\s*['\"]?(?<registry>[^'\"]*)['\"]?\\s*\\n\\s*repository:\\s*['\"]?(?<depName>[^'\"]+)['\"]?"
@@ -30,7 +25,7 @@
   "packageRules": [
     {
       "description": "Use semantic commits for Docker updates",
-      "matchManagers": ["regex", "custom"],
+      "matchManagers": ["regex"],
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps"
     },
