@@ -3,7 +3,7 @@
   "description": "Update Docker images in Helm values.yaml and Chart.yaml",
   "regexManagers": [
     {
-      "description": "Extract appVersion from Chart.yaml",
+      "description": "Update Docker image references in Chart.yaml",
       "fileMatch": ["^charts/.*/Chart\\.yaml$"],
       "matchStrings": [
         "appVersion:\\s*'?(?<currentValue>[^']+)'?"
@@ -12,12 +12,12 @@
       "datasourceTemplate": "docker"
     },
     {
-      "description": "Find first Docker image in values.yaml (without tag)",
+      "description": "Update multiple Docker images in values.yaml",
       "fileMatch": ["^charts/.*/values\\.yaml$"],
       "matchStrings": [
-        "image:\\s*\\n\\s*registry:\\s*['\"]?(?<registry>[^'\"]*)['\"]?\\s*\\n\\s*repository:\\s*['\"]?(?<depName>[^'\"]+)['\"]?"
+        "image:\\s*\\n\\s*repository:\\s*['\"]?(?<depName>[^'\"\\s]+)['\"]?\\s*\\n\\s*tag:\\s*['\"]?(?<currentValue>[^'\"\\s]+)['\"]?",
+        "image:\\s*\\n\\s*repository:\\s*(?<depName>[^\\s]+)\\n\\s*tag:\\s*(?<currentValue>[^\\s]+)"
       ],
-      "versioningTemplate": "{{lookup 'Chart.yaml' 'appVersion'}}",
       "datasourceTemplate": "docker"
     }
   ],
