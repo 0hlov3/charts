@@ -1934,6 +1934,26 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/joplin-server-0.1.7/joplin-server-0.1.7.tgz
     version: 0.1.7
+  linkwarden:
+  - apiVersion: v2
+    appVersion: v2.9.3
+    created: "2025-02-11T14:57:20.903720698Z"
+    description: A Helm chart for Kubernetes
+    digest: 118e256d3df669cd99b0c6040b6c50e1024165e2933a0ac31d41e8dd85260ee6
+    home: https://github.com/linkwarden/linkwarden
+    icon: https://docs.linkwarden.app/img/logo.png
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: linkwarden
+    sources:
+    - https://github.com/linkwarden/linkwarden
+    - https://docs.linkwarden.app/
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/linkwarden-0.1.0/linkwarden-0.1.0.tgz
+    version: 0.1.0
   matrix-synapse:
   - apiVersion: v2
     appVersion: v1.121.1
@@ -2838,4 +2858,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2025-02-02T22:13:20.119707635Z"
+generated: "2025-02-11T14:57:21.280623119Z"
