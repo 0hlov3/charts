@@ -110,16 +110,16 @@ externalPostgresql:
 ## @section Traffic Exposure Parameters
 # This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
 service:
-  ## @param service.type GoToSocial Service type
+  ## @param service.type Service type
   # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
   type: ClusterIP
-  ## @param service.port GoToSocial service port
+  ## @param service.port service port
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
   port: 80
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
-  ## @param ingress.enabled Enable ingress record generation for GoToSocial
+  ## @param ingress.enabled Enable ingress record generation for 
   enabled: false
   ## @param ingress.className IngressClass that will be used to implement the Ingress
   className: ""

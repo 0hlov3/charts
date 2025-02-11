@@ -50,9 +50,9 @@
 
 | Name                  | Description                                                                                                                      | Value       |
 | --------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `service.type`        | GoToSocial Service type                                                                                                          | `ClusterIP` |
-| `service.port`        | GoToSocial service port                                                                                                          | `80`        |
-| `ingress.enabled`     | Enable ingress record generation for GoToSocial                                                                                  | `false`     |
+| `service.type`        | Service type                                                                                                                     | `ClusterIP` |
+| `service.port`        | service port                                                                                                                     | `80`        |
+| `ingress.enabled`     | Enable ingress record generation for                                                                                             | `false`     |
 | `ingress.className`   | IngressClass that will be used to implement the Ingress                                                                          | `""`        |
 | `ingress.annotations` | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. | `{}`        |
 | `ingress.tls`         | TLS configuration                                                                                                                | `[]`        |
