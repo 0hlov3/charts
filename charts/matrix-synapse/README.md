@@ -263,3 +263,34 @@ When you are using Argocd it you may should set
 | `signingkey.existingSecret`                  | The Secret of the SinginKey if Exists                         | `""`              |
 | `signingkey.existingSecretKey`               | The Secret Key of the SinginKey where the key is stored       | `""`              |
 | `signingkey.resources`                       | Resources of the SigningKeyJob Containers                     | `{}`              |
+
+## OIDC
+
+```yaml
+            - name: OIDC_CLIENT_ID_{{ .idp_id | upper }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .secretName }}
+                  key: `clientId`
+            - name: OIDC_CLIENT_SECRET_{{ .idp_id | upper }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .secretName }}
+                  key: clientSecret
+```
+```shell
+/_synapse/client/oidc/callbac
+```
+
+```yaml
+  ## @param config.oidc_providers_enabled Enables an OIDC Providor config
+  oidc_providers_enabled: true
+  ## @param config.oidc_providers Configures an OIDC Providor
+  oidc_providers:
+    - idp_id: zitadel
+      idp_name: zitadel
+      discover: true
+      issuer: "https://auth.privatetrace.io/"
+      existingSecretName: "zitadel-secret"
+      extra_oidc_provider_config: {}
+```

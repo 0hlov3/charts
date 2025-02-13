@@ -140,11 +140,20 @@ config:
   oidc_providers_enabled: false
   ## @param config.oidc_providers Configures an OIDC Providor
   oidc_providers: []
-    # - idp_id: lemonldap
-    #   idp_name: lemonldap
+    # - idp_id: zitadel
+    #   idp_name: zitadel
     #   discover: true
-    #   issuer: "https://auth.example.org/"
-    #   existingSecretName: "lemonldap"
+    #   issuer: "https://auth.zitadel.io/"
+    #   scopes:
+    #     - "openid"
+    #     - "profile"
+    #     - "email"
+    #   allow_existing_users: "true"
+    #   user_mapping_provider:
+    #     config:
+    #       localpart_template: "{{ user.preferred_username }}"
+    #       display_name_template: "{{ user.preferred_username }}"
+    #   existingSecretName: "zitadel-secret"
     #   extra_oidc_provider_config: {}
 ## @param extraListeners Configure Extra listeners if needed.
 extraListeners: []

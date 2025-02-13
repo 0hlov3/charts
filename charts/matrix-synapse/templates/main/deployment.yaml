@@ -132,12 +132,12 @@ spec:
             - name: OIDC_CLIENT_ID_{{ .idp_id | upper }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .secretName }}
+                  name: {{ .existingSecretName }}
                   key: clientId
             - name: OIDC_CLIENT_SECRET_{{ .idp_id | upper }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .secretName }}
+                  name: {{ .existingSecretName }}
                   key: clientSecret
             {{- end }}
             {{- end }}
