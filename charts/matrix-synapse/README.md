@@ -264,24 +264,24 @@ When you are using Argocd it you may should set
 | `signingkey.existingSecretKey`               | The Secret Key of the SinginKey where the key is stored       | `""`              |
 | `signingkey.resources`                       | Resources of the SigningKeyJob Containers                     | `{}`              |
 
-## OIDC
+## Synapse OIDC Config
+This Helm chart supports configuring OpenID Connect (OIDC) providers for authentication in a Synapse server. This allows users to log in using identity providers such as Zitadel, Keycloak, or any other OIDC-compliant provider.
 
-```yaml
-            - name: OIDC_CLIENT_ID_{{ .idp_id | upper }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .secretName }}
-                  key: `clientId`
-            - name: OIDC_CLIENT_SECRET_{{ .idp_id | upper }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .secretName }}
-                  key: clientSecret
-```
+### Prerequisites
+Before enabling OIDC authentication, ensure the following:
+
+- You have a running Synapse instance deployed using Helm.
+- Your OIDC provider (e.g., Zitadel, Keycloak) is properly configured.
+- A Kubernetes Secret exists to securely store the client_id and client_secret for OIDC authentication.
+
+### 1. Create a Kubernetes Secret
+Since OIDC providers require client credentials, create a Kubernetes Secret to store them securely:
 ```shell
-/_synapse/client/oidc/callbac
+kubectl create secret generic oauth-provider1-secret  --from-literal clientId="my_cliend_id" --from-literal clientSecret="my-client-secret"
 ```
+Replace `"my_client_id"` and `"my_client_secret"` with your actual OIDC credentials.
 
+### Explanation of Configuration Fields
 ```yaml
   ## @param config.oidc_providers_enabled Enables an OIDC Providor config
   oidc_providers_enabled: true
@@ -290,7 +290,19 @@ When you are using Argocd it you may should set
     - idp_id: zitadel
       idp_name: zitadel
       discover: true
-      issuer: "https://auth.privatetrace.io/"
-      existingSecretName: "zitadel-secret"
+      issuer: "https://auth.my_auth.io/"
+      existingSecretName: "oauth-provider1-secret"
       extra_oidc_provider_config: {}
 ```
+### OIDC Callback URL
+Once deployed, you need to configure your OIDC provider (e.g., Zitadel, Keycloak) to allow authentication callbacks from Synapse.
+
+Use the following callback URL format:
+```shell
+https://<your-synapse-domain>/_synapse/client/oidc/callback
+```
+For example:
+```shell
+https://auth.my-dynspdr.com/_synapse/client/oidc/callback
+```
+Make sure to update the redirect URIs in your OIDC provider’s settings to match this format.
