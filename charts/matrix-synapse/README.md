@@ -323,6 +323,6 @@ https://<your-synapse-domain>/_synapse/client/oidc/callback
 ```
 For example:
 ```shell
-https://auth.my-dynspdr.com/_synapse/client/oidc/callback
+https://auth.your-synapse.com/_synapse/client/oidc/callback
 ```
 Make sure to update the redirect URIs in your OIDC provider’s settings to match this format.
