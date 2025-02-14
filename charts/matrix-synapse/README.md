@@ -141,7 +141,7 @@ When you are using Argocd it you may should set
 ### Synapse Config
 
 | Name                                                                 | Description                                                                                                                                                                                        | Value           |
-| -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+|----------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
 | `config.server.server_name`                                          | This sets the public-facing domain of the server e.g. matrix.org or localhost:8080.                                                                                                                | `""`            |
 | `config.server.public_baseurl`                                       | The public-facing base URL that clients use to access this Homeserver (not including _matrix/...). This is the same URL a user might enter into the 'Custom Homeserver URL' field on their client. | `""`            |
 | `config.server.web_client_location`                                  | The absolute URL to the web client which / will redirect to. Defaults to none.                                                                                                                     | `""`            |
@@ -182,6 +182,8 @@ When you are using Argocd it you may should set
 | `config.apiConfiguration.existingSecret.keys.macaroon_secret_key`    |                                                                                                                                                                                                    | `""`            |
 | `config.signingKeys.trusted_key_servers`                             | The trusted servers to download signing keys from.                                                                                                                                                 | `[]`            |
 | `config.signingKeys.suppress_key_server_warning`                     | Set the following to true to disable the warning that is emitted when the trusted_key_servers include 'matrix.org'.                                                                                | `false`         |
+| `config.oidc_providers_enabled`                                      | Enables an OIDC Providor config [synapse-oidc-config](#synapse-oidc-config)                                                                                                                        | `false`         |
+| `config.oidc_providers`                                              | Configures an OIDC Providor [synapse-oidc-config](#synapse-oidc-config)                                                                                                                            | `[]`            |
 | `extraListeners`                                                     | Configure Extra listeners if needed.                                                                                                                                                               | `[]`            |
 | `extraConfig`                                                        | Provide custom Synapse configurations in this section.                                                                                                                                             | `{}`            |
 | `extraCommands`                                                      | Extra commands to run when starting Synapse                                                                                                                                                        | `[]`            |
@@ -261,3 +263,66 @@ When you are using Argocd it you may should set
 | `signingkey.existingSecret`                  | The Secret of the SinginKey if Exists                         | `""`              |
 | `signingkey.existingSecretKey`               | The Secret Key of the SinginKey where the key is stored       | `""`              |
 | `signingkey.resources`                       | Resources of the SigningKeyJob Containers                     | `{}`              |
+
+## Synapse OIDC Config
+This Helm chart supports configuring OpenID Connect (OIDC) providers for authentication in a Synapse server. This allows users to log in using identity providers such as Zitadel, Keycloak, or any other OIDC-compliant provider.
+
+### Prerequisites
+Before enabling OIDC authentication, ensure the following:
+
+- You have a running Synapse instance deployed using Helm.
+- Your OIDC provider (e.g., Zitadel, Keycloak) is properly configured.
+- A Kubernetes Secret exists to securely store the client_id and client_secret for OIDC authentication.
+
+### 1. Create a Kubernetes Secret
+Since OIDC providers require client credentials, create a Kubernetes Secret to store them securely:
+```shell
+kubectl create secret generic oauth-provider1-secret  --from-literal clientId="my_cliend_id" --from-literal clientSecret="my-client-secret"
+```
+Replace `"my_client_id"` and `"my_client_secret"` with your actual OIDC credentials.
+
+### Explanation of Configuration Fields
+```yaml
+  oidc_providers_enabled: true
+  oidc_providers:
+    - idp_id: zitadel
+      idp_name: zitadel
+      discover: true
+      issuer: "https://<your-issuer-domain>"
+      scopes:
+        - "openid"
+        - "profile"
+        - "email"
+      allow_existing_users: "true"
+      user_mapping_provider:
+        config:
+          localpart_template: "{{ user.preferred_username }}"
+          display_name_template: "{{ user.preferred_username }}"
+      existingSecretName: "oauth-provider1-secret"
+      extra_oidc_provider_config: {}
+```
+| Parameter                  | Description                                                                                                                                                       |
+|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| oidc_providers_enabled     | Enables OIDC authentication in Synapse.                                                                                                                           |
+| oidc_providers             | Defines a list of OIDC providers for authentication.                                                                                                              |
+| idp_id                     | Unique identifier for the OIDC provider (e.g., zitadel).                                                                                                          |
+| idp_name                   | Display name for the provider in Synapse.                                                                                                                         |
+| discover                   | If true, Synapse will use discovery (.well-known/openid-configuration) for OIDC settings.                                                                         |
+| issuer                     | The OIDC provider’s issuer URL (replace with your actual OIDC provider URL).                                                                                      |
+| scopes                     | list of scopes to request. This should normally include the "openid" scope                                                                                        |
+| allow_existing_users       | set to true to allow a user logging in via OIDC to match a pre-existing account instead of failing. This could be used if switching from password logins to OIDC. |
+| existingSecretName         | The name of the Kubernetes Secret storing the client_id and client_secret.                                                                                        |
+| extra_oidc_provider_config | Allows additional OIDC provider-specific configurations if needed.                                                                                                |
+
+### OIDC Callback URL
+Once deployed, you need to configure your OIDC provider (e.g., Zitadel, Keycloak) to allow authentication callbacks from Synapse.
+
+Use the following callback URL format:
+```shell
+https://<your-synapse-domain>/_synapse/client/oidc/callback
+```
+For example:
+```shell
+https://auth.your-synapse.com/_synapse/client/oidc/callback
+```
+Make sure to update the redirect URIs in your OIDC provider’s settings to match this format.

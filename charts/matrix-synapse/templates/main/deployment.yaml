@@ -66,6 +66,12 @@ spec:
                     {{- if ne $macaroonSecretKey "false" }}
                     -e "s/@@@MACAROONSECRETKEY@@@/${SYNAPSE_MACAROON_SECRET_KEY:-}/" \
                     {{- end }}
+                    {{- if .Values.config.oidc_providers_enabled }}
+                    {{- range .Values.config.oidc_providers }}
+                    -e "s/@@@CLIENTID{{ .idp_id | upper }}@@@/${OIDC_CLIENT_ID_{{ .idp_id | upper }}:-}/" \
+                    -e "s/@@@CLIENTSECRET{{ .idp_id | upper }}@@@/${OIDC_CLIENT_SECRET_{{ .idp_id | upper }}:-}/" \
+                    {{- end }}
+                    {{- end }}
                        > /synapse/config/conf.d/secrets.yaml
               {{- if .Values.extraCommands }}
               {{ range .Values.extraCommands }}
@@ -117,6 +123,23 @@ spec:
             {{- if ne $macaroonSecretKey "false" }}
             - name: SYNAPSE_MACAROON_SECRET_KEY
               {{- include "matrix-synapse.macaroon_secret_key" . | nindent 14 }}
+            {{- end }}
+            {{- if .Values.config.oidc_providers_enabled }}
+            ####################
+            ## OIDC Providors ##
+            ####################
+            {{- range .Values.config.oidc_providers }}
+            - name: OIDC_CLIENT_ID_{{ .idp_id | upper }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .existingSecretName }}
+                  key: clientId
+            - name: OIDC_CLIENT_SECRET_{{ .idp_id | upper }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .existingSecretName }}
+                  key: clientSecret
+            {{- end }}
             {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:

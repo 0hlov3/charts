@@ -136,6 +136,25 @@ config:
       # - "matrix.org"
     ## @param config.signingKeys.suppress_key_server_warning Set the following to true to disable the warning that is emitted when the trusted_key_servers include 'matrix.org'.
     suppress_key_server_warning: false
+  ## @param config.oidc_providers_enabled Enables an OIDC Providor config [#synapse-oidc-config](synapse-oidc-config)
+  oidc_providers_enabled: false
+  ## @param config.oidc_providers Configures an OIDC Providor [#synapse-oidc-config](synapse-oidc-config)
+  oidc_providers: []
+    # - idp_id: zitadel
+    #   idp_name: zitadel
+    #   discover: true
+    #   issuer: "https://auth.my_issuer.io/"
+    #   scopes:
+    #     - "openid"
+    #     - "profile"
+    #     - "email"
+    #   allow_existing_users: "true"
+    #   user_mapping_provider:
+    #     config:
+    #       localpart_template: "{{ user.preferred_username }}"
+    #       display_name_template: "{{ user.preferred_username }}"
+    #   existingSecretName: "oauth-provider1-secret"
+    #   extra_oidc_provider_config: {}
 ## @param extraListeners Configure Extra listeners if needed.
 extraListeners: []
 ## @param extraConfig Provide custom Synapse configurations in this section.
