@@ -283,17 +283,37 @@ Replace `"my_client_id"` and `"my_client_secret"` with your actual OIDC credenti
 
 ### Explanation of Configuration Fields
 ```yaml
-  ## @param config.oidc_providers_enabled Enables an OIDC Providor config
   oidc_providers_enabled: true
-  ## @param config.oidc_providers Configures an OIDC Providor
   oidc_providers:
     - idp_id: zitadel
       idp_name: zitadel
       discover: true
-      issuer: "https://auth.my_auth.io/"
+      issuer: "https://<your-issuer-domain>"
+      scopes:
+        - "openid"
+        - "profile"
+        - "email"
+      allow_existing_users: "true"
+      user_mapping_provider:
+        config:
+          localpart_template: "{{ user.preferred_username }}"
+          display_name_template: "{{ user.preferred_username }}"
       existingSecretName: "oauth-provider1-secret"
       extra_oidc_provider_config: {}
 ```
+| Parameter                  | Description                                                                                                                                                       |
+|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| oidc_providers_enabled     | Enables OIDC authentication in Synapse.                                                                                                                           |
+| oidc_providers             | Defines a list of OIDC providers for authentication.                                                                                                              |
+| idp_id                     | Unique identifier for the OIDC provider (e.g., zitadel).                                                                                                          |
+| idp_name                   | Display name for the provider in Synapse.                                                                                                                         |
+| discover                   | If true, Synapse will use discovery (.well-known/openid-configuration) for OIDC settings.                                                                         |
+| issuer                     | The OIDC provider’s issuer URL (replace with your actual OIDC provider URL).                                                                                      |
+| scopes                     | list of scopes to request. This should normally include the "openid" scope                                                                                        |
+| allow_existing_users       | set to true to allow a user logging in via OIDC to match a pre-existing account instead of failing. This could be used if switching from password logins to OIDC. |
+| existingSecretName         | The name of the Kubernetes Secret storing the client_id and client_secret.                                                                                        |
+| extra_oidc_provider_config | Allows additional OIDC provider-specific configurations if needed.                                                                                                |
+
 ### OIDC Callback URL
 Once deployed, you need to configure your OIDC provider (e.g., Zitadel, Keycloak) to allow authentication callbacks from Synapse.
 

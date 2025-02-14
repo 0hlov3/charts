@@ -143,7 +143,7 @@ config:
     # - idp_id: zitadel
     #   idp_name: zitadel
     #   discover: true
-    #   issuer: "https://auth.my_auth.io/"
+    #   issuer: "https://auth.my_issuer.io/"
     #   scopes:
     #     - "openid"
     #     - "profile"
