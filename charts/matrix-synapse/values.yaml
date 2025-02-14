@@ -136,9 +136,9 @@ config:
       # - "matrix.org"
     ## @param config.signingKeys.suppress_key_server_warning Set the following to true to disable the warning that is emitted when the trusted_key_servers include 'matrix.org'.
     suppress_key_server_warning: false
-  ## @param config.oidc_providers_enabled Enables an OIDC Providor config
+  ## @param config.oidc_providers_enabled Enables an OIDC Providor config [#synapse-oidc-config](synapse-oidc-config)
   oidc_providers_enabled: false
-  ## @param config.oidc_providers Configures an OIDC Providor
+  ## @param config.oidc_providers Configures an OIDC Providor [#synapse-oidc-config](synapse-oidc-config)
   oidc_providers: []
     # - idp_id: zitadel
     #   idp_name: zitadel
