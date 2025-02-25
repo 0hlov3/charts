@@ -7,13 +7,17 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Update appVersion in Chart.yaml based on Docker image version",
-      "fileMatch": ["^charts/.*/Chart\\.yaml$"],
-      "matchStrings": [
-        "appVersion:\\s*['\"]?(?<currentValue>[^'\"]+)['\"]?"
+      "description": "Sync image tag from Chart.yaml appVersion to values.yaml tag using registry/repository for Docker lookup",
+      "fileMatch": [
+        "^charts/[^/]+/Chart\\.yaml$",
+        "^charts/[^/]+/values\\.yaml$"
       ],
-      "depNameTemplate": "{{parentDir}}",
-      "datasourceTemplate": "helm-values"
+      "matchStrings": [
+        "appVersion:\\s*['\"]?(?<currentValue>[^'\"]+)['\"]?",
+        "registry:\\s*['\"]?(?<registry>[^'\"]+)['\"]?\\s+repository:\\s*['\"]?(?<depName>[^'\"]+)['\"]?[\\s\\S]*?tag:\\s*['\"]?(?<currentValue>[^'\"]*)['\"]?"
+      ],
+      "depNameTemplate": "{{registry}}/{{depName}}",
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
