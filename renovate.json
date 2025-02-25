@@ -1,22 +1,20 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "Update Docker images in Helm values.yaml and Chart.yaml",
-  "assignees": [
-    "0hlov3"
-  ],
+  "description": "Sync values.yaml image tag with Chart.yaml appVersion and check Docker registry",
+  "assignees": ["0hlov3"],
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Sync image tag from Chart.yaml appVersion to values.yaml tag using registry/repository for Docker lookup",
+      "description": "Extract appVersion from Chart.yaml and update image.tag in values.yaml using registry/repository for Docker lookup",
       "fileMatch": [
         "^charts/[^/]+/Chart\\.yaml$",
         "^charts/[^/]+/values\\.yaml$"
       ],
       "matchStrings": [
         "appVersion:\\s*['\"]?(?<currentValue>[^'\"]+)['\"]?",
-        "registry:\\s*['\"]?(?<registry>[^'\"]+)['\"]?\\s+repository:\\s*['\"]?(?<depName>[^'\"]+)['\"]?[\\s\\S]*?tag:\\s*['\"]?(?<currentValue>[^'\"]*)['\"]?"
+        "(?s:image:\\s*\\n(?:\\s*registry:\\s*['\"]?(?<registry>[^'\"\\n]+)['\"]?\\s*\\n)?\\s*repository:\\s*['\"]?(?<depName>[^'\"\\n]+)['\"]?[\\s\\S]*?tag:\\s*['\"]?(?<currentValue>[^'\"\\n]*)['\"]?)"
       ],
-      "depNameTemplate": "{{registry}}/{{depName}}",
+      "depNameTemplate": "{{#if registry}}{{registry}}{{else}}docker.io{{/if}}/{{depName}}",
       "datasourceTemplate": "docker"
     }
   ],
@@ -35,3 +33,4 @@
     }
   ]
 }
+
