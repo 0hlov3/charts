@@ -2,35 +2,5 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "Sync values.yaml image tag with Chart.yaml appVersion and check Docker registry",
   "assignees": ["0hlov3"],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "description": "Extract appVersion from Chart.yaml and update image.tag in values.yaml using registry/repository for Docker lookup",
-      "fileMatch": [
-        "^charts/[^/]+/Chart\\.yaml$",
-        "^charts/[^/]+/values\\.yaml$"
-      ],
-      "matchStrings": [
-        "appVersion:\\s*['\"]?(?<currentValue>[^'\"]+)['\"]?",
-        "(?s:image:\\s*\\n(?:\\s*registry:\\s*['\"]?(?<registry>[^'\"\\n]+)['\"]?\\s*\\n)?\\s*repository:\\s*['\"]?(?<depName>[^'\"\\n]+)['\"]?[\\s\\S]*?tag:\\s*['\"]?(?<currentValue>[^'\"\\n]*)['\"]?)"
-      ],
-      "depNameTemplate": "{{#if registry}}{{registry}}{{else}}docker.io{{/if}}/{{depName}}",
-      "datasourceTemplate": "docker"
-    }
-  ],
-  "packageRules": [
-    {
-      "description": "Use semantic commits for Docker updates",
-      "matchManagers": ["custom.regex"],
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "deps"
-    },
-    {
-      "description": "Require approval for major updates",
-      "matchUpdateTypes": ["major"],
-      "dependencyDashboardApproval": true,
-      "automerge": false
-    }
-  ]
 }
 
