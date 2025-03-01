@@ -94,8 +94,12 @@ elk:
   env:
     # public translate api endpoint
     public_translate_api: ""
-    # default instance to load feeds from when a user goes to this elk frontend
+    # This is the address of the Mastodon/GoToSocial instance that will show up
+    # when a user visits your Elk deployment and is not logged in. If you don't
+    # make that variable, it will point to m.webtoo.ls by default.
     public_default_server: ""
+    # If enabled it will disable signing in to servers other than the
+    # server specified in NUXT_PUBLIC_DEFAULT_SERVER
     public_single_instance: ""
 
     # 'cloudflare' | 'vercel' | 'fs'
