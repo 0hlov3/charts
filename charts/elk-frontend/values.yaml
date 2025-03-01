@@ -85,3 +85,23 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+elk:
+  # existing Kubernetes Secret to use for elk docker container environment variables
+  # if set, ignores everything under elk.env
+  existingEnvSecret: ""
+  # ignored if elk.existingEnvSecret is set
+  env:
+    # public translate api endpoint
+    public_translate_api: ""
+    # default instance to load feeds from when a user goes to this elk frontend
+    public_default_server: ""
+    public_single_instance: ""
+
+    # 'cloudflare' | 'vercel' | 'fs'
+    storage_driver: "fs"
+    # storage filesystem base
+    storage_fs_base: ""
+
+    # administration key
+    admin_key: ""
