@@ -102,10 +102,5 @@ elk:
     # server specified in NUXT_PUBLIC_DEFAULT_SERVER
     public_single_instance: ""
 
-    # 'cloudflare' | 'vercel' | 'fs'
-    storage_driver: "fs"
-    # storage filesystem base
-    storage_fs_base: ""
-
     # administration key
     admin_key: ""
