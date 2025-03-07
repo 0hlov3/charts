@@ -2687,6 +2687,22 @@ entries:
     version: 0.1.0
   thelounge:
   - apiVersion: v2
+    appVersion: 4.4.3
+    created: "2025-03-07T22:11:20.09874738Z"
+    description: A Helm chart for Kubernetes
+    digest: c1c400b06cdbb7cc8e2437800afb8cb89816fb0465217aa931d3560ea404b485
+    home: https://github.com/thelounge/thelounge
+    icon: https://raw.githubusercontent.com/thelounge/thelounge/master/client/img/logo-vertical-transparent-bg.svg?sanitize=true
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: thelounge
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/thelounge-0.1.2/thelounge-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
     appVersion: 4.4.1
     created: "2025-01-10T11:57:28.01314935Z"
     description: A Helm chart for Kubernetes
@@ -3020,4 +3036,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2025-03-07T22:08:00.677121255Z"
+generated: "2025-03-07T22:11:20.09907467Z"
