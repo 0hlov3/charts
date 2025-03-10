@@ -327,7 +327,9 @@ externalPostgresql:
   password: ""
   ## @param externalPostgresql.existingSecret Name of an existing secret resource containing the database credentials
   existingSecret: ""
-  ## @param externalPostgresql.existingSecretPasswordKey Name of an existing secret key containing the database credentials
+  ## @param externalPostgresql.existingSecretUsernameKey Name of an existing secret key containing the database username
+  existingSecretUsernameKey: ""
+  ## @param externalPostgresql.existingSecretPasswordKey Name of an existing secret key containing the database password
   existingSecretPasswordKey: postgres-password
   ## @param externalPostgresql.tls_mode TLS Mode
   tls_mode: disable
