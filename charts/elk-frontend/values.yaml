@@ -85,3 +85,22 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+elk:
+  # existing Kubernetes Secret to use for elk docker container environment variables
+  # if set, ignores everything under elk.env
+  existingEnvSecret: ""
+  # ignored if elk.existingEnvSecret is set
+  env:
+    # public translate api endpoint
+    public_translate_api: ""
+    # This is the address of the Mastodon/GoToSocial instance that will show up
+    # when a user visits your Elk deployment and is not logged in. If you don't
+    # make that variable, it will point to m.webtoo.ls by default.
+    public_default_server: ""
+    # If enabled it will disable signing in to servers other than the
+    # server specified in NUXT_PUBLIC_DEFAULT_SERVER
+    public_single_instance: ""
+
+    # administration key
+    admin_key: ""
