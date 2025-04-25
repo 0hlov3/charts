@@ -24,7 +24,7 @@ version: 0.4.8
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "v1.11.97"
+appVersion: "v1.11.99"
 
 maintainers:
   - name: 0hlov3
@@ -34,4 +34,4 @@ maintainers:
 annotations:
   artifacthub.io/alternativeName: element
   artifacthub.io/category: skip-prediction
-  artifacthub.io/containsSecurityUpdates: false
+  artifacthub.io/containsSecurityUpdates: "false"
