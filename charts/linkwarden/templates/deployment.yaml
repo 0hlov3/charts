@@ -37,13 +37,6 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          command:
-            - sh
-            - -c
-            - |
-              export DATABASE_URL="postgresql://${LINKWARDEN_POSTGRES_USER}:${LINKWARDEN_POSTGRES_PASSWORD}@${LINKWARDEN_POSTGRES_HOST}:5432/${LINKWARDEN_POSTGRES_DATABASE}" && \
-              yarn prisma migrate deploy && \
-              yarn start
           {{- with .Values.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
@@ -74,6 +67,8 @@ spec:
               {{- include "linkwarden.postgres_username" . | nindent 14 }}
             - name: LINKWARDEN_POSTGRES_PASSWORD
               {{- include "linkwarden.postgres_password" . | nindent 14 }}
+            - name: DATABASE_URL
+              value: "postgresql://${LINKWARDEN_POSTGRES_USER}:${LINKWARDEN_POSTGRES_PASSWORD}@${LINKWARDEN_POSTGRES_HOST}:5432/${LINKWARDEN_POSTGRES_DATABASE}"
           {{- end }}
           #############
           # ExtraEnv ##
