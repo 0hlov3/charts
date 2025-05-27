@@ -2924,6 +2924,22 @@ entries:
     version: 0.1.2
   synapse-admin:
   - apiVersion: v2
+    appVersion: 0.11.0
+    created: "2025-05-27T06:36:24.693781016Z"
+    description: A Helm chart for Kubernetes to deploy awesometechnologies synapse-admin.
+    digest: 3e0bf41c04259af16d72544947014f3b116baa5b5d8b4766b313d33fa67a8910
+    home: https://github.com/Awesome-Technologies/synapse-admin
+    icon: https://avatars.githubusercontent.com/u/37705501
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: synapse-admin
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/synapse-admin-0.1.2/synapse-admin-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
     appVersion: 0.10.1
     created: "2025-01-10T11:57:27.896533654Z"
     description: A Helm chart for Kubernetes to deploy awesometechnologies synapse-admin.
@@ -3354,4 +3370,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2025-05-07T12:55:20.216521469Z"
+generated: "2025-05-27T06:36:24.694117646Z"
