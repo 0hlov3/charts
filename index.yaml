@@ -829,6 +829,27 @@ entries:
     version: 0.1.1
   etherpad:
   - apiVersion: v2
+    appVersion: 2.3.0
+    created: "2025-06-09T19:02:13.856011098Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~12.1.6
+    description: A Helm chart for Kubernetes to Deploy Etherpad.
+    digest: 3b091f86ac55233cd935ce377fc75aa3264626eae3932ef676770f3949998c9f
+    home: https://github.com/ether/etherpad-lite
+    icon: https://etherpad.org/img/brand.svg
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: etherpad
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/etherpad-0.2.0/etherpad-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     appVersion: 2.2.7
     created: "2025-03-07T22:02:23.430848533Z"
     dependencies:
@@ -3465,4 +3486,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-09T18:59:45.376307033Z"
+generated: "2025-06-09T19:02:13.856415026Z"
