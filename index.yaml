@@ -2,6 +2,22 @@ apiVersion: v1
 entries:
   cinnyapp:
   - apiVersion: v2
+    appVersion: v4.8.1
+    created: "2025-06-27T20:47:25.610637394Z"
+    description: A Helm chart for Kubernetes, to deploy cinnyapp.
+    digest: 6349f814d95c824c5ed0a74dd7eb1f02b0d611db659426a0d4cf048d47a7baf1
+    home: https://github.com/cinnyapp/cinny
+    icon: https://cinny.in/assets/cinny.svg
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: cinnyapp
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/cinnyapp-1.0.3/cinnyapp-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
     appVersion: v4.8.0
     created: "2025-06-09T18:58:28.510690498Z"
     description: A Helm chart for Kubernetes, to deploy cinnyapp.
@@ -3538,4 +3554,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-12T10:44:33.865060915Z"
+generated: "2025-06-27T20:47:25.611029644Z"
