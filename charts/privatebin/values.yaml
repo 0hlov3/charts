@@ -110,7 +110,7 @@ securityContext:
   ## @param securityContext.runAsUser Security Context runAsUser
   runAsUser: 65534
   ## @param securityContext.runAsGroup Security Context runAsGroup
-  runAsGroup: 82i
+  runAsGroup: 82
   ## @param securityContext.readOnlyRootFilesystem Set primary container's Security Context readOnlyRootFilesystem
   readOnlyRootFilesystem: true
 
