@@ -39,9 +39,9 @@ config:
   ## @param config.syntaxhighlightingtheme (optional) set a syntax highlighting theme, as found in css/prettify/
   syntaxhighlightingtheme: sons-of-obsidian
   ## @param config.sizelimit size limit per paste or comment in bytes, defaults to 10 Mebibytes
-  sizelimit: 10485760
+  sizelimit: 10000000
   ## @param config.template template to include, default is "bootstrap" (tpl/bootstrap.php), also available are "page" (tpl/page.php), the classic ZeroBin style and several bootstrap variants: "bootstrap-dark", "bootstrap-compact", "bootstrap-page", which can be combined with "-dark" and "-compact" for "bootstrap-dark-page" and finally "bootstrap-compact-page" - previews at: https://privatebin.info/screenshots.html
-  template: bootstrap
+  template: bootstrap5
   ## @param config.languageselection by default PrivateBin will guess the visitors language based on the browsers settings. Optionally you can enable the language selection menu, which uses a session cookie to store the choice until the browser is closed.
   languageselection: false
   # languagedefault: en
