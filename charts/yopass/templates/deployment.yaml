@@ -36,6 +36,15 @@ spec:
             - "--max-length={{ .Values.yopass.secretMaxLength  }}"
             - "--memcached=localhost:11211"
             - "--port={{ .Values.service.port }}"
+          env:
+            - name: DISABLE_UPLOAD
+              value: {{ .Values.config.disable_upload | quote }}
+            - name: PREFETCH_SECRET
+              value: {{ .Values.config.prefetch_secret | quote }}
+            - name: DISABLE_FEATURES
+              value: {{ .Values.config.disable_features | quote }}
+            - name: NO_LANGUAGE_SWITCHER
+              value: {{ .Values.config.no_language_switcher | quote }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http

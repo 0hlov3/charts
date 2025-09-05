@@ -14,6 +14,11 @@ yopass:
   listenAddress: 0.0.0.0
   secretMaxLength: 10000
 
+config:
+  disable_upload: false
+  prefetch_secret: true
+  disable_features: true
+  no_language_switcher: false
 
 imagePullSecrets: []
 nameOverride: ""
