@@ -2,42 +2,70 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+## @section Deployment
+## @param replicaCount Number of Yopass server replicas to run
 replicaCount: 1
 
+## @section Container image
+## @extra image Container image configuration
 image:
+  ## @param image.repository Container image repository for Yopass
   repository: jhaals/yopass
+  ## @param image.pullPolicy Image pull policy
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
+  ## @param image.tag [string] Image tag (defaults to chart appVersion if empty)
   tag: ""
 
+## @section Yopass server settings
+## @extra yopass Yopass server flags (mapped to CLI flags)
 yopass:
+  ## @param yopass.listenAddress Bind address for the server (maps to --address)
   listenAddress: 0.0.0.0
+  ## @param yopass.secretMaxLength Maximum allowed encrypted secret size in bytes (maps to --max-length)
   secretMaxLength: 10000
 
+## @section Web UI & feature toggles
+## @extra config Frontend/runtime feature flags returned via /config
 config:
+  ## @param config.disable_upload Disable file upload endpoints and UI (maps to --disable-upload)
   disable_upload: false
+  ## @param config.prefetch_secret Enable prefetch/status check for one-time secrets (maps to --prefetch-secret)
   prefetch_secret: true
+  ## @param config.disable_features Hide the “features” section on the homepage (maps to --disable-features)
   disable_features: true
+  ## @param config.no_language_switcher Hide the language switcher in the UI (maps to --no-language-switcher)
   no_language_switcher: false
 
+## @section Global image & naming
+## @param imagePullSecrets [array] Names of imagePullSecrets to use for pulling images
 imagePullSecrets: []
+## @param nameOverride [string] String to partially override chart name
 nameOverride: ""
+## @param fullnameOverride [string] String to fully override chart fullname
 fullnameOverride: ""
 
+## @section Service account
+## @extra serviceAccount ServiceAccount options
 serviceAccount:
   # Specifies whether a service account should be created
+  ## @param serviceAccount.create Whether to create a ServiceAccount
   create: true
   # Annotations to add to the service account
+  ## @param serviceAccount.annotations [object] Annotations to add to the ServiceAccount
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
+  ## @param serviceAccount.name [string] Name of the ServiceAccount to use (generated if empty and create=true)
   name: ""
 
+## @section Pod annotations & security
+## @param podAnnotations [object] Annotations to add to the Pod metadata
 podAnnotations: {}
-
+## @param podSecurityContext [object] Pod-level security context (e.g., fsGroup)
 podSecurityContext: {}
   # fsGroup: 2000
-
+## @param securityContext [object] Container-level security context (capabilities, runAs*, readOnlyRootFilesystem, etc.)
 securityContext: {}
   # capabilities:
   #   drop:
@@ -46,10 +74,21 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+## @section Service
+## @extra service Kubernetes Service configuration
 service:
+  ## @param service.type Service type
   type: ClusterIP
+  ## @param service.port Service port for the HTTP API/UI
   port: 1337
 
+## @section Ingress
+## @extra ingress Kubernetes Ingress configuration
+## @param ingress.enabled Enable Ingress resource
+## @param ingress.className [string] IngressClass to use (Kubernetes >=1.18)
+## @param ingress.annotations [object] Annotations to add to the Ingress
+## @param ingress.hosts [array] Ingress host definitions
+## @param ingress.tls [array] TLS configuration for the Ingress (secrets and hostnames)
 ingress:
   enabled: false
   className: ""
@@ -67,6 +106,8 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+## @section Resources
+## @param resources [object] CPU/Memory resource requests/limits for the Pod
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -79,8 +120,10 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+## @section Scheduling
+## @param nodeSelector [object] Node labels for Pod assignment
 nodeSelector: {}
-
+## @param tolerations [array] Tolerations for taints to schedule on matching nodes
 tolerations: []
-
+## @param affinity [object] Affinity/anti-affinity rules for Pod scheduling
 affinity: {}
