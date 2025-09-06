@@ -2,8 +2,12 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
 
+## @section Image parameters
+## @param image.registry [string] Image registry
+## @param image.repository [string] Image repository
+## @param image.tag [string] Image tag (defaults to chart appVersion if empty)
+## @param image.pullPolicy [string] Image pull policy
 image:
   registry: docker.io
   repository: louislam/uptime-kuma
@@ -11,14 +15,17 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+## @section Persistence parameters
+## @param persistence.enabled Enable PersistentVolumeClaim for Uptime Kuma data
+## @param persistence.size [string] PVC size for data persistence
 persistence:
   enabled: false
   size: 4Gi
 
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
+## @section Service account parameters
+## @param serviceAccount.create Enable creation of a ServiceAccount
+## @param serviceAccount.annotations [object] Annotations to add to the ServiceAccount
+## @param serviceAccount.name [string] Name of the ServiceAccount to use (auto-generated if empty and create=true)
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -28,23 +35,36 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+## @section Deployment & Pod parameters
+## @param replicaCount Number of replicas for the Uptime Kuma Deployment
+replicaCount: 1
+## @param podAnnotations [object] Additional annotations to add to the Pod
 podAnnotations: {}
-
+## @param podSecurityContext [object] Pod-level security context (e.g. fsGroup)
 podSecurityContext: {}
-  # fsGroup: 2000
-
+# fsGroup: 2000
+## @param securityContext [object] Container-level security context (e.g. runAsUser, readOnlyRootFilesystem)
 securityContext: {}
   # capabilities:
   #   drop:
   #   - ALL
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
-  # runAsUser: 1000
+# runAsUser: 1000
 
+## @section Service parameters
+## @param service.type Kubernetes Service type
+## @param service.port Service port for the Uptime Kuma web UI
 service:
   type: ClusterIP
   port: 3001
 
+## @section Ingress parameters
+## @param ingress.enabled Enable Ingress for the main UI
+## @param ingress.className [string] IngressClass name to use
+## @param ingress.annotations [object] Extra annotations for the Ingress
+## @param ingress.hosts [array] List of host rules for the UI (each item supports host and paths[].path/pathType)
+## @param ingress.tls [array] TLS configuration for hosts (secretName, hosts[])
 ingress:
   enabled: false
   className: ""
@@ -61,6 +81,12 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+## @section Status Ingress parameters
+## @param ingressStatus.enabled Enable a separate Ingress for a public read-only status page
+## @param ingressStatus.className [string] IngressClass name to use for the status page
+## @param ingressStatus.annotations [object] Extra annotations for the status Ingress
+## @param ingressStatus.hosts [array] List of host rules for the status page (paths should point to /status/)
+## @param ingressStatus.tls [array] TLS configuration for status hosts (secretName, hosts[])
 ingressStatus:
   enabled: false
   className: ""
@@ -77,6 +103,8 @@ ingressStatus:
   #    hosts:
   #      - chart-example.local
 
+## @section Resources & scheduling
+## @param resources [object] Resource requests/limits for the container
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -87,10 +115,18 @@ resources: {}
   #   memory: 128Mi
   # requests:
   #   cpu: 100m
-  #   memory: 128Mi
-
+#   memory: 128Mi
+## @param nodeSelector [object] Node selector rules for pod assignment
 nodeSelector: {}
-
+## @param tolerations [array] Tolerations for pod assignment
 tolerations: []
-
+## @param affinity [object] Affinity rules for pod assignment
 affinity: {}
+
+## @section Common parameters
+## @param nameOverride [string] String to partially override the chart name
+nameOverride: ""
+## @param fullnameOverride [string] String to fully override the release name
+fullnameOverride: ""
+## @param imagePullSecrets [array] Image pull secrets for private registries
+imagePullSecrets: []
