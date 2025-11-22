@@ -8,8 +8,8 @@ keywords:
   - pastebin
   - self-destroy
 type: application
-version: 0.1.12
-appVersion: "2.0.1"
+version: 0.1.13
+appVersion: "2.0.3"
 maintainers:
   - name: 0hlov3
     email: dev@privatetrace.io
