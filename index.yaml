@@ -3786,6 +3786,27 @@ entries:
     version: 0.1.1
   privatebin:
   - apiVersion: v2
+    appVersion: 2.0.3
+    created: "2025-11-22T16:39:23.898123002Z"
+    description: PrivateBin is a minimalist, open source online pastebin where the
+      server has zero knowledge of pasted data.
+    digest: a656f4687249fa8c2f827b550c1b89502012f89c2c1e3ec74202f3456b9dfe38
+    home: https://github.com/PrivateBin/PrivateBin
+    icon: https://privatebin.info/img/logo.png
+    keywords:
+    - paste
+    - pastebin
+    - self-destroy
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: privatebin
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/privatebin-0.1.13/privatebin-0.1.13.tgz
+    version: 0.1.13
+  - apiVersion: v2
     appVersion: 2.0.1
     created: "2025-10-12T16:12:13.953818958Z"
     description: PrivateBin is a minimalist, open source online pastebin where the
@@ -4672,4 +4693,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2025-11-22T16:37:56.40699161Z"
+generated: "2025-11-22T16:39:23.898478849Z"
