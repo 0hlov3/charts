@@ -947,6 +947,22 @@ entries:
     version: 0.2.9
   elk-frontend:
   - apiVersion: v2
+    appVersion: 0.17.2
+    created: "2025-11-28T21:15:14.868910852Z"
+    description: A Helm chart for Kubernetes to deploy Elk in Kubernetes.
+    digest: ba22094645a1314ae98b196e1cdda3aeec5b1b85c66b33532a081b116a42027a
+    home: https://github.com/elk-zone/elk
+    icon: https://raw.githubusercontent.com/elk-zone/elk/main/public/logo.svg
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: elk-frontend
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/elk-frontend-0.2.19/elk-frontend-0.2.19.tgz
+    version: 0.2.19
+  - apiVersion: v2
     appVersion: 0.17.1
     created: "2025-11-22T16:14:14.338568234Z"
     description: A Helm chart for Kubernetes to deploy Elk in Kubernetes.
@@ -4693,4 +4709,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2025-11-22T16:39:23.898478849Z"
+generated: "2025-11-28T21:15:14.869388657Z"
