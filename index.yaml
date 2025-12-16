@@ -1556,6 +1556,27 @@ entries:
     version: 0.1.0
   gotosocial:
   - apiVersion: v2
+    appVersion: 0.20.2
+    created: "2025-12-16T06:54:20.78036441Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~11.9.13
+    description: A Helm chart for Kubernetes to Deploy GoToSocial
+    digest: c7be05bd95fb1dba7217e901721e75f067f8a6e604d281395cfec586c41ada6a
+    home: https://github.com/superseriousbusiness/gotosocial
+    icon: https://docs.gotosocial.org/en/latest/assets/sloth.png
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: gotosocial
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/gotosocial-1.3.1/gotosocial-1.3.1.tgz
+    version: 1.3.1
+  - apiVersion: v2
     appVersion: 0.20.0
     created: "2025-11-28T22:25:48.874479274Z"
     dependencies:
@@ -2836,6 +2857,25 @@ entries:
     version: 0.1.7
   linkwarden:
   - apiVersion: v2
+    appVersion: v2.13.2
+    created: "2025-12-16T06:54:20.93997219Z"
+    description: A Helm chart for Kubernetes
+    digest: 35c237ce06dd58133483f2e71c3379c85106c35b8d66fc9033c5405f7525d108
+    home: https://github.com/linkwarden/linkwarden
+    icon: https://docs.linkwarden.app/img/logo.png
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: linkwarden
+    sources:
+    - https://github.com/linkwarden/linkwarden
+    - https://docs.linkwarden.app/
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/linkwarden-1.0.10/linkwarden-1.0.10.tgz
+    version: 1.0.10
+  - apiVersion: v2
     appVersion: v2.13.1
     created: "2025-10-30T07:12:46.418364634Z"
     description: A Helm chart for Kubernetes
@@ -3102,6 +3142,37 @@ entries:
     - https://github.com/0hlov3/charts/releases/download/linkwarden-0.1.0/linkwarden-0.1.0.tgz
     version: 0.1.0
   matrix-synapse:
+  - apiVersion: v2
+    appVersion: v1.144.0
+    created: "2025-12-16T06:54:21.078951581Z"
+    dependencies:
+    - condition: dragonfly.enabled
+      name: dragonfly
+      repository: oci://ghcr.io/dragonflydb/dragonfly/helm
+      version: v1.27.1
+    description: A Helm chart for deploying Matrix Synapse on Kubernetes
+    digest: 2da651260f51231f4f62365ba4742edf984b6951d1f14c6aa7e871f568dfb637
+    home: https://github.com/element-hq/synapse
+    icon: https://avatars.githubusercontent.com/u/13446337?s=48&v=4
+    keywords:
+    - matrix
+    - synapse
+    - chat
+    - helm
+    - kubernetes
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: matrix-synapse
+    sources:
+    - https://github.com/element-hq/synapse
+    - https://matrix.org
+    - https://www.dragonflydb.io
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/matrix-synapse-1.0.24/matrix-synapse-1.0.24.tgz
+    version: 1.0.24
   - apiVersion: v2
     appVersion: v1.142.1
     created: "2025-11-22T16:36:57.345671241Z"
@@ -4767,4 +4838,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2025-12-16T06:38:35.059361506Z"
+generated: "2025-12-16T06:54:21.22328512Z"
