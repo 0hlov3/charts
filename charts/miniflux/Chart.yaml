@@ -1,0 +1,27 @@
+apiVersion: v2
+name: miniflux
+description: Miniflux is a minimalist and opinionated feed reader.
+home: https://github.com/miniflux/v2
+icon: https://avatars.githubusercontent.com/u/10584991?s=48&v=4
+
+type: application
+version: 0.1.0
+appVersion: "2.2.16"
+
+keywords:
+  - miniflux
+  - rss
+  - news
+  - feed
+
+maintainers:
+  - name: 0hlov3
+    email: dev@privatetrace.io
+    url: https://schoenwald.aero
+
+annotations:
+  artifacthub.io/links: |-
+    - name: App Source
+      url: https://github.com/miniflux/v2
+    - name: Chart Source
+      url: https://github.com/gabe565/charts/tree/main/charts/miniflux

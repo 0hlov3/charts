@@ -1,0 +1,168 @@
+# Default values for miniflux.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## @section Global parameters
+## @param nameOverride String to partially override common.names.name
+nameOverride: ""
+## @param fullnameOverride String to fully override common.names.fullname
+fullnameOverride: ""
+## @param imagePullSecrets Global image pull secrets (list of Kubernetes Secret names)
+imagePullSecrets: []
+
+## @section Image parameters
+## @param image.registry Miniflux image registry
+## @param image.repository Miniflux image repository
+## @param image.pullPolicy Miniflux image pull policy
+## @param image.tag Miniflux image tag (overrides chart appVersion if set)
+image:
+  registry: docker.io
+  repository: miniflux/miniflux
+  pullPolicy: IfNotPresent
+  tag: ""
+
+## @section Miniflux configuration
+## @param env.RUN_MIGRATIONS Run database migrations on startup ("1" or "0")
+## @param env.CREATE_ADMIN Create admin user on startup ("1" or "0")
+## @param env.BASE_URL Public base URL (e.g. https://rss.example.com)
+env:
+  RUN_MIGRATIONS: "1"
+  CREATE_ADMIN: "1"
+  BASE_URL: ""
+
+## @section ServiceAccount parameters
+## @param serviceAccount.create Specifies whether a service account should be created
+## @param serviceAccount.automount Automatically mount ServiceAccount API credentials
+## @param serviceAccount.annotations Annotations to add to the service account
+## @param serviceAccount.name The name of the service account to use (auto-generated if empty and create=true)
+serviceAccount:
+  create: true
+  automount: false
+  annotations: {}
+  name: ""
+
+## @section Pod metadata
+## @param podAnnotations Annotations to add to the Pod
+## @param podLabels Labels to add to the Pod
+podAnnotations: {}
+podLabels: {}
+
+## @section Security contexts
+## @param podSecurityContext.fsGroup Pod fsGroup
+podSecurityContext:
+  fsGroup: 1000
+
+## @skip  securityContext.capabilities.drop
+## @param securityContext.readOnlyRootFilesystem Mount root filesystem as read-only
+## @param securityContext.runAsNonRoot Require the container to run as non-root
+## @param securityContext.runAsUser Container UID
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+## @section Service parameters
+## @param service.type Kubernetes service type
+## @param service.port Service port
+service:
+  type: ClusterIP
+  port: 8080
+
+## @section Ingress parameters
+## @param ingress.enabled Enable ingress controller resource
+## @param ingress.className IngressClass name
+## @param ingress.annotations Ingress annotations
+## @skip ingress.hosts Ingress hosts definition
+## @param ingress.tls Ingress TLS configuration
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: tls-miniflux-general
+  #    hosts:
+  #      - chart-example.local
+
+# -- Expose the service via gateway-api HTTPRoute
+# Requires Gateway API resources and suitable controller installed within the cluster
+# (see: https://gateway-api.sigs.k8s.io/guides/)
+## @section Gateway API parameters
+## @param httpRoute.enabled Enable Gateway API HTTPRoute
+## @param httpRoute.annotations HTTPRoute annotations
+## @skip httpRoute.parentRefs Gateways this Route is attached to
+## @skip httpRoute.hostnames Hostnames matching HTTP Host header
+## @skip httpRoute.rules HTTPRoute rules and filters
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs:
+    - name: gateway
+      sectionName: http
+  hostnames:
+    - chart-example.local
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /headers
+  #   filters:
+  #   - type: RequestHeaderModifier
+  #     requestHeaderModifier:
+  #       set:
+  #       - name: My-Overwrite-Header
+  #         value: this-is-the-only-value
+  #       remove:
+  #       - User-Agent
+  # - matches:
+  #   - path:
+  #       type: PathPrefix
+  #       value: /echo
+  #     headers:
+  #     - name: version
+  #       value: v2
+
+## @section Resource parameters
+## @skip resources.limits The resources limits for the container
+## @skip resources.requests The requested resources for the container
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+## @section Probes parameters
+## @skip livenessProbe Liveness probe configuration
+## @skip readinessProbe Readiness probe configuration
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+## @section Extra volume parameters
+## @param volumes Extra volumes to add to the Deployment
+## @param volumeMounts Extra volumeMounts to add to the container
+volumes: []
+volumeMounts: []
+
+## @section Scheduling parameters
+## @param nodeSelector Node labels for pod assignment
+## @param tolerations Tolerations for pod assignment
+## @param affinity Affinity for pod assignment
+nodeSelector: {}
+tolerations: []
+affinity: {}
