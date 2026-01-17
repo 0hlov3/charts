@@ -21,9 +21,10 @@ This chart deploys the Yopass server with an in-pod **Memcached** sidecar for st
 ## Notes & Caveats
 
  - Ephemeral storage: The chart hard-codes --database=memcached and runs a Memcached sidecar. If the Pod restarts, in-memory secrets are lost. This matches Yopass’ ephemeral design.
+ - Replica caveat: replicaCount must remain 1 unless you wire external/shared storage; each pod has its own in-pod Memcached and the Service load-balances requests (no shared cache, no session affinity).
  - Sidecar image: Memcached image is currently unpinned in the template. Pinning (via values) isn’t exposed yet.
  - Security context: Sensible defaults are provided but commented out—enable runAsNonRoot, readOnlyRootFilesystem, and drop capabilities as needed.
- - Resource limits: Not set by default; set resources.requests/limits to ensure stable
+ - Resource limits: Not set by default; set resources.requests/limits to ensure stable scheduling and performance.
 
 ## Parameters
 
