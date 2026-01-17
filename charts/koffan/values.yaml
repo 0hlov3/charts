@@ -1,0 +1,246 @@
+---
+# Default values for koffan.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## @section Koffan Parameters
+
+# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+## @param replicaCount Number of replicas to deploy
+## @note Set >1 only for dev/testing. SQLite cannot scale safely with multiple replicas.
+replicaCount: 1
+
+# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
+image:
+  ## @param image.registry image registry
+  registry: ghcr.io
+  ## @param image.repository image repository
+  repository: pansalut/koffan
+  # This sets the pull policy for images.
+  ## @param image.pullPolicy image pull policy
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  ## @param image.tag image tag (immutable tags are recommended)
+  tag: ""
+
+app:
+  ## @param app.env Set to development for non secure cookies
+  env: production
+  ## @param app.port Service port used by the container
+  port: 80
+  ## @param app.dbPath Database file path
+  dbPath: /data/shopping.db
+  ## @param app.defaultLang Default UI language (pl, en, de, es, fr, pt, uk, no, lt, el)
+  defaultLang: en
+  ## @param app.loginMaxAttempts Max login attempts before lockout
+  loginMaxAttempts: 5
+  ## @param app.loginWindowMinutes Time window for counting attempts
+  loginWindowMinutes: 15
+  ## @param app.loginLockoutMinutes Lockout duration after exceeding limit
+  loginLockoutMinutes: 30
+
+auth:
+  ## @param auth.disableAuth Set to true to disable authentication (for reverse proxy setups)
+  disableAuth: false
+  ## @param auth.password Login password (ignored when auth.existingSecret.name is set)
+  password: change-me
+  apiToken:
+    ## @param auth.apiToken.enabled Enable REST API using a token
+    enabled: false
+    ## @param auth.apiToken.value Token value (ignored when auth.existingSecret.name is set)
+    value: ""
+  ## @param auth.createSecret Create a Secret for app credentials
+  createSecret: true
+  existingSecret:
+    ## @param auth.existingSecret.name Use an existing Secret name instead of creating one
+    name: ""
+    ## @param auth.existingSecret.passwordKey Key name for the password in the Secret (also used for chart-created Secret keys)
+    passwordKey: app-password
+    ## @param auth.existingSecret.apiTokenKey Key name for the API token in the Secret (also used for chart-created Secret keys)
+    apiTokenKey: api-token
+
+persistence:
+  ## @param persistence.enabled Enable persistent storage for the DB
+  ## @note For dev/testing, you can set enabled: false and useEmptyDir: false to run without a volume.
+  enabled: true
+  ## @param persistence.size Persistent volume size
+  size: 1Gi
+  ## @param persistence.accessModes Persistent volume access modes
+  accessModes:
+    - ReadWriteOnce
+  ## @param persistence.storageClass Storage class for the PVC (empty = default)
+  storageClass: ""
+  ## @param persistence.annotations PVC annotations
+  annotations: {}
+  ## @param persistence.existingClaim Use an existing PVC instead of creating one
+  existingClaim: ""
+  ## @param persistence.mountPath Mount path for the DB directory
+  mountPath: /data
+  ## @param persistence.useEmptyDir Use an emptyDir when persistence is disabled
+  ## @note For dev/testing, set this to false to keep data on the container filesystem.
+  useEmptyDir: false
+
+## @param imagePullSecrets Secrets for pulling images from a private registry
+imagePullSecrets: []
+## @param nameOverride Override the chart name
+nameOverride: ""
+## @param fullnameOverride Override the full chart name
+fullnameOverride: ""
+
+## @param serviceAccount.create Create a service account
+## @param serviceAccount.automount Automount service account token
+## @param serviceAccount.annotations Service account annotations
+## @param serviceAccount.name Service account name
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+## @param podAnnotations Pod annotations
+podAnnotations: {}
+## @param podLabels Pod labels
+podLabels: {}
+
+## @param podSecurityContext.fsGroup Pod security context fsGroup
+podSecurityContext:
+  fsGroup: 1000
+
+## @param securityContext.capabilities.drop Container security context capabilities drop list
+## @param securityContext.readOnlyRootFilesystem Container security context read-only root filesystem
+## @param securityContext.runAsNonRoot Container security context run as non-root
+## @param securityContext.runAsUser Container security context run as user
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+## @param service.type Service type
+## @param service.port Service port
+service:
+  # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+  type: ClusterIP
+  # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
+  port: 80
+
+## @param ingress.enabled Enable ingress
+## @param ingress.className Ingress class name
+## @param ingress.annotations Ingress annotations
+## @param ingress.hosts[0].host Ingress host
+## @param ingress.hosts[0].paths[0].path Ingress path
+## @param ingress.hosts[0].paths[0].pathType Ingress path type
+## @param ingress.tls Ingress TLS configuration
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: tls-koffan-general
+  #    hosts:
+  #      - chart-example.local
+
+## @param httpRoute.enabled Enable HTTPRoute
+## @param httpRoute.annotations HTTPRoute annotations
+## @param httpRoute.parentRefs[0].name HTTPRoute parent ref name
+## @param httpRoute.parentRefs[0].sectionName HTTPRoute parent ref section name
+## @param httpRoute.hostnames HTTPRoute hostnames
+## @param httpRoute.rules[0].matches[0].path.type HTTPRoute match path type
+## @param httpRoute.rules[0].matches[0].path.value HTTPRoute match path value
+httpRoute:
+  # HTTPRoute enabled.
+  enabled: false
+  # HTTPRoute annotations.
+  annotations: {}
+  # Which Gateways this Route is attached to.
+  parentRefs:
+    - name: gateway
+      sectionName: http
+      # namespace: default
+  # Hostnames matching HTTP header.
+  hostnames:
+    - chart-example.local
+  # List of rules and filters applied.
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /headers
+  #   filters:
+  #   - type: RequestHeaderModifier
+  #     requestHeaderModifier:
+  #       set:
+  #       - name: My-Overwrite-Header
+  #         value: this-is-the-only-value
+  #       remove:
+  #       - User-Agent
+  # - matches:
+  #   - path:
+  #       type: PathPrefix
+  #       value: /echo
+  #     headers:
+  #     - name: version
+  #       value: v2
+
+## @param resources Container resources
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+## @param livenessProbe.httpGet.path Liveness probe path
+## @param livenessProbe.httpGet.port Liveness probe port
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+## @param readinessProbe.httpGet.path Readiness probe path
+## @param readinessProbe.httpGet.port Readiness probe port
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+## @param volumes Additional volumes
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+## @param volumeMounts Additional volume mounts
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+
+## @param nodeSelector Node selector
+nodeSelector: {}
+
+## @param tolerations Pod tolerations
+tolerations: []
+
+## @param affinity Pod affinity
+affinity: {}
