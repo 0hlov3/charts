@@ -64,13 +64,24 @@ A Helm chart for deploying [Awesome-Technologies/synapse-admin](https://github.c
 | `ingress.hosts`       | Ingress host definitions (host + paths)           | `[]`    |
 | `ingress.tls`         | TLS configuration for ingress (secrets and hosts) | `[]`    |
 
+### Config parameters
+
+| Name                       | Description                                                         | Value   |
+| -------------------------- | ------------------------------------------------------------------- | ------- |
+| `config.enabled`           | Enable mounting a config.json ConfigMap                             | `false` |
+| `config.existingConfigMap` | Existing ConfigMap name with a config.json key                      | `""`    |
+| `config.mountPath`         | Path to mount config.json in the container                          | `""`    |
+| `config.json`              | JSON content for config.json (used when existingConfigMap is empty) | `{}`    |
+
 ### Resources & Probes
 
-| Name             | Description                                | Value |
-| ---------------- | ------------------------------------------ | ----- |
-| `resources`      | Resource requests/limits for the container | `{}`  |
-| `livenessProbe`  | Liveness probe configuration               | `{}`  |
-| `readinessProbe` | Readiness probe configuration              | `{}`  |
+| Name                     | Description                                | Value  |
+| ------------------------ | ------------------------------------------ | ------ |
+| `resources`              | Resource requests/limits for the container | `{}`   |
+| `livenessProbe.enabled`  | Enable liveness probe                      | `true` |
+| `livenessProbe.config`   | Liveness probe configuration               | `{}`   |
+| `readinessProbe.enabled` | Enable readiness probe                     | `true` |
+| `readinessProbe.config`  | Readiness probe configuration              | `{}`   |
 
 ### Scheduling
 

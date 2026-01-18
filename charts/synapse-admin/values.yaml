@@ -92,6 +92,19 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+## @section Config parameters
+## @param config.enabled Enable mounting a config.json ConfigMap
+## @param config.existingConfigMap [string] Existing ConfigMap name with a config.json key
+## @param config.mountPath [string] Path to mount config.json in the container
+## @param config.json [object] JSON content for config.json (used when existingConfigMap is empty)
+config:
+  enabled: false
+  existingConfigMap: ""
+  mountPath: /usr/share/nginx/html/config.json
+  json: {}
+  #json:
+  #  homeserver: "https://matrix.example.com"
+
 ## @section Resources & Probes
 
 ## @param resources [object] Resource requests/limits for the container
@@ -102,19 +115,25 @@ resources:
     cpu: 100m
     memory: 128Mi
 
-## @param livenessProbe [object] Liveness probe configuration
+## @param livenessProbe.enabled Enable liveness probe
+## @param livenessProbe.config [object] Liveness probe configuration
 livenessProbe:
-  httpGet:
-    path: /
-    port: http
-  failureThreshold: 3
-  periodSeconds: 10
-## @param readinessProbe [object] Readiness probe configuration
+  enabled: true
+  config:
+    httpGet:
+      path: /
+      port: http
+    failureThreshold: 3
+    periodSeconds: 10
+## @param readinessProbe.enabled Enable readiness probe
+## @param readinessProbe.config [object] Readiness probe configuration
 readinessProbe:
-  tcpSocket:
-    port: 80
-  initialDelaySeconds: 15
-  periodSeconds: 10
+  enabled: true
+  config:
+    tcpSocket:
+      port: 80
+    initialDelaySeconds: 15
+    periodSeconds: 10
 
 ## @section Scheduling
 
