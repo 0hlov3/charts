@@ -37,7 +37,7 @@ config:
   ## @param config.defaultformatter which display mode to preselect by default, defaults to "plaintext"
   defaultformatter: plaintext
   ## @param config.syntaxhighlightingtheme (optional) set a syntax highlighting theme, as found in css/prettify/
-  syntaxhighlightingtheme: sons-of-obsidian
+  # syntaxhighlightingtheme: sons-of-obsidian
   ## @param config.sizelimit size limit per paste or comment in bytes, defaults to 10 Mebibytes
   sizelimit: 10000000
   ## @param config.template template to include, default is "bootstrap" (tpl/bootstrap.php), also available are "page" (tpl/page.php), the classic ZeroBin style and several bootstrap variants: "bootstrap-dark", "bootstrap-compact", "bootstrap-page", which can be combined with "-dark" and "-compact" for "bootstrap-dark-page" and finally "bootstrap-compact-page" - previews at: https://privatebin.info/screenshots.html
@@ -67,7 +67,7 @@ config:
     ## @param config.traffic.limit time limit between calls from the same IP address in seconds Set this to 0 to disable rate limiting.
     limit: 10
     ## @param config.traffic.exempted (optional) Set IPs addresses (v4 or v6) or subnets (CIDR) which are exempted from the rate-limit. Invalid IPs will be ignored. If multiple values are to  be exempted, the list needs to be comma separated. Leave unset to disable 
-    exempted: "172,10.10.10/24"
+    exempted: ""
 
 persistence:
   ## @param persistence.enabled Enable persistence using a PersistentVolumeClaim
@@ -119,6 +119,25 @@ service:
   type: ClusterIP
   ## @param service.port service port
   port: 8080
+
+## @section Probes
+## @param livenessProbe.enabled Enable liveness probe
+## @param livenessProbe.config [object] Liveness probe configuration
+livenessProbe:
+  enabled: true
+  config:
+    httpGet:
+      path: /
+      port: http
+
+## @param readinessProbe.enabled Enable readiness probe
+## @param readinessProbe.config [object] Readiness probe configuration
+readinessProbe:
+  enabled: true
+  config:
+    httpGet:
+      path: /
+      port: http
 
 ingress:
   ## @param ingress.enabled Enable ingress record generation

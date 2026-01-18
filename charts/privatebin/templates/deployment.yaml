@@ -37,30 +37,43 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+          {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+            {{- toYaml .Values.livenessProbe.config | nindent 12 }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            {{- toYaml .Values.readinessProbe.config | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if .Values.persistence.enabled }}
+          {{- if or .Values.persistence.enabled .Values.config }}
           volumeMounts:
+            {{- if .Values.config }}
+            - mountPath: /srv/cfg/conf.php
+              name: privatebin-config
+              subPath: conf.php
+              readOnly: true
+            {{- end }}
+            {{- if .Values.persistence.enabled }}
             - mountPath: /srv/data
               name: privatebin-data
               readOnly: False
+            {{- end }}
           {{- end }}
-      {{- if .Values.persistence.enabled }}
+      {{- if or .Values.persistence.enabled .Values.config }}
       volumes:
+        {{- if .Values.config }}
+        - name: privatebin-config
+          configMap:
+            name: {{ include "privatebin.fullname" . }}
+        {{- end }}
+        {{- if .Values.persistence.enabled }}
         - name: privatebin-data
           persistentVolumeClaim:
             claimName: {{ $fullName }}
+        {{- end }}
       {{- end }}
-      securityContext:
-        fsGroup: 65534
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -31,7 +31,9 @@ data:
     ; make sure the value exists in [formatter_options]
     defaultformatter = "{{ .Values.config.defaultformatter }}"
     ; (optional) set a syntax highlighting theme, as found in css/prettify/
-    ; syntaxhighlightingtheme = "{{ .Values.config.syntaxhighlightingtheme }}"
+    {{- if .Values.config.syntaxhighlightingtheme }}
+    syntaxhighlightingtheme = "{{ .Values.config.syntaxhighlightingtheme }}"
+    {{- end }}
     ; size limit per paste or comment in bytes, defaults to 10 Mebibytes
     sizelimit = {{ .Values.config.sizelimit }}
     ; template to include, default is "bootstrap" (tpl/bootstrap.php)
@@ -58,12 +60,12 @@ data:
     {{- end }}
     ; (optional) Let users create a QR code for sharing the paste URL with one click.
     ; It works both when a new paste is created and when you view a paste.
-    {{- if .Values.config.qrcode }}
+    {{- if hasKey .Values.config "qrcode" }}
     qrcode = {{ .Values.config.qrcode }}
     {{- end }}
     ; (optional) Let users send an email sharing the paste URL with one click.
     ; It works both when a new paste is created and when you view a paste.
-    {{- if .Values.config.email }}
+    {{- if hasKey .Values.config "email" }}
     email = {{ .Values.config.email }}
     {{- end }}
     ; (optional) IP based icons are a weak mechanism to detect if a comment was from
@@ -72,7 +74,7 @@ data:
     ; SHA512 HMAC rainbow table is generated for all (relevant) IPs.
     ; Can be set to one these values:
     ; "none" / "identicon" (default) / "jdenticon" / "vizhash".
-    {{- if .Values.config.icon }}
+    {{- if hasKey .Values.config "icon" }}
     icon = "{{ .Values.config.icon }}"
     {{- end }}
     ; Content Security Policy headers allow a website to restrict what sources are
@@ -97,21 +99,21 @@ data:
     ; stay compatible with PrivateBin Alpha 0.19, less secure
     ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
     ; sha256 in HMAC for the deletion token
-    {{- if .Values.config.zerobincompatibility }}
-    ; zerobincompatibility = {{ .Values.config.zerobincompatibility }}
+    {{- if hasKey .Values.config "zerobincompatibility" }}
+    zerobincompatibility = {{ .Values.config.zerobincompatibility }}
     {{- end }}
     ; Enable or disable the warning message when the site is served over an insecure
     ; connection (insecure HTTP instead of HTTPS), defaults to true.
     ; Secure transport methods like Tor and I2P domains are automatically whitelisted.
     ; It is **strongly discouraged** to disable this.
     ; See https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection for more     information.
-    {{- if .Values.config.httpwarning }}
+    {{- if hasKey .Values.config "httpwarning" }}
     httpwarning = {{ .Values.config.httpwarning }}
     {{- end }}
     ; Pick compression algorithm or disable it. Only applies to pastes/comments
     ; created after changing the setting.
     ; Can be set to one these values: "none" / "zlib" (default).
-    {{- if .Values.config.compression }}
+    {{- if hasKey .Values.config "compression" }}
     compression = "{{ .Values.config.compression }}"
     {{- end }}
     [expire]
