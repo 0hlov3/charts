@@ -52,6 +52,40 @@ securityContext: {}
   # runAsNonRoot: true
 # runAsUser: 1000
 
+## @section Probes parameters
+## @param livenessProbe.enabled Enable liveness probe
+## @param livenessProbe.path [string] HTTP path for liveness probe
+## @param livenessProbe.initialDelaySeconds Delay before liveness probe starts
+## @param livenessProbe.periodSeconds Liveness probe period
+## @param livenessProbe.timeoutSeconds Liveness probe timeout
+## @param livenessProbe.failureThreshold Liveness probe failure threshold
+## @param livenessProbe.successThreshold Liveness probe success threshold
+livenessProbe:
+  enabled: true
+  path: /
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 1
+  failureThreshold: 3
+  successThreshold: 1
+
+## @section Probes parameters
+## @param readinessProbe.enabled Enable readiness probe
+## @param readinessProbe.path [string] HTTP path for readiness probe
+## @param readinessProbe.initialDelaySeconds Delay before readiness probe starts
+## @param readinessProbe.periodSeconds Readiness probe period
+## @param readinessProbe.timeoutSeconds Readiness probe timeout
+## @param readinessProbe.failureThreshold Readiness probe failure threshold
+## @param readinessProbe.successThreshold Readiness probe success threshold
+readinessProbe:
+  enabled: true
+  path: /
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 1
+  failureThreshold: 3
+  successThreshold: 1
+
 ## @section Service parameters
 ## @param service.type Kubernetes Service type
 ## @param service.port Service port for the Uptime Kuma web UI

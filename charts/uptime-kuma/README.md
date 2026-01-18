@@ -4,11 +4,21 @@ Deploy [Uptime Kuma](https://github.com/louislam/uptime-kuma)—a self-hosted mo
 
 - **Chart name:** `uptime-kuma`
 - **Chart type:** Application
-- **Chart version:** 0.2.2
-- **App version:** `1.23.16-debian`
+- **Chart version:** 1.0.0
+- **App version:** `2.0.0`
 - **Upstream image:** `docker.io/louislam/uptime-kuma`
 
 This chart creates a `Deployment`, `Service`, optional `Ingress`(es), and an optional `PersistentVolumeClaim` for data.
+
+## Upgrade note (0.3.0 -> 1.0.0)
+When upgrading from v1 to v2, the data migration can take time and the app may not respond during the process. To avoid restarts mid-migration, temporarily disable probes:
+```yaml
+livenessProbe:
+  enabled: false
+readinessProbe:
+  enabled: false
+```
+Re-enable them after the migration completes.
 
 ## Requirements
  - Kubernetes 1.19+ (Ingress v1 is used when available; older gates handled in templates)
@@ -49,6 +59,30 @@ This chart creates a `Deployment`, `Service`, optional `Ingress`(es), and an opt
 | `podAnnotations`     | Additional annotations to add to the Pod                                  | `{}`  |
 | `podSecurityContext` | Pod-level security context (e.g. fsGroup)                                 | `{}`  |
 | `securityContext`    | Container-level security context (e.g. runAsUser, readOnlyRootFilesystem) | `{}`  |
+
+### Probes parameters
+
+| Name                                | Description                        | Value  |
+| ----------------------------------- | ---------------------------------- | ------ |
+| `livenessProbe.enabled`             | Enable liveness probe              | `true` |
+| `livenessProbe.path`                | HTTP path for liveness probe       | `""`   |
+| `livenessProbe.initialDelaySeconds` | Delay before liveness probe starts | `0`    |
+| `livenessProbe.periodSeconds`       | Liveness probe period              | `10`   |
+| `livenessProbe.timeoutSeconds`      | Liveness probe timeout             | `1`    |
+| `livenessProbe.failureThreshold`    | Liveness probe failure threshold   | `3`    |
+| `livenessProbe.successThreshold`    | Liveness probe success threshold   | `1`    |
+
+### Probes parameters
+
+| Name                                 | Description                         | Value  |
+| ------------------------------------ | ----------------------------------- | ------ |
+| `readinessProbe.enabled`             | Enable readiness probe              | `true` |
+| `readinessProbe.path`                | HTTP path for readiness probe       | `""`   |
+| `readinessProbe.initialDelaySeconds` | Delay before readiness probe starts | `0`    |
+| `readinessProbe.periodSeconds`       | Readiness probe period              | `10`   |
+| `readinessProbe.timeoutSeconds`      | Readiness probe timeout             | `1`    |
+| `readinessProbe.failureThreshold`    | Readiness probe failure threshold   | `3`    |
+| `readinessProbe.successThreshold`    | Readiness probe success threshold   | `1`    |
 
 ### Service parameters
 
