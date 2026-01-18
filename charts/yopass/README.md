@@ -22,7 +22,7 @@ This chart deploys the Yopass server with an in-pod **Memcached** sidecar for st
 
  - Ephemeral storage: The chart hard-codes --database=memcached and runs a Memcached sidecar. If the Pod restarts, in-memory secrets are lost. This matches Yopass’ ephemeral design.
  - Replica caveat: replicaCount must remain 1 unless you wire external/shared storage; each pod has its own in-pod Memcached and the Service load-balances requests (no shared cache, no session affinity).
- - Sidecar image: Memcached image is currently unpinned in the template. Pinning (via values) isn’t exposed yet.
+ - Sidecar image: Pin Memcached using `memcached.image.tag` to avoid drifting image versions.
  - Security context: Sensible defaults are provided but commented out—enable runAsNonRoot, readOnlyRootFilesystem, and drop capabilities as needed.
  - Resource limits: Not set by default; set resources.requests/limits to ensure stable scheduling and performance.
 
@@ -118,6 +118,18 @@ This chart deploys the Yopass server with an in-pod **Memcached** sidecar for st
 | `nodeSelector` | Node labels for Pod assignment                       | `{}`  |
 | `tolerations`  | Tolerations for taints to schedule on matching nodes | `[]`  |
 | `affinity`     | Affinity/anti-affinity rules for Pod scheduling      | `{}`  |
+
+### Memcached
+
+| Name                         | Description                                       | Value          |
+| ---------------------------- | ------------------------------------------------- | -------------- |
+| `memcached`                  | Memcached sidecar configuration                   |                |
+| `memcached.image`            | Memcached image configuration                     |                |
+| `memcached.image.registry`   | Memcached image registry                          | `docker.io`    |
+| `memcached.image.repository` | Memcached image repository                        | `memcached`    |
+| `memcached.image.tag`        | Memcached image tag                               | `""`           |
+| `memcached.image.pullPolicy` | Memcached image pull policy                       | `IfNotPresent` |
+| `memcached.resources`        | CPU/Memory resource requests/limits for Memcached | `{}`           |
 
 ## Contributing
 Issues and PRs welcome! Please bump the chart version in Chart.yaml when changing templates or values, and keep this README’s Parameters in sync using the [Bitnami generator](https://github.com/bitnami/readme-generator-for-helm).

@@ -127,3 +127,25 @@ nodeSelector: {}
 tolerations: []
 ## @param affinity [object] Affinity/anti-affinity rules for Pod scheduling
 affinity: {}
+
+## @section Memcached
+## @extra memcached Memcached sidecar configuration
+memcached:
+  ## @extra memcached.image Memcached image configuration
+  image:
+    ## @param memcached.image.registry Memcached image registry
+    registry: docker.io
+    ## @param memcached.image.repository Memcached image repository
+    repository: memcached
+    ## @param memcached.image.tag [string] Memcached image tag
+    tag: ""
+    ## @param memcached.image.pullPolicy Memcached image pull policy
+    pullPolicy: IfNotPresent
+  ## @param memcached.resources [object] CPU/Memory resource requests/limits for Memcached
+  resources:
+    limits:
+      cpu: 100m
+      memory: 100Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi

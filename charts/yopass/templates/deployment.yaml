@@ -61,14 +61,10 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: {{ .Chart.Name }}-memcached
-          image: memcached
+          image: "{{ .Values.memcached.image.registry }}/{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag | default "latest" }}"
+          imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}
           resources:
-            limits:
-              cpu: 100m
-              memory: 100Mi
-            requests:
-              cpu: 100m
-              memory: 100Mi
+            {{- toYaml .Values.memcached.resources | nindent 12 }}
           args:
             - "-m 64"
           ports:
