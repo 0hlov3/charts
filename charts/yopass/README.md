@@ -24,7 +24,7 @@ This chart deploys the Yopass server with an in-pod **Memcached** sidecar for st
  - Replica caveat: replicaCount must remain 1 unless you wire external/shared storage; each pod has its own in-pod Memcached and the Service load-balances requests (no shared cache, no session affinity).
  - Sidecar image: Pin Memcached using `memcached.image.tag` to avoid drifting image versions.
  - Security context: Sensible defaults are provided but commented out—enable runAsNonRoot, readOnlyRootFilesystem, and drop capabilities as needed.
- - Resource limits: Not set by default; set resources.requests/limits to ensure stable scheduling and performance.
+ - Resource limits: The Yopass container (`resources`) has no defaults; the Memcached sidecar (`memcached.resources`) ships with default requests/limits. Tune both for your environment.
 
 ## Parameters
 
@@ -121,15 +121,15 @@ This chart deploys the Yopass server with an in-pod **Memcached** sidecar for st
 
 ### Memcached
 
-| Name                         | Description                                       | Value          |
-| ---------------------------- | ------------------------------------------------- | -------------- |
-| `memcached`                  | Memcached sidecar configuration                   |                |
-| `memcached.image`            | Memcached image configuration                     |                |
-| `memcached.image.registry`   | Memcached image registry                          | `docker.io`    |
-| `memcached.image.repository` | Memcached image repository                        | `memcached`    |
-| `memcached.image.tag`        | Memcached image tag                               | `""`           |
-| `memcached.image.pullPolicy` | Memcached image pull policy                       | `IfNotPresent` |
-| `memcached.resources`        | CPU/Memory resource requests/limits for Memcached | `{}`           |
+| Name                         | Description                                                                                         | Value           |
+| ---------------------------- | --------------------------------------------------------------------------------------------------- | --------------- |
+| `memcached`                  | Memcached sidecar configuration                                                                     |                 |
+| `memcached.image`            | Memcached image configuration                                                                       |                 |
+| `memcached.image.registry`   | Memcached image registry                                                                            | `docker.io`     |
+| `memcached.image.repository` | Memcached image repository                                                                          | `memcached`     |
+| `memcached.image.tag`        | Memcached image tag (must be set, no `latest`)                                                      | `1.6.40-alpine` |
+| `memcached.image.pullPolicy` | Memcached image pull policy                                                                         | `IfNotPresent`  |
+| `memcached.resources`        | CPU/Memory resource requests/limits for Memcached (default limits/requests: cpu=100m, memory=100Mi) | `{}`            |
 
 ## Contributing
 Issues and PRs welcome! Please bump the chart version in Chart.yaml when changing templates or values, and keep this README’s Parameters in sync using the [Bitnami generator](https://github.com/bitnami/readme-generator-for-helm).

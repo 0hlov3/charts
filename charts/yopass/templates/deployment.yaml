@@ -61,7 +61,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: {{ .Chart.Name }}-memcached
-          image: "{{ .Values.memcached.image.registry }}/{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag | default "latest" }}"
+          image: "{{ .Values.memcached.image.registry }}/{{ .Values.memcached.image.repository }}:{{ required "memcached.image.tag is required and must not be empty" .Values.memcached.image.tag }}"
           imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}
           resources:
             {{- toYaml .Values.memcached.resources | nindent 12 }}

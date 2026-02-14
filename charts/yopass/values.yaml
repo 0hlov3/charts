@@ -137,11 +137,11 @@ memcached:
     registry: docker.io
     ## @param memcached.image.repository Memcached image repository
     repository: memcached
-    ## @param memcached.image.tag [string] Memcached image tag
-    tag: ""
+    ## @param memcached.image.tag Memcached image tag (must be set, no `latest`)
+    tag: "1.6.40-alpine"
     ## @param memcached.image.pullPolicy Memcached image pull policy
     pullPolicy: IfNotPresent
-  ## @param memcached.resources [object] CPU/Memory resource requests/limits for Memcached
+  ## @param memcached.resources [object] CPU/Memory resource requests/limits for Memcached (default limits/requests: cpu=100m, memory=100Mi)
   resources:
     limits:
       cpu: 100m
