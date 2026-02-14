@@ -4912,6 +4912,22 @@ entries:
   yopass:
   - apiVersion: v2
     appVersion: 12.5.0
+    created: "2026-02-14T15:02:00.818477013Z"
+    description: A Helm chart for Kubernetes to Deploy Yopass
+    digest: 51bff506491a80011461c298427f5167ddbc663050587fbf9c86ab51c0fbf764
+    home: https://github.com/jhaals/yopass
+    icon: https://user-images.githubusercontent.com/37777956/59544367-0867aa80-8f09-11e9-8d6a-02008e1bccc7.png
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: yopass
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/yopass-0.1.17/yopass-0.1.17.tgz
+    version: 0.1.17
+  - apiVersion: v2
+    appVersion: 12.5.0
     created: "2026-02-14T14:52:07.317768424Z"
     description: A Helm chart for Kubernetes to Deploy Yopass
     digest: 05ce4aa2edda379380a7e26931d56a2a2640d15f61d1dc93393f023c939d6bb9
@@ -5182,4 +5198,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2026-02-14T14:52:07.318285245Z"
+generated: "2026-02-14T15:02:00.819138437Z"
