@@ -207,19 +207,27 @@ securityContext:
   ## @param securityContext.runAsGroup Security Context runAsGroup
   runAsGroup: 1000
 
+# Health checks are enabled by default. If GoToSocial takes a long time to start
+# (e.g. due to database migrations), consider increasing failureThreshold /
+# initialDelaySeconds on the startupProbe, or disable individual probes by
+# setting enabled: false.
 startupProbe:
+  ## @param startupProbe.enabled Enable startupProbe. Set to false to disable during upgrades with long-running migrations.
+  enabled: true
   httpGet:
     ## @param startupProbe.httpGet.path Path to access on the HTTP server
     path: /livez
     ## @param startupProbe.httpGet.port Port for startupProbe
     port: http
-  ## @param startupProbe.failureThreshold Failure threshold for startupProbe
-  failureThreshold: 60
+  ## @param startupProbe.failureThreshold Failure threshold for startupProbe. 90 * 10s = 15 minutes total startup budget.
+  failureThreshold: 90
   ## @param startupProbe.periodSeconds Period seconds for startupProbe
   periodSeconds: 10
-  ## @param startupProbe.initialDelaySeconds ensures probes don't start prematurely.
-  initialDelaySeconds: 5
+  ## @param startupProbe.initialDelaySeconds Initial delay before the first probe, gives GoToSocial time to begin startup.
+  initialDelaySeconds: 30
 livenessProbe:
+  ## @param livenessProbe.enabled Enable livenessProbe. Set to false to disable.
+  enabled: true
   httpGet:
     ## @param livenessProbe.httpGet.path Path to access on the HTTP server
     path: /livez
@@ -230,6 +238,8 @@ livenessProbe:
   ## @param livenessProbe.periodSeconds Period seconds for livenessProbe, Default: Check every 30 seconds to reduce overhead
   periodSeconds: 30
 readinessProbe:
+  ## @param readinessProbe.enabled Enable readinessProbe. Set to false to disable.
+  enabled: true
   httpGet:
     ## @param readinessProbe.httpGet.path Path to access on the HTTP server
     path: /readyz
