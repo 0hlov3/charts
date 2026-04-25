@@ -1,120 +1,187 @@
-# Default values for joplin-server.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+## @section Global parameters
 
+## @param replicaCount Number of Joplin Server replicas
 replicaCount: 1
 
+## @section Image parameters
+
+## @param image.repository Docker image repository
+## @param image.pullPolicy Image pull policy
+## @param image.tag [string] Image tag (overrides the chart appVersion when set)
 image:
   repository: joplin/server
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
-joplin:
-  APP_PORT: 22300
-  APP_BASE_URL: http://localhost:22300
-  externalPostgres:
-    enabled: false
-    POSTGRES_PASSWORD: joplin
-    POSTGRES_DATABASE: joplin
-    POSTGRES_USER: joplin
-    POSTGRES_PORT: 5432
-    POSTGRES_HOST: localhost
-    POSTGRES_SSL_MODE_NO_VERIFY: false
-  mailer:
-    enabled: false
-    existingSecretName: joplin-mailer
-
-
+## @param imagePullSecrets [array] List of image pull secret names
 imagePullSecrets: []
+## @param nameOverride [string] Override for the chart name
 nameOverride: ""
+## @param fullnameOverride [string] Override for the full release name
 fullnameOverride: ""
 
+## @section Joplin parameters
+
+joplin:
+  ## @param joplin.appBaseUrl Publicly reachable base URL of the server (e.g. https://joplin.example.com)
+  appBaseUrl: http://localhost:22300
+  ## @param joplin.appPort Port the Joplin Server process listens on inside the container
+  appPort: 22300
+
+  ## Database backend configuration
+  database:
+    ## @param joplin.database.client Database backend. `sqlite` for testing/single-user; `pg` for production
+    client: sqlite
+
+  ## External PostgreSQL configuration (used when joplin.database.client=pg)
+  postgres:
+    ## @param joplin.postgres.host PostgreSQL host
+    host: localhost
+    ## @param joplin.postgres.port PostgreSQL port
+    port: 5432
+    ## @param joplin.postgres.database PostgreSQL database name
+    database: joplin-server
+    ## @param joplin.postgres.user PostgreSQL username
+    user: joplin
+    ## @param joplin.postgres.password [string] Plain-text PostgreSQL password. Ignored when existingSecret is set. Do NOT use in production.
+    password: ""
+    ## @param joplin.postgres.existingSecret [string] Name of an existing Secret containing the PostgreSQL password
+    existingSecret: ""
+    ## @param joplin.postgres.existingSecretPasswordKey Key inside the Secret that holds the PostgreSQL password
+    existingSecretPasswordKey: password
+    ## @param joplin.postgres.sslModeNoVerify Connect via POSTGRES_CONNECTION_STRING with ?sslmode=no-verify appended
+    sslModeNoVerify: false
+
+  ## Storage driver configuration
+  storage:
+    ## @param joplin.storage.driver STORAGE_DRIVER passed verbatim to Joplin Server. Examples: `Type=Database`, `Type=Filesystem; Path=/data`, `Type=S3; Region=…`
+    driver: "Type=Database"
+    ## @param joplin.storage.driverFallback [string] Optional STORAGE_DRIVER_FALLBACK value for migration scenarios
+    driverFallback: ""
+
+  ## Mailer configuration
+  mailer:
+    ## @param joplin.mailer.enabled Enable mailer support. Requires an existing Secret named by joplin.mailer.existingSecretName
+    enabled: false
+    ## @param joplin.mailer.existingSecretName Name of the Secret with mailer credentials (keys: mailerHost, mailerPort, mailerSecure, mailerAuthUser, mailerAuthPassword, mailerNoreplyName, mailerNoreplyEmail)
+    existingSecretName: joplin-mailer
+
+## @section Persistence parameters
+
+## @param persistence.enabled Enable persistent storage. Required for SQLite and Filesystem storage backends.
+## @param persistence.mountPath Mount path inside the container
+## @param persistence.storageClass [string] StorageClass for the PVC. Leave empty to use the cluster default.
+## @param persistence.accessMode PVC access mode
+## @param persistence.size PVC size
+## @param persistence.existingClaim [string] Name of an existing PVC to use instead of creating one
+persistence:
+  enabled: false
+  mountPath: /home/joplin/.config/joplin-server
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  existingClaim: ""
+
+## @section Service Account parameters
+
 serviceAccount:
-  # Specifies whether a service account should be created
+  ## @param serviceAccount.create Create a ServiceAccount for the pod
   create: true
-  # Annotations to add to the service account
+  ## @param serviceAccount.annotations [object] Annotations to add to the ServiceAccount
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  ## @param serviceAccount.name [string] Name of the ServiceAccount. Auto-generated when empty and serviceAccount.create is true.
   name: ""
 
+## @section Pod parameters
+
+## @param podAnnotations [object] Annotations to add to the pod
 podAnnotations: {}
 
+## @param podSecurityContext.fsGroup Group ID for the pod filesystem
 podSecurityContext:
   fsGroup: 1001
 
+## @param securityContext.capabilities.drop [array] Capabilities to drop from the container
+## @param securityContext.readOnlyRootFilesystem Mount the container root filesystem as read-only
+## @param securityContext.runAsNonRoot Require the container to run as a non-root user
+## @param securityContext.runAsUser User ID to run the container process
+## @param securityContext.runAsGroup Group ID to run the container process
 securityContext:
   capabilities:
     drop:
-    - ALL
+      - ALL
   readOnlyRootFilesystem: false
   runAsNonRoot: true
   runAsUser: 1001
   runAsGroup: 1001
 
+## @section Service parameters
+
 service:
+  ## @param service.type Kubernetes Service type
   type: ClusterIP
+  ## @param service.port Service port
   port: 80
 
+## @section Ingress parameters
+
 ingress:
+  ## @param ingress.enabled Enable Ingress
   enabled: false
+  ## @param ingress.className IngressClass name (e.g. nginx)
   className: "nginx"
+  ## @param ingress.annotations [object] Additional annotations for the Ingress
   annotations: {}
     # kubernetes.io/tls-acme: "true"
     # cert-manager.io/cluster-issuer: letsencrypt-prod
+  ## @param ingress.hosts[0].host Hostname for the Ingress rule
+  ## @param ingress.hosts[0].paths[0].path URL path
+  ## @param ingress.hosts[0].paths[0].pathType Path type (Exact, Prefix, ImplementationSpecific)
   hosts:
     - host: chart-example.local
       paths:
         - path: /
           pathType: ImplementationSpecific
+  ## @param ingress.tls [array] TLS configuration for the Ingress
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
 
+## @section Resource parameters
+
+## @param resources.limits.memory [default: 512Mi] Memory limit
+## @param resources.limits.cpu [default: 500m] CPU limit
+## @param resources.requests.memory [default: 256Mi] Memory request
+## @param resources.requests.cpu [default: 100m] CPU request
 resources:
   limits:
-    memory: 256Mi
-    cpu: 250m
+    memory: 512Mi
+    cpu: 500m
   requests:
     memory: 256Mi
-    cpu: 250m
+    cpu: 100m
+
+## @section Autoscaling parameters
 
 autoscaling:
+  ## @param autoscaling.enabled Enable Horizontal Pod Autoscaler
   enabled: false
+  ## @param autoscaling.minReplicas Minimum number of replicas
   minReplicas: 1
-  maxReplicas: 100
+  ## @param autoscaling.maxReplicas Maximum number of replicas
+  maxReplicas: 5
+  ## @param autoscaling.targetCPUUtilizationPercentage Target CPU utilization percentage
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
+## @section Scheduling parameters
+
+## @param nodeSelector [object] Node labels for pod assignment
 nodeSelector: {}
 
+## @param tolerations [array] Tolerations for pod assignment
 tolerations: []
 
+## @param affinity [object] Affinity rules for pod assignment
 affinity: {}
-
-postgresql:
-  enabled: true
-  primary:
-    resources:
-      limits:
-        memory: 256Mi
-        cpu: 250m
-      requests:
-        memory: 256Mi
-        cpu: 250m
-    persistence:
-      size: 1Gi
-  auth:
-    # Password for the "postgres" admin user. Ignored if auth.existingSecret with key postgres-password is provided
-    postgresPassword: #ChangeMe
-    # Name for a custom user to create
-    username: joplin
-    # Password for the custom user to create. Ignored if auth.existingSecret with key password is provided
-    password: #ChangeMe
-    database: joplin-server
-    # Password for the replication user. Ignored if auth.existingSecret with key replication-password is provided
-    replicationPassword: #ChangeMe
-    # Name of existing secret to use for PostgreSQL credentials. auth.postgresPassword, auth.password, and auth.replicationPassword will be ignored and picked up from this secret. The secret might also contains the key ldap-password if LDAP is enabled. ldap.bind_password will be ignored and picked from this secret in this case.
-    existingSecret: ""
