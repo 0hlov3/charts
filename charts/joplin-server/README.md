@@ -108,6 +108,7 @@ joplin:
 
 persistence:
   enabled: true
+  mountPath: /data
   size: 10Gi
 ```
 
