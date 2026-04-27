@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "joplin-server values",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "pullPolicy": {
+          "type": "string",
+          "enum": ["Always", "IfNotPresent", "Never"]
+        },
+        "tag": { "type": "string" }
+      },
+      "required": ["repository", "pullPolicy"]
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "nameOverride":     { "type": "string" },
+    "fullnameOverride": { "type": "string" },
+    "joplin": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "appBaseUrl": { "type": "string", "minLength": 1 },
+        "appPort": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "database": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "client": {
+              "type": "string",
+              "enum": ["sqlite", "pg"],
+              "description": "Database backend. Use 'sqlite' for testing/single-user, 'pg' for production."
+            }
+          },
+          "required": ["client"]
+        },
+        "postgres": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "host":     { "type": "string", "minLength": 1 },
+            "port":     { "type": "integer", "minimum": 1, "maximum": 65535 },
+            "database": { "type": "string", "minLength": 1 },
+            "user":     { "type": "string", "minLength": 1 },
+            "password": { "type": "string" },
+            "existingSecret":             { "type": "string" },
+            "existingSecretPasswordKey":  { "type": "string", "minLength": 1 },
+            "sslModeNoVerify": { "type": "boolean" }
+          },
+          "required": ["host", "port", "database", "user", "existingSecretPasswordKey"]
+        },
+        "storage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "driver":         { "type": "string", "minLength": 1 },
+            "driverFallback": { "type": "string" }
+          },
+          "required": ["driver"]
+        },
+        "mailer": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled":            { "type": "boolean" },
+            "existingSecretName": { "type": "string", "minLength": 1 }
+          },
+          "required": ["enabled"],
+          "if":   { "properties": { "enabled": { "const": true } } },
+          "then": { "required": ["existingSecretName"] }
+        }
+      },
+      "required": ["appBaseUrl", "appPort", "database", "postgres", "storage", "mailer"]
+    },
+    "persistence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled":       { "type": "boolean" },
+        "mountPath":     { "type": "string", "minLength": 1 },
+        "storageClass":  { "type": "string" },
+        "accessMode": {
+          "type": "string",
+          "enum": ["ReadWriteOnce", "ReadWriteMany", "ReadOnlyMany", "ReadWriteOncePod"]
+        },
+        "size":          { "type": "string", "minLength": 1 },
+        "existingClaim": { "type": "string" }
+      },
+      "required": ["enabled", "mountPath", "accessMode", "size"]
+    },
+    "serviceAccount": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "create":      { "type": "boolean" },
+        "annotations": { "type": "object" },
+        "name":        { "type": "string" }
+      },
+      "required": ["create"]
+    },
+    "podAnnotations":    { "type": "object" },
+    "podSecurityContext": { "type": "object" },
+    "securityContext":    { "type": "object" },
+    "service": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["ClusterIP", "NodePort", "LoadBalancer"]
+        },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 }
+      },
+      "required": ["type", "port"]
+    },
+    "ingress": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled":     { "type": "boolean" },
+        "className":   { "type": "string" },
+        "annotations": { "type": "object" },
+        "hosts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "host": { "type": "string" },
+              "paths": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "path":     { "type": "string" },
+                    "pathType": {
+                      "type": "string",
+                      "enum": ["Exact", "Prefix", "ImplementationSpecific"]
+                    }
+                  },
+                  "required": ["path", "pathType"]
+                }
+              }
+            },
+            "required": ["host", "paths"]
+          }
+        },
+        "tls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "secretName": { "type": "string" },
+              "hosts": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            },
+            "required": ["secretName", "hosts"]
+          }
+        }
+      },
+      "required": ["enabled"]
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "limits":   {
+          "type": "object",
+          "properties": {
+            "cpu":    { "type": "string" },
+            "memory": { "type": "string" }
+          }
+        },
+        "requests": {
+          "type": "object",
+          "properties": {
+            "cpu":    { "type": "string" },
+            "memory": { "type": "string" }
+          }
+        }
+      }
+    },
+    "autoscaling": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled":                        { "type": "boolean" },
+        "minReplicas":                    { "type": "integer", "minimum": 1 },
+        "maxReplicas":                    { "type": "integer", "minimum": 1 },
+        "targetCPUUtilizationPercentage": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "targetMemoryUtilizationPercentage": { "type": "integer", "minimum": 1, "maximum": 100 }
+      },
+      "required": ["enabled"],
+      "if":   { "properties": { "enabled": { "const": true } } },
+      "then": { "required": ["minReplicas", "maxReplicas"] }
+    },
+    "nodeSelector": { "type": "object" },
+    "tolerations":  { "type": "array" },
+    "affinity":     { "type": "object" }
+  },
+  "required": [
+    "replicaCount", "image", "joplin", "persistence",
+    "serviceAccount", "service", "ingress", "resources", "autoscaling"
+  ]
+}

@@ -9,14 +9,10 @@ maintainers:
     email: dev@privatetrace.io
     url: https://schoenwald.aero
 
+kubeVersion: ">=1.23.0-0"
 type: application
 # ChartVersion
-version: "0.2.9"
+version: "1.0.0"
 # AppVersion
-appVersion: "2.14.1-beta"
+appVersion: "3.6.1"
 
-dependencies:
-  - name: postgresql
-    version: ~11.9.13
-    repository: https://charts.bitnami.com/bitnami
-    condition: postgresql.enabled
