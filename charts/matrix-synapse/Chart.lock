@@ -1,6 +1,6 @@
 dependencies:
 - name: dragonfly
   repository: oci://ghcr.io/dragonflydb/dragonfly/helm
-  version: v1.26.1
-digest: sha256:2e366f81448dda29b362104d784151a1cdf6fb2b175ac528846b9cf6189a9f34
-generated: "2025-01-15T17:00:49.62268808Z"
+  version: v1.27.1
+digest: sha256:7cd34bd6adb3a47f4996533dbd5eb173f44111408112a92f8792d35390b563ac
+generated: "2025-02-25T09:01:21.755339094Z"

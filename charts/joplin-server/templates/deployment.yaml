@@ -1,4 +1,3 @@
-{{- $postgresHost := include "joplin-server.postgresql.host" . }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -36,12 +35,18 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: APP_BASE_URL
-              value: "{{ .Values.joplin.APP_BASE_URL }}"
+              value: {{ .Values.joplin.appBaseUrl | quote }}
             - name: APP_PORT
-              value: {{ .Values.joplin.APP_PORT |quote }}
+              value: {{ .Values.joplin.appPort | quote }}
+            - name: STORAGE_DRIVER
+              value: {{ .Values.joplin.storage.driver | quote }}
+            {{- if .Values.joplin.storage.driverFallback }}
+            - name: STORAGE_DRIVER_FALLBACK
+              value: {{ .Values.joplin.storage.driverFallback | quote }}
+            {{- end }}
             {{- if .Values.joplin.mailer.enabled }}
             - name: MAILER_ENABLED
-              value: "{{ .Values.joplin.mailer.enabled }}"
+              value: "1"
             - name: MAILER_HOST
               valueFrom:
                 secretKeyRef:
@@ -51,7 +56,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.joplin.mailer.existingSecretName }}
-                  key: mailerport
+                  key: mailerPort
             - name: MAILER_SECURE
               valueFrom:
                 secretKeyRef:
@@ -78,60 +83,66 @@ spec:
                   name: {{ .Values.joplin.mailer.existingSecretName }}
                   key: mailerNoreplyEmail
             {{- end }}
-            {{- if and (eq .Values.joplin.externalPostgres.enabled true) (eq .Values.joplin.externalPostgres.POSTGRES_SSL_MODE_NO_VERIFY false) }}
+            {{- if eq .Values.joplin.database.client "pg" }}
             - name: DB_CLIENT
               value: "pg"
-            - name: POSTGRES_PASSWORD
-              value: "{{ .Values.joplin.externalPostgres.POSTGRES_PASSWORD }}"
-            - name: POSTGRES_DATABASE
-              value: "{{ .Values.joplin.externalPostgres.POSTGRES_DATABASE }}"
-            - name: POSTGRES_USER
-              value: "{{ .Values.joplin.externalPostgres.POSTGRES_USER }}"
-            - name: POSTGRES_PORT
-              value: "{{ .Values.joplin.externalPostgres.POSTGRES_PORT }}"
-            - name: POSTGRES_HOST
-              value: "{{ .Values.joplin.externalPostgres.POSTGRES_HOST }}"
-            {{ else if and (eq .Values.joplin.externalPostgres.enabled true) (eq .Values.joplin.externalPostgres.POSTGRES_SSL_MODE_NO_VERIFY true) }}
-            - name: DB_CLIENT
-              value: "pg"
-            - name: POSTGRES_CONNECTION_STRING
-              value: "postgresql://{{ .Values.joplin.externalPostgres.POSTGRES_USER }}:{{ .Values.joplin.externalPostgres.POSTGRES_PASSWORD }}@{{ .Values.joplin.externalPostgres.POSTGRES_HOST }}:{{ .Values.joplin.externalPostgres.POSTGRES_PORT }}/{{ .Values.joplin.externalPostgres.POSTGRES_DATABASE }}?sslmode=no-verify"
-            {{- else if .Values.postgresql.enabled }}
-            - name: DB_CLIENT
-              value: "pg"
-            - name: POSTGRES_DATABASE
-              value: "{{ .Values.postgresql.auth.database }}"
-            - name: POSTGRES_USER
-              value: "{{ .Values.postgresql.auth.username }}"
-            - name: POSTGRES_PORT
-              value: "5432"
-            - name: POSTGRES_HOST
-              value: "{{ $postgresHost }}"
-            {{- if .Values.postgresql.auth.existingSecret }}
+            {{- if .Values.joplin.postgres.existingSecret }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: password
-                  name: "{{ .Values.postgresql.auth.existingSecret }}"
+                  name: {{ .Values.joplin.postgres.existingSecret }}
+                  key: {{ .Values.joplin.postgres.existingSecretPasswordKey }}
             {{- else }}
             - name: POSTGRES_PASSWORD
-              value: "{{ .Values.postgresql.auth.password }}"
+              value: {{ .Values.joplin.postgres.password | quote }}
+            {{- end }}
+            {{- if .Values.joplin.postgres.sslModeNoVerify }}
+            - name: POSTGRES_CONNECTION_STRING
+              value: "postgresql://{{ .Values.joplin.postgres.user }}:$(POSTGRES_PASSWORD)@{{ .Values.joplin.postgres.host }}:{{ .Values.joplin.postgres.port }}/{{ .Values.joplin.postgres.database }}?sslmode=no-verify"
+            {{- else }}
+            - name: POSTGRES_HOST
+              value: {{ .Values.joplin.postgres.host | quote }}
+            - name: POSTGRES_PORT
+              value: {{ .Values.joplin.postgres.port | quote }}
+            - name: POSTGRES_DATABASE
+              value: {{ .Values.joplin.postgres.database | quote }}
+            - name: POSTGRES_USER
+              value: {{ .Values.joplin.postgres.user | quote }}
             {{- end }}
             {{- end }}
           ports:
             - name: http
-              containerPort: 22300
+              containerPort: {{ .Values.joplin.appPort }}
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
+          livenessProbe:
+            httpGet:
+              path: /api/ping
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/ping
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          {{- if .Values.persistence.enabled }}
+          volumeMounts:
+            - name: data
+              mountPath: {{ .Values.persistence.mountPath }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      {{- if .Values.persistence.enabled }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "joplin-server.pvcName" . }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

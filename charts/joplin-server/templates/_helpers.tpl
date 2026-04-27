@@ -8,7 +8,7 @@ Expand the name of the chart.
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
+If the release name already contains the chart name it is used as-is.
 */}}
 {{- define "joplin-server.fullname" -}}
 {{- if .Values.fullnameOverride }}
@@ -62,17 +62,12 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+Name of the PVC to mount for filesystem storage.
 */}}
-{{- define "joplin-server.postgresql.fullname" -}}
-{{- printf "%s-%s" .Release.Name "postgresql" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{/*
-Set postgres host
-*/}}
-{{- define "joplin-server.postgresql.host" -}}
-{{- if .Values.postgresql.enabled -}}
-{{- template "joplin-server.postgresql.fullname" . -}}
-{{- end -}}
-{{- end -}}
+{{- define "joplin-server.pvcName" -}}
+{{- if .Values.persistence.existingClaim }}
+{{- .Values.persistence.existingClaim }}
+{{- else }}
+{{- include "joplin-server.fullname" . }}
+{{- end }}
+{{- end }}

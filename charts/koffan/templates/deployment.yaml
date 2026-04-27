@@ -1,0 +1,125 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "koffan.fullname" . }}
+  labels:
+    {{- include "koffan.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  {{- if and (not .Values.auth.createSecret) (not .Values.auth.existingSecret.name) }}
+  {{- fail "auth.existingSecret.name must be set when auth.createSecret is false" }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "koffan.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "koffan.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "koffan.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.app.port }}
+              protocol: TCP
+          env:
+            - name: APP_ENV
+              value: {{ .Values.app.env | quote }}
+            - name: PORT
+              value: {{ .Values.app.port | quote }}
+            - name: DB_PATH
+              value: {{ .Values.app.dbPath | quote }}
+            - name: DEFAULT_LANG
+              value: {{ .Values.app.defaultLang | quote }}
+            - name: LOGIN_MAX_ATTEMPTS
+              value: {{ .Values.app.loginMaxAttempts | quote }}
+            - name: LOGIN_WINDOW_MINUTES
+              value: {{ .Values.app.loginWindowMinutes | quote }}
+            - name: LOGIN_LOCKOUT_MINUTES
+              value: {{ .Values.app.loginLockoutMinutes | quote }}
+            - name: DISABLE_AUTH
+              value: {{ .Values.auth.disableAuth | quote }}
+            - name: APP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "koffan.secretName" . }}
+                  key: {{ .Values.auth.existingSecret.passwordKey }}
+            {{- if .Values.auth.apiToken.enabled }}
+            - name: API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "koffan.secretName" . }}
+                  key: {{ .Values.auth.existingSecret.apiTokenKey }}
+            {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.persistence.enabled .Values.persistence.useEmptyDir .Values.volumeMounts }}
+          volumeMounts:
+            {{- if or .Values.persistence.enabled .Values.persistence.useEmptyDir }}
+            - name: data
+              mountPath: {{ .Values.persistence.mountPath | quote }}
+            {{- end }}
+            {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+      {{- if or .Values.persistence.enabled .Values.persistence.useEmptyDir .Values.volumes }}
+      volumes:
+        {{- if or .Values.persistence.enabled .Values.persistence.useEmptyDir }}
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ default (include "koffan.fullname" .) .Values.persistence.existingClaim }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        {{- end }}
+        {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

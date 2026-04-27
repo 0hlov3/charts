@@ -1,3 +1,6 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json"
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Sync values.yaml image tag with Chart.yaml appVersion and check Docker registry",
+  "assignees": ["0hlov3"],
 }
+

@@ -1,0 +1,37 @@
+joplin:
+  appBaseUrl: https://notes.privatetrace.io
+
+  database:
+    client: pg
+
+  postgres:
+    host: shared-database-rw.shared-database.svc.cluster.local
+    port: 5432
+    database: joplin-server
+    user: joplin
+    existingSecret: joplin-database
+    existingSecretPasswordKey: password
+
+  storage:
+    driver: "Type=Filesystem; Path=/data"
+
+persistence:
+  enabled: true
+  mountPath: /data
+  accessMode: ReadWriteOnce
+  size: 2Gi
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: notes.privatetrace.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: joplin-tls
+      hosts:
+        - notes.privatetrace.io

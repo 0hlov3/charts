@@ -1,3 +1,23 @@
+################################################################################
+##                        BREAKING CHANGE — READ CAREFULLY                    ##
+################################################################################
+
+This chart (>= 1.0.0) is NOT compatible with upgrades from earlier versions.
+
+What changed:
+  - The Bitnami PostgreSQL sub-chart has been removed entirely.
+    You must provision PostgreSQL externally and configure
+    joplin.postgres.* (or joplin.postgres.existingSecret) before deploying.
+  - Values keys were restructured — old values.yaml files will NOT work.
+    Refer to the chart README for the new schema.
+
+If you are migrating from a previous release:
+  1. Back up your PostgreSQL data.
+  2. Uninstall the old release (helm uninstall <release>).
+  3. Deploy fresh with the new values schema.
+
+################################################################################
+
 1. Get the application URL by running these commands:
 {{- if .Values.ingress.enabled }}
 {{- range $host := .Values.ingress.hosts }}
@@ -10,13 +30,29 @@
   export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
   echo http://$NODE_IP:$NODE_PORT
 {{- else if contains "LoadBalancer" .Values.service.type }}
-     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
-           You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "joplin-server.fullname" . }}'
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+        Watch with: kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "joplin-server.fullname" . }}
   export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "joplin-server.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
   echo http://$SERVICE_IP:{{ .Values.service.port }}
-{{- else if contains "ClusterIP" .Values.service.type }}
+{{- else }}
   export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "joplin-server.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
-  export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
   echo "Visit http://127.0.0.1:8080 to use your application"
-  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
+  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:{{ .Values.joplin.appPort }}
+{{- end }}
+
+2. Default admin credentials (change immediately after first login):
+   Email:    admin@localhost
+   Password: admin
+
+{{- if eq .Values.joplin.database.client "sqlite" }}
+
+WARNING: SQLite is enabled. The database file is stored inside the container
+and will be lost when the pod restarts unless you enable persistence:
+
+  persistence:
+    enabled: true
+    mountPath: /home/joplin/.config/joplin-server
+
+SQLite is not recommended for production or multi-user deployments.
+Use joplin.database.client=pg with an external PostgreSQL instance instead.
 {{- end }}

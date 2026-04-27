@@ -1,14 +1,14 @@
 apiVersion: v2
 name: gotosocial
 description: A Helm chart for Kubernetes to Deploy GoToSocial
-icon: https://docs.gotosocial.org/en/latest/assets/sloth.png
-home: https://github.com/superseriousbusiness/gotosocial
+icon: https://codeberg.org/superseriousbusiness/gotosocial/raw/branch/main/docs/overrides/public/sloth.webp
+home: https://codeberg.org/superseriousbusiness/gotosocial
 
 type: application
 # Chart Version
-version: "1.0.1"
+version: "2.0.2"
 # gotosocial version
-appVersion: "0.17.3"
+appVersion: "0.21.2"
 
 maintainers:
   - name: 0hlov3
