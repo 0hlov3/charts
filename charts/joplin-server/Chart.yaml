@@ -12,7 +12,6 @@ maintainers:
 kubeVersion: ">=1.23.0-0"
 type: application
 # ChartVersion
-version: "1.0.0"
+version: "1.0.1"
 # AppVersion
 appVersion: "3.6.1"
-

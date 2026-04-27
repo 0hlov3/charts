@@ -118,6 +118,9 @@ spec:
             httpGet:
               path: /api/ping
               port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.joplin.appBaseUrl | trimPrefix "https://" | trimPrefix "http://" | trimSuffix "/" }}
             initialDelaySeconds: 30
             periodSeconds: 15
             timeoutSeconds: 5
@@ -126,6 +129,9 @@ spec:
             httpGet:
               path: /api/ping
               port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.joplin.appBaseUrl | trimPrefix "https://" | trimPrefix "http://" | trimSuffix "/" }}
             initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 3
