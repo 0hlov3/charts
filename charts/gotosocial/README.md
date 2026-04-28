@@ -228,7 +228,8 @@ If your GoToSocial instance frequently exceeds rate limits, it may be due to NAT
 | `externalPostgresql.username`                  | Non-root username for GoToSocial                                                                  | `""`                            |
 | `externalPostgresql.password`                  | Password for the non-root username for GoToSocial                                                 | `""`                            |
 | `externalPostgresql.existingSecret`            | Name of an existing secret resource containing the database credentials                           | `""`                            |
-| `externalPostgresql.existingSecretPasswordKey` | Name of an existing secret key containing the database credentials                                | `postgres-password`             |
+| `externalPostgresql.existingSecretUsernameKey` | Name of an existing secret key containing the database username                                   | `""`                            |
+| `externalPostgresql.existingSecretPasswordKey` | Name of an existing secret key containing the database password                                   | `postgres-password`             |
 | `externalPostgresql.tls_mode`                  | TLS Mode                                                                                          | `disable`                       |
 | `externalPostgresql.ca_cert`                   | CA Cert to use when tls mode is in required state                                                 | `""`                            |
 | `externalPostgresql.database`                  | GoToSocial database name                                                                          | `GoToSocial`                    |
