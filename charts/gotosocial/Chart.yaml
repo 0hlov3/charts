@@ -6,12 +6,12 @@ home: https://codeberg.org/superseriousbusiness/gotosocial
 
 type: application
 # Chart Version
-version: "2.0.2"
+version: "2.1.0"
 # gotosocial version
 appVersion: "0.21.2"
 
 maintainers:
-  - name: 0hlov3
+  - name: 0hlov31
     email: dev@privatetrace.io
     url: https://schoenwald.aero
 
