@@ -3305,6 +3305,36 @@ entries:
         - name: Documentation
           url: https://github.com/PanSalut/Koffan#readme
     apiVersion: v2
+    appVersion: v2.10.0
+    created: "2026-04-28T10:55:28.143850542Z"
+    description: A Helm chart for Kubernetes Koffan
+    digest: 3df0a709d7e243fd1036e073f9983812646f8edb3a3c2768fdc75cb77d194bde
+    home: https://github.com/PanSalut/Koffan
+    icon: https://raw.githubusercontent.com/PanSalut/Koffan/main/static/koffan-logo.webp
+    keywords:
+    - koffan
+    - shopping-list
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: koffan
+    sources:
+    - https://github.com/PanSalut/Koffan
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/koffan-0.1.3/koffan-0.1.3.tgz
+    version: 0.1.3
+  - annotations:
+      artifacthub.io/images: |
+        - name: Logo
+          url: https://raw.githubusercontent.com/PanSalut/Koffan/main/static/koffan-logo.webp
+      artifacthub.io/links: |
+        - name: Homepage
+          url: https://github.com/PanSalut/Koffan
+        - name: Documentation
+          url: https://github.com/PanSalut/Koffan#readme
+    apiVersion: v2
     appVersion: v2.1.1
     created: "2026-02-24T07:11:21.273858202Z"
     description: A Helm chart for Kubernetes Koffan
@@ -5878,4 +5908,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2026-04-28T09:01:58.989979444Z"
+generated: "2026-04-28T10:55:28.144589263Z"
