@@ -125,10 +125,14 @@ etherpad:
     minify: true
     # How long may clients use served javascript code (in seconds)? Not setting this may cause problems during deployment. Set to 0 to disable caching. (6 hours)
     maxAge: 21600
-    # Absolute path to the Abiword executable. Abiword is needed to get advanced import/export features of pads. Setting it to null disables Abiword and will only allow plain text and HTML import/exports.
-    abiword: null
-    # This is the absolute path to the soffice executable. LibreOffice can be used in lieu of Abiword to export pads. Setting it to null disables LibreOffice exporting.
+    # Absolute path to the soffice (LibreOffice) executable. Required for DOCX/ODT/PDF import/export.
+    # Since v2.7.0 Abiword has been replaced by LibreOffice — set this to your LibreOffice binary path.
+    # LibreOffice is not included in the default Docker image; build with INSTALL_SOFFICE=1 to include it.
+    # Setting it to null disables import/export conversion.
     soffice: null
+    # When true, exports produce .docx files via LibreOffice; when false, legacy .doc output is used.
+    # Requires soffice to be set.
+    docxExport: true
     # Path to the Tidy executable. Tidy is used to improve the quality of exported pads. Setting it to null disables Tidy.
     tidyHTML: null
     # Allow import of file types other than the supported ones: txt, doc, docx, rtf, odt, html & htm

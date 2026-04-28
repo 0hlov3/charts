@@ -162,10 +162,10 @@ spec:
               value: {{ .Values.etherpad.advanced.minify |quote }}
             - name: MAX_AGE
               value: {{ .Values.etherpad.advanced.maxAge |quote }}
-            - name: ABIWORD
-              value: {{ .Values.etherpad.advanced.abiword |quote }}
             - name: SOFFICE
               value: {{ .Values.etherpad.advanced.soffice |quote }}
+            - name: DOCX_EXPORT
+              value: {{ .Values.etherpad.advanced.docxExport |quote }}
             - name: TIDY_HTML
               value: {{ .Values.etherpad.advanced.tidyHTML |quote }}
             - name: ALLOW_UNKNOWN_FILE_ENDS
