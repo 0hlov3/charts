@@ -72,7 +72,7 @@ spec:
             - name: SQLITE_TMPDIR
               value: "{{- .Values.sqLite.tmpdir }}"
           {{- end }}
-          {{- if and .Values.externalPostgresql.enabled (ne .Values.externalPostgresql.existingSecret "") (ne .Values.externalPostgresql.existingSecretUsernameKey "") }}
+          {{- if and (not .Values.postgresql.enabled) .Values.externalPostgresql.enabled (ne .Values.externalPostgresql.existingSecret "") (ne .Values.externalPostgresql.existingSecretUsernameKey "") }}
             - name: GTS_DB_USER
               valueFrom:
                 secretKeyRef:
