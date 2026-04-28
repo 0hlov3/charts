@@ -11,5 +11,8 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "joplin-server.fullname" . }}:{{ .Values.service.port }}']
+      args:
+        - '--spider'
+        - '--timeout=10'
+        - 'http://{{ include "joplin-server.fullname" . }}:{{ .Values.service.port }}/api/ping'
   restartPolicy: Never

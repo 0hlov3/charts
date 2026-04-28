@@ -6,6 +6,41 @@ This Helm chart deploys GoToSocial, a lightweight and privacy-focused social net
 
 If PostgreSQL or external database is not enabled, SQLite is used by default. In this scenario, it is critical to back up your instance key before recreating the pod, as the instance key is tied to the database. Failure to do so may result in data loss and federation issues.
 
+## Breaking Changes
+
+### v2.0.0 — Probe behavior changed (GoToSocial 0.21.0)
+
+> **Before upgrading to chart version 1.4.0, disable all health probes.**
+
+GoToSocial 0.21.0 may run long-running database migrations on first boot. If
+Kubernetes probes are active during the upgrade, the pod can be killed before
+migrations finish, leaving the database in an inconsistent state.
+
+**Step 1 — Upgrade with probes disabled:**
+
+```shell
+helm upgrade gotosocial schoenwald/gotosocial \
+  --set startupProbe.enabled=false \
+  --set livenessProbe.enabled=false \
+  --set readinessProbe.enabled=false
+```
+
+**Step 2 — Wait until the pod is `Running` and migrations are complete**, then
+re-enable the probes:
+
+```shell
+helm upgrade gotosocial schoenwald/gotosocial \
+  --set startupProbe.enabled=true \
+  --set livenessProbe.enabled=true \
+  --set readinessProbe.enabled=true
+```
+
+The `enabled` flag on each probe is new in this chart version. All three probes
+default to `enabled: true`. If you manage probes via a custom `values.yaml`,
+add the `enabled` key to each probe block.
+
+---
+
 ## Deployment Steps
 ### Create Namespace
 ```shell
@@ -150,15 +185,18 @@ If your GoToSocial instance frequently exceeds rate limits, it may be due to NAT
 | `securityContext.runAsNonRoot`                           | Set Controller container's Security Context runAsNonRoot                                                                                     | `true`                                                  |
 | `securityContext.runAsUser`                              | Security Context runAsUser                                                                                                                   | `1000`                                                  |
 | `securityContext.runAsGroup`                             | Security Context runAsGroup                                                                                                                  | `1000`                                                  |
+| `startupProbe.enabled`                                   | Enable startupProbe. Set to false to disable during upgrades with long-running migrations.                                                   | `true`                                                  |
 | `startupProbe.httpGet.path`                              | Path to access on the HTTP server                                                                                                            | `/livez`                                                |
 | `startupProbe.httpGet.port`                              | Port for startupProbe                                                                                                                        | `http`                                                  |
-| `startupProbe.failureThreshold`                          | Failure threshold for startupProbe                                                                                                           | `60`                                                    |
+| `startupProbe.failureThreshold`                          | Failure threshold for startupProbe. 90 * 10s = 15 minutes total startup budget.                                                              | `90`                                                    |
 | `startupProbe.periodSeconds`                             | Period seconds for startupProbe                                                                                                              | `10`                                                    |
-| `startupProbe.initialDelaySeconds`                       | ensures probes don't start prematurely.                                                                                                      | `5`                                                     |
+| `startupProbe.initialDelaySeconds`                       | Initial delay before the first probe, gives GoToSocial time to begin startup.                                                                | `30`                                                    |
+| `livenessProbe.enabled`                                  | Enable livenessProbe. Set to false to disable.                                                                                               | `true`                                                  |
 | `livenessProbe.httpGet.path`                             | Path to access on the HTTP server                                                                                                            | `/livez`                                                |
 | `livenessProbe.httpGet.port`                             | Port for livenessProbe                                                                                                                       | `http`                                                  |
 | `livenessProbe.failureThreshold`                         | Failure threshold for livenessProbe                                                                                                          | `2`                                                     |
 | `livenessProbe.periodSeconds`                            | Period seconds for livenessProbe, Default: Check every 30 seconds to reduce overhead                                                         | `30`                                                    |
+| `readinessProbe.enabled`                                 | Enable readinessProbe. Set to false to disable.                                                                                              | `true`                                                  |
 | `readinessProbe.httpGet.path`                            | Path to access on the HTTP server                                                                                                            | `/readyz`                                               |
 | `readinessProbe.httpGet.port`                            | Port for readinessProbe                                                                                                                      | `http`                                                  |
 | `readinessProbe.failureThreshold`                        | Failure threshold for readinessProbe                                                                                                         | `5`                                                     |
@@ -190,7 +228,8 @@ If your GoToSocial instance frequently exceeds rate limits, it may be due to NAT
 | `externalPostgresql.username`                  | Non-root username for GoToSocial                                                                  | `""`                            |
 | `externalPostgresql.password`                  | Password for the non-root username for GoToSocial                                                 | `""`                            |
 | `externalPostgresql.existingSecret`            | Name of an existing secret resource containing the database credentials                           | `""`                            |
-| `externalPostgresql.existingSecretPasswordKey` | Name of an existing secret key containing the database credentials                                | `postgres-password`             |
+| `externalPostgresql.existingSecretUsernameKey` | Name of an existing secret key containing the database username                                   | `""`                            |
+| `externalPostgresql.existingSecretPasswordKey` | Name of an existing secret key containing the database password                                   | `postgres-password`             |
 | `externalPostgresql.tls_mode`                  | TLS Mode                                                                                          | `disable`                       |
 | `externalPostgresql.ca_cert`                   | CA Cert to use when tls mode is in required state                                                 | `""`                            |
 | `externalPostgresql.database`                  | GoToSocial database name                                                                          | `GoToSocial`                    |

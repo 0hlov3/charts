@@ -50,12 +50,18 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          {{- if .Values.startupProbe.enabled }}
           startupProbe:
-            {{- toYaml .Values.startupProbe | nindent 12 }}
+            {{- omit .Values.startupProbe "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
-            {{- toYaml .Values.livenessProbe | nindent 12 }}
+            {{- omit .Values.livenessProbe "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
           readinessProbe:
-            {{- toYaml .Values.readinessProbe | nindent 12 }}
+            {{- omit .Values.readinessProbe "enabled" | toYaml | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
@@ -65,6 +71,13 @@ spec:
           {{- if ne .Values.sqLite.tmpdir "" }}
             - name: SQLITE_TMPDIR
               value: "{{- .Values.sqLite.tmpdir }}"
+          {{- end }}
+          {{- if and (not .Values.postgresql.enabled) .Values.externalPostgresql.enabled (ne .Values.externalPostgresql.existingSecret "") (ne .Values.externalPostgresql.existingSecretUsernameKey "") }}
+            - name: GTS_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.externalPostgresql.existingSecret }}
+                  key: {{ .Values.externalPostgresql.existingSecretUsernameKey }}
           {{- end }}
           {{- if and .Values.postgresql.enabled (ne .Values.postgresql.auth.existingSecret "") }}
             - name: GTS_DB_PASSWORD
