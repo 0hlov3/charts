@@ -1,6 +1,7 @@
 apiVersion: v2
 name: privatebin
-description: PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data.
+description: PrivateBin is a minimalist, open source online pastebin where the
+  server has zero knowledge of pasted data.
 icon: https://privatebin.info/img/logo.png
 home: https://github.com/PrivateBin/PrivateBin
 keywords:
@@ -8,8 +9,8 @@ keywords:
   - pastebin
   - self-destroy
 type: application
-version: 0.1.13
-appVersion: "2.0.3"
+version: 0.1.14
+appVersion: "2.0.4"
 maintainers:
   - name: 0hlov3
     email: dev@privatetrace.io
