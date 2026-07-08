@@ -5,8 +5,8 @@ home: https://github.com/miniflux/v2
 icon: https://avatars.githubusercontent.com/u/10584991?s=48&v=4
 
 type: application
-version: 0.1.4
-appVersion: "2.3.1"
+version: 0.1.5
+appVersion: "2.3.2"
 
 keywords:
   - miniflux
