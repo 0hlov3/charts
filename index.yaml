@@ -5136,6 +5136,33 @@ entries:
         - name: Chart Source
           url: https://github.com/gabe565/charts/tree/main/charts/miniflux
     apiVersion: v2
+    appVersion: 2.3.2
+    created: "2026-07-08T07:28:37.817985724Z"
+    description: Miniflux is a minimalist and opinionated feed reader.
+    digest: 0cd653671703740df21c33db59fcdda8a61fb77ab4825e2f9f466e60976b1228
+    home: https://github.com/miniflux/v2
+    icon: https://avatars.githubusercontent.com/u/10584991?s=48&v=4
+    keywords:
+    - miniflux
+    - rss
+    - news
+    - feed
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: miniflux
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/miniflux-0.1.5/miniflux-0.1.5.tgz
+    version: 0.1.5
+  - annotations:
+      artifacthub.io/links: |-
+        - name: App Source
+          url: https://github.com/miniflux/v2
+        - name: Chart Source
+          url: https://github.com/gabe565/charts/tree/main/charts/miniflux
+    apiVersion: v2
     appVersion: 2.3.1
     created: "2026-05-31T04:19:32.179748742Z"
     description: Miniflux is a minimalist and opinionated feed reader.
@@ -6482,4 +6509,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2026-07-08T07:28:08.396824722Z"
+generated: "2026-07-08T07:28:37.818474096Z"
