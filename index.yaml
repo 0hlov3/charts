@@ -3970,6 +3970,37 @@ entries:
     version: 0.1.0
   matrix-synapse:
   - apiVersion: v2
+    appVersion: v1.156.0
+    created: "2026-07-08T07:28:08.396240125Z"
+    dependencies:
+    - condition: dragonfly.enabled
+      name: dragonfly
+      repository: oci://ghcr.io/dragonflydb/dragonfly/helm
+      version: v1.27.1
+    description: A Helm chart for deploying Matrix Synapse on Kubernetes
+    digest: 82223c4e217dac68f4f5b8864e0f99950c76da2a7e577c2cb3d9235264652af6
+    home: https://github.com/element-hq/synapse
+    icon: https://avatars.githubusercontent.com/u/13446337?s=48&v=4
+    keywords:
+    - matrix
+    - synapse
+    - chat
+    - helm
+    - kubernetes
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: matrix-synapse
+    sources:
+    - https://github.com/element-hq/synapse
+    - https://matrix.org
+    - https://www.dragonflydb.io
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/matrix-synapse-1.0.36/matrix-synapse-1.0.36.tgz
+    version: 1.0.36
+  - apiVersion: v2
     appVersion: v1.155.0
     created: "2026-06-17T20:23:36.206181365Z"
     dependencies:
@@ -6451,4 +6482,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2026-07-08T07:22:38.861440027Z"
+generated: "2026-07-08T07:28:08.396824722Z"
