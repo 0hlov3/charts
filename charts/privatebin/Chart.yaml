@@ -9,8 +9,8 @@ keywords:
   - pastebin
   - self-destroy
 type: application
-version: 0.1.14
-appVersion: "2.0.4"
+version: 0.1.15
+appVersion: "2.0.5"
 maintainers:
   - name: 0hlov3
     email: dev@privatetrace.io
