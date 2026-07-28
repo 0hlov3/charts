@@ -39,6 +39,7 @@ This chart deploys the Yopass server with an in-pod **Memcached** sidecar for st
 | Name               | Description                                       | Value           |
 | ------------------ | ------------------------------------------------- | --------------- |
 | `image`            | Container image configuration                     |                 |
+| `image.registry`   | Container image registry                          | `docker.io`     |
 | `image.repository` | Container image repository for Yopass             | `jhaals/yopass` |
 | `image.pullPolicy` | Image pull policy                                 | `IfNotPresent`  |
 | `image.tag`        | Image tag (defaults to chart appVersion if empty) | `""`            |
@@ -127,7 +128,7 @@ This chart deploys the Yopass server with an in-pod **Memcached** sidecar for st
 | `memcached.image`            | Memcached image configuration                                                                       |                 |
 | `memcached.image.registry`   | Memcached image registry                                                                            | `docker.io`     |
 | `memcached.image.repository` | Memcached image repository                                                                          | `memcached`     |
-| `memcached.image.tag`        | Memcached image tag (must be set, no `latest`)                                                      | `1.6.40-alpine` |
+| `memcached.image.tag`        | Memcached image tag (must be set, no `latest`)                                                      | `1.6.45-alpine` |
 | `memcached.image.pullPolicy` | Memcached image pull policy                                                                         | `IfNotPresent`  |
 | `memcached.resources`        | CPU/Memory resource requests/limits for Memcached (default limits/requests: cpu=100m, memory=100Mi) | `{}`            |
 
