@@ -2,7 +2,7 @@ apiVersion: v2
 name: element-web
 description: |
   Element (formerly known as Vector and Riot) is a Matrix web client built using the Matrix React SDK.
-icon: https://element.io/images/element-logo.svg
+icon: https://raw.githubusercontent.com/element-hq/element-web/develop/apps/web/res/themes/element/img/logos/element-logo.svg
 home: https://github.com/element-hq/element-web
 
 # A chart can be either an 'application' or a 'library' chart.
@@ -18,7 +18,7 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.4.45
+version: 0.4.46
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
