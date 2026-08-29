@@ -10,7 +10,7 @@ version: 1.0.38
 
 # Application version reflects the specific release of the application.
 # Use quotes to preserve formatting.
-appVersion: "v1.157.2"
+appVersion: "v1.159.0"
 
 # Chart maintainers, contributors, and related metadata.
 maintainers:
