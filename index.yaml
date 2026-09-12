@@ -3918,6 +3918,25 @@ entries:
     version: 0.1.1
   linkwarden:
   - apiVersion: v2
+    appVersion: v2.16.3
+    created: "2026-09-12T21:50:14.182559946Z"
+    description: A Helm chart for Kubernetes
+    digest: a2b0c77fed2c59d3ce4de9fa83d1d0c9c2be4bc16e50a09d44d1bd7bf1a1a3ac
+    home: https://github.com/linkwarden/linkwarden
+    icon: https://docs.linkwarden.app/img/logo.png
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: linkwarden
+    sources:
+    - https://github.com/linkwarden/linkwarden
+    - https://docs.linkwarden.app/
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/linkwarden-1.0.19/linkwarden-1.0.19.tgz
+    version: 1.0.19
+  - apiVersion: v2
     appVersion: v2.16.1
     created: "2026-08-29T18:06:24.449474753Z"
     description: A Helm chart for Kubernetes
@@ -7121,4 +7140,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-12T21:49:35.363797213Z"
+generated: "2026-09-12T21:50:14.182992647Z"
