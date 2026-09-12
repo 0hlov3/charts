@@ -3341,6 +3341,23 @@ entries:
     version: 0.3.7
   joplin-server:
   - apiVersion: v2
+    appVersion: 3.7.2
+    created: "2026-09-12T21:48:53.672740349Z"
+    description: This server allows you to sync any Joplin client
+    digest: e111e3eef7884b7ce1d52f09cf80519041c84bf60a90c208beddd81c805c5aec
+    home: https://github.com/laurent22/joplin
+    icon: https://raw.githubusercontent.com/laurent22/joplin/dev/Assets/LinuxIcons/256x256.png
+    kubeVersion: '>=1.23.0-0'
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: joplin-server
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/joplin-server-1.0.3/joplin-server-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
     appVersion: 3.7.1
     created: "2026-05-31T03:59:22.157150676Z"
     description: This server allows you to sync any Joplin client
@@ -7077,4 +7094,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-12T21:46:04.706343921Z"
+generated: "2026-09-12T21:48:53.673755775Z"
