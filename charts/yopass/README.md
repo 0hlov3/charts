@@ -11,7 +11,17 @@ This chart deploys the Yopass server with an in-pod **Memcached** sidecar for st
  - Built-in Memcached sidecar (ephemeral by design)
  - Configurable Service (ClusterIP by default)
  - Optional Ingress with TLS
+ - Optional Prometheus metrics endpoint (`--metrics-port`)
+ - `extraArgs` / `extraEnv` / `extraEnvFrom` escape hatches for upstream flags this chart doesn't model directly (license key, OIDC, webhooks, audit logging, TLS, `--trusted-proxies`, etc.)
  - Helm test hook to validate connectivity
+
+## Upgrade note (1.0.2 -> 1.1.0)
+`securityContext` and `podSecurityContext` changed from empty (`{}`) to hardened, non-root defaults (see [Pod annotations & security](#pod-annotations--security)). This is safe for the stock `jhaals/yopass` image with the chart's default in-database (Memcached) storage. If you run a custom/forked image with a different UID or as root, or enable a disk-writing feature such as `--file-store disk` via `extraArgs`, override the relevant key(s), e.g.:
+```yaml
+securityContext:
+  runAsUser: null       # explicit null removes the key; an empty {} override does not,
+  readOnlyRootFilesystem: false  # since Helm deep-merges map values against the chart defaults
+```
 
 ## Requirements
  - Kubernetes 1.19+ (Ingress templates handle older APIs too)
@@ -22,8 +32,11 @@ This chart deploys the Yopass server with an in-pod **Memcached** sidecar for st
 
  - Ephemeral storage: The chart hard-codes --database=memcached and runs a Memcached sidecar. If the Pod restarts, in-memory secrets are lost. This matches Yopass’ ephemeral design.
  - Replica caveat: replicaCount must remain 1 unless you wire external/shared storage; each pod has its own in-pod Memcached and the Service load-balances requests (no shared cache, no session affinity).
+ - Redis backend: upstream Yopass also supports `--database redis` as an alternative to Memcached, but this chart only wires up Memcached today. Using Redis currently requires overriding `extraArgs`/`extraEnv` yourself and disabling the bundled sidecar is not supported; see the project's issue tracker/README if you need native Redis support added.
+ - DynamoDB: not applicable here — the self-hosted `yopass-server` binary this chart deploys only supports `memcached` and `redis` as `--database` backends; DynamoDB is part of Yopass' separately-hosted offering, not something this chart can or should configure.
  - Sidecar image: Pin Memcached using `memcached.image.tag` to avoid drifting image versions.
- - Security context: Sensible defaults are provided but commented out—enable runAsNonRoot, readOnlyRootFilesystem, and drop capabilities as needed.
+ - Security context: `securityContext`/`podSecurityContext` default to a hardened, non-root, read-only-root-filesystem profile that matches the upstream image (`USER 1000` on a distroless base). This is safe with the chart's default in-database storage; if you enable a feature that writes to disk (e.g. `--file-store disk` via `extraArgs`), also relax `securityContext.readOnlyRootFilesystem`.
+ - License-gated features: OIDC, audit logging, webhooks, secret requests, read receipts, and theming all require an upstream `--license-key` and are not modeled as first-class values. Use `extraArgs`/`extraEnv`/`extraEnvFrom` (e.g. to inject the license key from a Secret) to enable them.
  - Resource limits: The Yopass container (`resources`) has no defaults; the Memcached sidecar (`memcached.resources`) ships with default requests/limits. Tune both for your environment.
 
 ## Parameters
@@ -62,6 +75,22 @@ This chart deploys the Yopass server with an in-pod **Memcached** sidecar for st
 | `config.disable_features`     | Hide the “features” section on the homepage (maps to --disable-features)      | `true`  |
 | `config.no_language_switcher` | Hide the language switcher in the UI (maps to --no-language-switcher)         | `false` |
 
+### Metrics
+
+| Name              | Description                                                                                                                                              | Value   |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| `metrics`         | Prometheus metrics server (maps to --metrics-port)                                                                                                       |         |
+| `metrics.enabled` | Start Yopass's built-in Prometheus metrics listener (--metrics-port) on a dedicated container port and annotate the Pod for prometheus.io auto-discovery | `false` |
+| `metrics.port`    | Port the metrics listener binds to; also used for the `prometheus.io/port` pod annotation                                                                | `9090`  |
+
+### Advanced configuration
+
+| Name           | Description                                                                                                                                                   | Value |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `extraArgs`    | Extra CLI flags appended to yopass-server, for upstream options this chart doesn't model directly (license key, OIDC, webhooks, TLS, --trusted-proxies, etc.) | `[]`  |
+| `extraEnv`     | Extra environment variables appended to the yopass container (Kubernetes EnvVar objects), e.g. to inject a license key from a Secret                          | `[]`  |
+| `extraEnvFrom` | Extra envFrom sources appended to the yopass container (Kubernetes EnvFromSource objects), for bulk-loading env vars from a ConfigMap/Secret                  | `[]`  |
+
 ### Global image & naming
 
 | Name               | Description                                         | Value |
@@ -81,11 +110,11 @@ This chart deploys the Yopass server with an in-pod **Memcached** sidecar for st
 
 ### Pod annotations & security
 
-| Name                 | Description                                                                           | Value |
-| -------------------- | ------------------------------------------------------------------------------------- | ----- |
-| `podAnnotations`     | Annotations to add to the Pod metadata                                                | `{}`  |
-| `podSecurityContext` | Pod-level security context (e.g., fsGroup)                                            | `{}`  |
-| `securityContext`    | Container-level security context (capabilities, runAs*, readOnlyRootFilesystem, etc.) | `{}`  |
+| Name                 | Description                                                                                                                                                                                                                                                                                | Value |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----- |
+| `podAnnotations`     | Annotations to add to the Pod metadata                                                                                                                                                                                                                                                     | `{}`  |
+| `podSecurityContext` | Pod-level security context. Defaults to a restricted seccomp profile only, so it doesn't force a UID onto the Memcached sidecar's own non-root user                                                                                                                                        | `{}`  |
+| `securityContext`    | Container-level security context for the yopass container. Defaults to a hardened non-root profile (UID 1000, all capabilities dropped, read-only root filesystem) matching the upstream distroless image; relax readOnlyRootFilesystem if you enable a disk-writing feature via extraArgs | `{}`  |
 
 ### Service
 

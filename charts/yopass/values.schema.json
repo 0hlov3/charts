@@ -55,6 +55,30 @@
         "no_language_switcher": { "type": "boolean", "description": "Hide the language switcher in the UI (maps to --no-language-switcher)." }
       }
     },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Prometheus metrics server, served on a dedicated port (maps to --metrics-port).",
+      "properties": {
+        "enabled": { "type": "boolean", "description": "Expose a Prometheus metrics endpoint on a dedicated container port and add prometheus.io/* pod annotations." },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535, "description": "Port for the metrics server." }
+      }
+    },
+    "extraArgs": {
+      "type": "array",
+      "description": "Additional CLI flags appended to the yopass-server args, e.g. license/OIDC/webhook/TLS flags not otherwise exposed by this chart.",
+      "items": { "type": "string" }
+    },
+    "extraEnv": {
+      "type": "array",
+      "description": "Additional environment variables appended to the yopass container, as Kubernetes EnvVar objects.",
+      "items": { "type": "object" }
+    },
+    "extraEnvFrom": {
+      "type": "array",
+      "description": "Additional envFrom sources for the yopass container, as Kubernetes EnvFromSource objects.",
+      "items": { "type": "object" }
+    },
     "imagePullSecrets": {
       "type": "array",
       "description": "Names of imagePullSecrets to use for pulling images.",

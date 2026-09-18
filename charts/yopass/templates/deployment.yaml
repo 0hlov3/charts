@@ -11,9 +11,16 @@ spec:
       {{- include "yopass.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- if or .Values.podAnnotations .Values.metrics.enabled }}
       annotations:
+        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: {{ .Values.metrics.port | quote }}
+        prometheus.io/path: "/metrics"
+        {{- end }}
       {{- end }}
       labels:
         {{- include "yopass.selectorLabels" . | nindent 8 }}
@@ -36,6 +43,12 @@ spec:
             - "--max-length={{ .Values.yopass.secretMaxLength  }}"
             - "--memcached=localhost:11211"
             - "--port={{ .Values.service.port }}"
+            {{- if .Values.metrics.enabled }}
+            - "--metrics-port={{ .Values.metrics.port }}"
+            {{- end }}
+            {{- with .Values.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           env:
             - name: DISABLE_UPLOAD
               value: {{ .Values.config.disable_upload | quote }}
@@ -45,18 +58,30 @@ spec:
               value: {{ .Values.config.disable_features | quote }}
             - name: NO_LANGUAGE_SWITCHER
               value: {{ .Values.config.no_language_switcher | quote }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+            {{- if .Values.metrics.enabled }}
+            - name: metrics
+              containerPort: {{ .Values.metrics.port }}
+              protocol: TCP
+            {{- end }}
           livenessProbe:
             httpGet:
-              path: /
+              path: /health
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /ready
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

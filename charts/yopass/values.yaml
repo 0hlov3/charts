@@ -40,6 +40,31 @@ config:
   ## @param config.no_language_switcher Hide the language switcher in the UI (maps to --no-language-switcher)
   no_language_switcher: false
 
+## @section Metrics
+## @extra metrics Prometheus metrics server (maps to --metrics-port)
+metrics:
+  ## @param metrics.enabled Start Yopass's built-in Prometheus metrics listener (--metrics-port) on a dedicated container port and annotate the Pod for prometheus.io auto-discovery
+  enabled: false
+  ## @param metrics.port Port the metrics listener binds to; also used for the `prometheus.io/port` pod annotation
+  port: 9090
+
+## @section Advanced configuration
+## @param extraArgs [array] Extra CLI flags appended to yopass-server, for upstream options this chart doesn't model directly (license key, OIDC, webhooks, TLS, --trusted-proxies, etc.)
+extraArgs: []
+  # - "--license-key=$(LICENSE_KEY)"
+  # - "--trusted-proxies=10.0.0.0/8"
+## @param extraEnv [array] Extra environment variables appended to the yopass container (Kubernetes EnvVar objects), e.g. to inject a license key from a Secret
+extraEnv: []
+  # - name: LICENSE_KEY
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: yopass-license
+  #       key: license-key
+## @param extraEnvFrom [array] Extra envFrom sources appended to the yopass container (Kubernetes EnvFromSource objects), for bulk-loading env vars from a ConfigMap/Secret
+extraEnvFrom: []
+  # - secretRef:
+  #     name: yopass-extra-env
+
 ## @section Global image & naming
 ## @param imagePullSecrets [array] Names of imagePullSecrets to use for pulling images
 imagePullSecrets: []
@@ -65,17 +90,27 @@ serviceAccount:
 ## @section Pod annotations & security
 ## @param podAnnotations [object] Annotations to add to the Pod metadata
 podAnnotations: {}
-## @param podSecurityContext [object] Pod-level security context (e.g., fsGroup)
-podSecurityContext: {}
+## @param podSecurityContext [object] Pod-level security context. Defaults to a restricted seccomp profile only, so it doesn't force a UID onto the Memcached sidecar's own non-root user
+podSecurityContext:
+  # The upstream image runs as a fixed non-root UID (1000) on a distroless
+  # base, so a restricted seccomp profile is safe by default. This does not
+  # pin a runAsUser/fsGroup at the pod level so it stays compatible with the
+  # Memcached sidecar's own (different) non-root user.
+  seccompProfile:
+    type: RuntimeDefault
   # fsGroup: 2000
-## @param securityContext [object] Container-level security context (capabilities, runAs*, readOnlyRootFilesystem, etc.)
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+## @param securityContext [object] Container-level security context for the yopass container. Defaults to a hardened non-root profile (UID 1000, all capabilities dropped, read-only root filesystem) matching the upstream distroless image; relax readOnlyRootFilesystem if you enable a disk-writing feature via extraArgs
+securityContext:
+  # Matches the upstream image, which sets `USER 1000` on a distroless base
+  # (no shell/package manager) and, with the default in-database (Memcached)
+  # storage, never writes to the local filesystem.
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
 
 ## @section Service
 ## @extra service Kubernetes Service configuration
