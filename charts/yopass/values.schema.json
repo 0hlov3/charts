@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "yopass values",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "resourceList": {
+      "type": "object",
+      "description": "Map of resource name (e.g. cpu, memory) to Kubernetes resource quantity.",
+      "additionalProperties": { "type": ["string", "number"] }
+    },
+    "resourceRequirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "limits": { "$ref": "#/$defs/resourceList" },
+        "requests": { "$ref": "#/$defs/resourceList" }
+      }
+    }
+  },
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Number of Yopass server replicas to run. Keep at 1 unless using external/shared storage, since each pod runs its own in-pod Memcached sidecar with no shared cache."
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Container image configuration for the Yopass server.",
+      "properties": {
+        "registry": { "type": "string", "minLength": 1, "description": "Container image registry." },
+        "repository": { "type": "string", "minLength": 1, "description": "Container image repository for Yopass." },
+        "pullPolicy": { "type": "string", "enum": ["Always", "IfNotPresent", "Never"], "description": "Image pull policy." },
+        "tag": { "type": "string", "description": "Image tag. Defaults to the chart appVersion when empty." }
+      }
+    },
+    "yopass": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Yopass server flags, mapped to CLI arguments.",
+      "properties": {
+        "listenAddress": { "type": "string", "minLength": 1, "description": "Bind address for the server (maps to --address)." },
+        "secretMaxLength": { "type": "integer", "minimum": 1, "description": "Maximum allowed encrypted secret size in bytes (maps to --max-length)." }
+      }
+    },
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Frontend/runtime feature flags returned via /config and passed to the container as environment variables.",
+      "properties": {
+        "disable_upload": { "type": "boolean", "description": "Disable file upload endpoints and UI (maps to --disable-upload)." },
+        "prefetch_secret": { "type": "boolean", "description": "Enable prefetch/status check for one-time secrets (maps to --prefetch-secret)." },
+        "disable_features": { "type": "boolean", "description": "Hide the \"features\" section on the homepage (maps to --disable-features)." },
+        "no_language_switcher": { "type": "boolean", "description": "Hide the language switcher in the UI (maps to --no-language-switcher)." }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "description": "Names of imagePullSecrets to use for pulling images.",
+      "items": { "type": "object" }
+    },
+    "nameOverride": { "type": "string", "description": "String to partially override chart name." },
+    "fullnameOverride": { "type": "string", "description": "String to fully override chart fullname." },
+    "serviceAccount": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "ServiceAccount options.",
+      "properties": {
+        "create": { "type": "boolean", "description": "Whether to create a ServiceAccount." },
+        "annotations": { "type": "object", "description": "Annotations to add to the ServiceAccount." },
+        "name": { "type": "string", "description": "Name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template." }
+      }
+    },
+    "podAnnotations": { "type": "object", "description": "Annotations to add to the Pod metadata." },
+    "podSecurityContext": { "type": "object", "description": "Pod-level security context (e.g., fsGroup)." },
+    "securityContext": { "type": "object", "description": "Container-level security context (capabilities, runAs*, readOnlyRootFilesystem, etc.)." },
+    "service": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Kubernetes Service configuration.",
+      "properties": {
+        "type": { "type": "string", "enum": ["ClusterIP", "NodePort", "LoadBalancer"], "description": "Service type." },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535, "description": "Service port for the HTTP API/UI." }
+      }
+    },
+    "ingress": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Kubernetes Ingress configuration.",
+      "properties": {
+        "enabled": { "type": "boolean", "description": "Enable Ingress resource." },
+        "className": { "type": "string", "description": "IngressClass to use (Kubernetes >=1.18)." },
+        "annotations": { "type": "object", "description": "Annotations to add to the Ingress." },
+        "hosts": {
+          "type": "array",
+          "description": "Ingress host definitions.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "host": { "type": "string", "description": "Hostname to route through the Ingress." },
+              "paths": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "path": { "type": "string" },
+                    "pathType": { "type": "string", "enum": ["Exact", "Prefix", "ImplementationSpecific"] }
+                  },
+                  "required": ["path"]
+                }
+              }
+            },
+            "required": ["host"]
+          }
+        },
+        "tls": {
+          "type": "array",
+          "description": "TLS configuration for the Ingress (secrets and hostnames).",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "secretName": { "type": "string" },
+              "hosts": { "type": "array", "items": { "type": "string" } }
+            },
+            "required": ["secretName"]
+          }
+        }
+      }
+    },
+    "resources": {
+      "$ref": "#/$defs/resourceRequirements",
+      "description": "CPU/Memory resource requests/limits for the Yopass container. Left empty by default so it can run on resource-constrained environments."
+    },
+    "nodeSelector": { "type": "object", "description": "Node labels for Pod assignment." },
+    "tolerations": {
+      "type": "array",
+      "description": "Tolerations for taints to schedule on matching nodes.",
+      "items": { "type": "object" }
+    },
+    "affinity": { "type": "object", "description": "Affinity/anti-affinity rules for Pod scheduling." },
+    "memcached": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "In-pod Memcached sidecar configuration, used as the (ephemeral) storage backend for secrets.",
+      "properties": {
+        "image": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Memcached image configuration.",
+          "properties": {
+            "registry": { "type": "string", "minLength": 1, "description": "Memcached image registry." },
+            "repository": { "type": "string", "minLength": 1, "description": "Memcached image repository." },
+            "tag": { "type": "string", "minLength": 1, "description": "Memcached image tag. Must be explicitly set (no default/latest fallback); the chart fails to render if empty." },
+            "pullPolicy": { "type": "string", "enum": ["Always", "IfNotPresent", "Never"], "description": "Memcached image pull policy." }
+          },
+          "required": ["tag"]
+        },
+        "resources": {
+          "$ref": "#/$defs/resourceRequirements",
+          "description": "CPU/Memory resource requests/limits for the Memcached sidecar."
+        }
+      }
+    }
+  }
+}
