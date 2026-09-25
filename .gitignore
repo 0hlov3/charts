@@ -1,5 +1,5 @@
 **/development/**
-
+**/examples/**
 ### VisualStudioCode template
 .vscode/*
 !.vscode/settings.json

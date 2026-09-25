@@ -2,183 +2,284 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+## @section Global parameters
+
+## @param replicaCount Number of Etherpad pod replicas to run
 replicaCount: 1
 
+## @param imagePullSecrets [array] Names of existing Secrets to use for pulling the Etherpad image from a private registry
+imagePullSecrets: []
+## @param nameOverride [string] Override for the chart name used when generating resource names
+nameOverride: ""
+## @param fullnameOverride [string] Override for the fully qualified release name used to generate resource names
+fullnameOverride: ""
+
+## @section Image parameters
+
+## @extra image Etherpad container image
 image:
+  ## @param image.repository Etherpad container image repository
   repository: etherpad/etherpad
+  ## @param image.pullPolicy Etherpad image pull policy
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
+  ## @param image.tag [string] Etherpad image tag. Defaults to the chart's appVersion when empty
   tag: ""
+
+## @section Etherpad general settings
 
 etherpad:
   general:
-    # The name of the instance
+    ## @param etherpad.general.title The name of the Etherpad instance, shown in the UI
     title: "Etherpad"
-    # favicon default name, or a fully specified URL to your own favicon
+    ## @param etherpad.general.favicon Favicon: either the default name or a fully specified URL to your own favicon
     favicon: "null"
-    # The default text of a pad
+    ## @param etherpad.general.defaultPadText [default: "Welcome to Etherpad! ..."] The default text of a newly created pad (see values.yaml for the full default text)
     defaultPadText: |
       Welcome to Etherpad! This pad text is synchronized as you type, so that everyone viewing this page sees the same text. This allows you to collaborate seamlessly on documents! Get involved with Etherpad at https://etherpad.org
-    # IP which etherpad should bind at. Change to :: for IPv6
+    ## @param etherpad.general.ip IP address Etherpad binds to inside the container. Change to :: for IPv6
     ip: 0.0.0.0
+    ## @param etherpad.general.port TCP port Etherpad listens on inside the container
     port: 9001
-    # the password for the admin user (leave unspecified if you do not want to create it)
     admin:
+      ## @param etherpad.general.admin.password Plain-text password for the built-in "admin" user. Leave empty to skip creating it. Ignored when existingSecret.enabled is true
       password: ""
+      ## @extra etherpad.general.admin.existingSecret Read the admin password from an existing Secret instead of the plain-text value above
       existingSecret:
+        ## @param etherpad.general.admin.existingSecret.enabled Read ADMIN_PASSWORD from existingSecret.secretName/secretKey instead of etherpad.general.admin.password
         enabled: false
+        ## @param etherpad.general.admin.existingSecret.secretName Name of the existing Secret containing the admin password
         secretName: etherpad
+        ## @param etherpad.general.admin.existingSecret.secretKey Key inside existingSecret.secretName that holds the admin password
         secretKey: admin-password
-    # the password for the first user user (leave unspecified if you do not want to create it)
+    ## @param etherpad.general.userPassword Plain-text password for the built-in first "user" account. Leave empty to skip creating it
     userPassword: ""
+
+## @section Etherpad pad options
+
+  ## @extra etherpad.padOptions Default behavior/appearance applied to every pad; users may still override some of these per-pad in their browser
   padOptions:
+    ## @param etherpad.padOptions.NoColors Disable authorship colors in the editor
     NoColors: false
+    ## @param etherpad.padOptions.showControls Show the pad's toolbar/editbar controls
     showControls: true
+    ## @param etherpad.padOptions.showChat Show the chat panel
     showChat: true
+    ## @param etherpad.padOptions.showLineNumbers Show line numbers in the editor
     showLineNumbers: true
+    ## @param etherpad.padOptions.useMonospaceFont Use a monospace font in the editor
     useMonospaceFont: false
+    ## @param etherpad.padOptions.userName Default display name shown for anonymous users. Set to false to disable
     userName: false
+    ## @param etherpad.padOptions.userColor Default authorship color for anonymous users. Set to false to disable
     userColor: false
+    ## @param etherpad.padOptions.rtl Render pad content right-to-left
     rtl: false
+    ## @param etherpad.padOptions.alwaysShowChat Keep the chat panel open by default
     alwaysShowChat: false
+    ## @param etherpad.padOptions.chatAndUsers Show the combined chat-and-users panel
     chatAndUsers: false
+    ## @param etherpad.padOptions.lang Default UI language (e.g. en-gb)
     lang: en-gb
+    ## @param etherpad.padOptions.lowercasePadIDs Force pad IDs to lowercase
     lowercasePadIDs: false
+
+## @section Etherpad keyboard shortcuts
+
+  ## @extra etherpad.shortcuts Enable/disable individual pad editor keyboard shortcuts
   shortcuts:
-    # focus on the File Menu and/or editbar
+    ## @param etherpad.shortcuts.enabledAltF9 Alt+F9: focus the File Menu and/or editbar
     enabledAltF9: true
-    # focus on the Chat window
+    ## @param etherpad.shortcuts.enabledAltC Alt+C: focus the Chat window
     enabledAltC: true
-    # save a revision
+    ## @param etherpad.shortcuts.enabledCmdS Cmd/Ctrl+S: save a revision
     enabledCmdS: true
-    # undo/redo
+    ## @param etherpad.shortcuts.enabledCmdZ Cmd/Ctrl+Z: undo
     enabledCmdZ: true
-    # redo
+    ## @param etherpad.shortcuts.enabledCmdY Cmd/Ctrl+Y: redo
     enabledCmdY: true
-    # italic
+    ## @param etherpad.shortcuts.enabledCmdI Cmd/Ctrl+I: italic
     enabledCmdI: true
-    # bold
+    ## @param etherpad.shortcuts.enabledCmdB Cmd/Ctrl+B: bold
     enabledCmdB: true
-    # underline
+    ## @param etherpad.shortcuts.enabledCmdU Cmd/Ctrl+U: underline
     enabledCmdU: true
-    # backspace
+    ## @param etherpad.shortcuts.enabledCmdH Cmd/Ctrl+H: backspace
     enabledCmdH: true
-    # strike through
+    ## @param etherpad.shortcuts.enabledCmd5 Cmd/Ctrl+5: strike through
     enabledCmd5: true
-    # ordered list
+    ## @param etherpad.shortcuts.enabledCmdShift1 Cmd/Ctrl+Shift+1: ordered list
     enabledCmdShift1: true
-    # shows a gritter popup showing a line author
+    ## @param etherpad.shortcuts.enabledCmdShift2 Cmd/Ctrl+Shift+2: show a gritter popup with the line's author
     enabledCmdShift2: true
-    # unordered list
+    ## @param etherpad.shortcuts.enabledCmdShiftL Cmd/Ctrl+Shift+L: unordered list
     enabledCmdShiftL: true
-    # ordered list
+    ## @param etherpad.shortcuts.enabledCmdShiftN Cmd/Ctrl+Shift+N: ordered list
     enabledCmdShiftN: true
-    # clear authorship
+    ## @param etherpad.shortcuts.enabledCmdShiftC Cmd/Ctrl+Shift+C: clear authorship colors
     enabledCmdShiftC: true
+    ## @param etherpad.shortcuts.enabledDELETE Delete key shortcut handling in the editor
     enabledDELETE: true
+    ## @param etherpad.shortcuts.enabledRETURN Return/Enter key shortcut handling in the editor
     enabledRETURN: true
-    # in mozilla versions 14-19 avoid reconnecting pad
+    ## @param etherpad.shortcuts.enabledESC Esc: avoid reconnecting the pad (needed on Mozilla versions 14-19)
     enabledESC: true
-    # indent
+    ## @param etherpad.shortcuts.enabledTAB Tab: indent
     enabledTAB: true
-    # scroll to top of pad
+    ## @param etherpad.shortcuts.enabledCTRLHOME Ctrl+Home: scroll to top of pad
     enabledCTRLHOME: true
+    ## @param etherpad.shortcuts.enabledPAGEUP Page Up: scroll the pad up
     enabledPAGEUP: true
+    ## @param etherpad.shortcuts.enabledPAGEDOWN Page Down: scroll the pad down
     enabledPAGEDOWN:  true
+
+## @section Etherpad skins
+
   skins:
-    # either no-skin, colibris or an existing directory under src/static/skins
+    ## @param etherpad.skins.skinName Skin to use: no-skin, colibris, or an existing directory under src/static/skins
     skinName: colibris
-    # multiple skin variants separated by spaces
-    skinVariants: "uper-light-toolbar super-light-editor light-background"
+    ## @param etherpad.skins.skinVariants Space-separated list of skin variants (colibris skin only)
+    skinVariants: "super-light-toolbar super-light-editor light-background"
+
+## @section Etherpad logging
+
   logging:
-    # valid values are DEBUG, INFO, WARN and ERROR
+    ## @param etherpad.logging.logLevel Server log verbosity. One of DEBUG, INFO, WARN, ERROR
     logLevel: INFO
-    # Privacy: disable IP logging
+    # Privacy: disable IP logging. Preserved for compatibility; rendered as IP_LOGGING
+    # when ipLogging is not set.
+    ## @param etherpad.logging.disableIPLogging Deprecated compatibility toggle: true maps to etherpad.logging.ipLogging=anonymous, false maps to full. Ignored when ipLogging is set explicitly
     disableIPLogging: false
+    ## @param etherpad.logging.ipLogging [string] Client IP logging mode: anonymous, truncated, or full. Leave empty to derive the value from disableIPLogging
+    ipLogging: ""
+
+## @section Etherpad cookie settings
+
   cookie:
+    ## @param etherpad.cookie.keyRotationInterval How often (in milliseconds) the cookie signing key is rotated
     keyRotationInterval: "86400000"
+    ## @param etherpad.cookie.sameSite Value of the SameSite cookie attribute
     sameSite: "Lax"
+    ## @param etherpad.cookie.sessionLifetime How long (in milliseconds) a session cookie remains valid before the user must log in again
     sessionLifetime: "864000000"
+    ## @param etherpad.cookie.sessionRefreshInterval How often (in milliseconds) the session cookie's expiration is refreshed
     sessionRefreshInterval: "86400000"
+
+## @section Etherpad advanced settings
+
   advanced:
-    # hide/show the settings.json in admin page
+    ## @param etherpad.advanced.showSettingsInAdminPage Show the raw settings.json content on the /admin/settings page
     showSettingsInAdminPage: true
-    # set to true if you are using a reverse proxy in front of Etherpad (for example: Traefik for SSL termination via Let's Encrypt). This will affect security and correctness of the logs if not done
+    # Authentication method used by the server. Etherpad 3.x defaults to sso.
+    # Set to apikey if existing clients rely on the legacy APIKEY.txt/API-key system.
+    ## @param etherpad.advanced.authenticationMethod Authentication method used by the server: sso (built-in OpenID Connect provider, Etherpad 3.x default) or apikey (legacy APIKEY.txt-based API auth)
+    authenticationMethod: sso
+    ## @param etherpad.advanced.trustProxy Trust X-Forwarded-* headers from a reverse proxy in front of Etherpad (e.g. for TLS termination). Only enable when the proxy is trusted and sets these headers correctly
     trustProxy: false
-    # maximum allowed file size when importing a pad, in bytes. (50 MB)
-    importMaxFileSize: 52428800
-    # maximum number of import/export calls per IP.
+    ## @param etherpad.advanced.importMaxFileSize Maximum allowed file size when importing a pad, in bytes (default: 50 MB)
+    importMaxFileSize: "52428800"
+    ## @param etherpad.advanced.importExportMaxReqPerIp Maximum number of import/export calls allowed per IP within the rate-limit window
     importExportMaxReqPerIp: 10
-    # the call rate for import/export requests will be estimated in this time window (in milliseconds)
+    ## @param etherpad.advanced.importExportRateLimitWindow Time window (in milliseconds) used to estimate the import/export call rate
     importExportRateLimitWindow: 90000
-    # duration of the rate limit window for commits by individual users/IPs (in seconds)
+    ## @param etherpad.advanced.commitRateLimitDuration Duration (in seconds) of the rate-limit window for pad commits by individual users/IPs
     commitRateLimitDuration: 1
-    # maximum number of changes per IP to allow during the rate limit window
+    ## @param etherpad.advanced.commitRateLimitPoints Maximum number of pad changes allowed per IP during the rate-limit window
     commitRateLimitPoints: 10
-    # Should we suppress errors from being visible in the default Pad Text?
+    ## @param etherpad.advanced.suppressErrorsInPadText Suppress internal errors from being shown inside the default pad text
     suppressErrorsInPadText: false
-    # If this option is enabled, a user must have a session to access pads. This effectively allows only group pads to be accessed.
+    ## @param etherpad.advanced.requireSession Require a session to access any pad, effectively restricting access to group pads only
     requireSession: false
-    # Users may edit pads but not create new ones. Pad creation is only via the API. This applies both to group pads and regular pads.
+    ## @param etherpad.advanced.editOnly Allow editing existing pads but disallow creating new ones outside of the API
     editOnly: false
-    # If true, all css & js will be minified before sending to the client. This will improve the loading performance massively, but makes it difficult to debug the javascript/css
+    ## @param etherpad.advanced.minify Minify CSS/JS served to clients. Improves load performance but hinders frontend debugging
     minify: true
-    # How long may clients use served javascript code (in seconds)? Not setting this may cause problems during deployment. Set to 0 to disable caching. (6 hours)
+    ## @param etherpad.advanced.maxAge How long (in seconds) clients may cache served JavaScript. Set to 0 to disable caching (default: 6 hours)
     maxAge: 21600
     # Absolute path to the soffice (LibreOffice) executable. Required for DOCX/ODT/PDF import/export.
     # Since v2.7.0 Abiword has been replaced by LibreOffice — set this to your LibreOffice binary path.
     # LibreOffice is not included in the default Docker image; build with INSTALL_SOFFICE=1 to include it.
-    # Setting it to null disables import/export conversion.
+    ## @param etherpad.advanced.soffice [nullable] Absolute path to the soffice (LibreOffice) executable, used for DOC/ODT/RTF export and PDF import. Set to null to disable those conversions (not bundled in the default image)
     soffice: null
-    # When true, exports produce .docx files via LibreOffice; when false, legacy .doc output is used.
-    # Requires soffice to be set.
+    ## @param etherpad.advanced.docxExport Export DOCX files via LibreOffice when true; falls back to legacy .doc output when false. Requires soffice to be set
     docxExport: true
-    # Path to the Tidy executable. Tidy is used to improve the quality of exported pads. Setting it to null disables Tidy.
+    # Deprecated: Etherpad 3.3.x's Docker settings template no longer exposes TIDY_HTML.
+    # This value is kept for chart values compatibility and is not rendered; it has no effect.
+    ## @param etherpad.advanced.tidyHTML [nullable] Deprecated and unused: Etherpad 3.3.x's Docker settings template no longer exposes TIDY_HTML. Kept only for values-file compatibility; has no effect
     tidyHTML: null
-    # Allow import of file types other than the supported ones: txt, doc, docx, rtf, odt, html & htm
+    ## @param etherpad.advanced.allowUnknownFileEnds Allow importing file types other than the natively supported ones (txt, doc, docx, rtf, odt, html, htm)
     allowUnknownFileEnds: true
-    # This setting is used if you require authentication of all users. Note: "/admin" always requires authentication.
+    ## @param etherpad.advanced.requireAuthentication Require authentication for all users. Note: /admin always requires authentication regardless of this setting
     requireAuthentication: false
-    # Require authorization by a module, or a user with is_admin set, see below.
+    ## @param etherpad.advanced.requireAuthorization Require authorization by a plugin/module, or a user with is_admin set
     requireAuthorization: false
-    # Time (in seconds) to automatically reconnect pad when a "Force reconnect" message is shown to user. Set to 0 to disable automatic reconnection.
+    ## @param etherpad.advanced.automaticReconnectionTimeout Seconds before the client automatically reconnects after a "Force reconnect" message. Set to 0 to disable automatic reconnection
     automaticReconnectionTimeout: 0
-    # Percentage of viewport height to be additionally scrolled. e.g. 0.5, to place caret line in the middle of viewport, when user edits a line above of the viewport. Set to 0 to disable extra scrolling
+    ## @param etherpad.advanced.focusLinePercentageAbove Extra viewport height (as a fraction, e.g. 0.5) to scroll when the caret line is above the viewport. Set to 0 to disable
     focusLinePercentageAbove: 0
-    # Percentage of viewport height to be additionally scrolled. e.g. 0.5, to place caret line in the middle of viewport, when user edits a line below of the viewport. Set to 0 to disable extra scrolling
+    ## @param etherpad.advanced.focusLinePercentageBelow Extra viewport height (as a fraction, e.g. 0.5) to scroll when the caret line is below the viewport. Set to 0 to disable
     focusLinePercentageBelow: 0
-    # Percentage of viewport height to be additionally scrolled when user presses arrow up in the line of the top of the viewport. Set to 0 to let the scroll to be handled as default by Etherpad
+    ## @param etherpad.advanced.focusLinePercentageArrowUp Extra viewport height to scroll when the user presses arrow-up at the top of the viewport. Set to 0 for Etherpad's default handling
     focusLinePercentageArrowUp: 0
-    # Time (in milliseconds) used to animate the scroll transition. Set to 0 to disable animation
+    ## @param etherpad.advanced.focusLineDuration Duration (in milliseconds) of the scroll-into-view animation. Set to 0 to disable animation
     focusLineDuration: 0
-    # Flag to control if it should scroll when user places the caret in the last line of the viewport
+    ## @param etherpad.advanced.focusLineCaretScroll Scroll the viewport when the caret is placed on the last line of the pad
     focusLineCaretScroll: false
-    # The maximum size (in bytes) of a single message accepted via Socket.IO. If a client sends a larger message, its connection gets closed to prevent DoS (memory exhaustion) attacks.
-    socketioMaxHttpBufferSize: 10000
-    # Allow Load Testing tools to hit the Etherpad Instance. WARNING: this will disable security on the instance.
+    ## @param etherpad.advanced.socketioMaxHttpBufferSize Maximum size (in bytes) of a single Socket.IO message. Larger messages cause the connection to be closed to prevent memory-exhaustion (DoS) attacks
+    socketioMaxHttpBufferSize: "1000000"
+    ## @param etherpad.advanced.loadTest Allow load-testing tools to hit this instance. WARNING: disables security protections; never enable in production
     loadTest: false
-    # Enable dumping objects preventing a clean exit of Node.js. WARNING: this has a significant performance impact.
+    ## @param etherpad.advanced.dumpOnUncleanExit Dump Node.js objects that prevent a clean process exit. WARNING: has a significant performance impact
     dumpOnUncleanExit: false
-    # Expose Etherpad version in the web interface and in the Server http header. Do not enable on production machines.
+    ## @param etherpad.advanced.exposeVersion Expose the Etherpad version in the web UI and the Server HTTP header. Do not enable on production instances
     exposeVersion: false
 
+## @section External PostgreSQL parameters
+
 externalPostgresql:
+  ## @param externalPostgresql.enabled Use an externally managed PostgreSQL database instead of Etherpad's default DirtyDB backend or the bundled Bitnami subchart. Mutually exclusive with postgresql.enabled
   enabled: false
-  existingSecret: ""
-  username: "etherpad"
-  password: "etherpad"
-  database: "etherpad"
+  ## @param externalPostgresql.host Hostname or Kubernetes Service DNS name of the external PostgreSQL server (any provider/operator; no assumptions are made about naming or namespace)
   host: "etherpad.example.com"
+  ## @param externalPostgresql.port TCP port of the external PostgreSQL server
   port: "5432"
+  ## @param externalPostgresql.database Name of the database Etherpad connects to
+  database: "etherpad"
+  ## @param externalPostgresql.username Plain-text database username. Ignored when existingSecret is set
+  username: "etherpad"
+  ## @param externalPostgresql.password Plain-text database password. Ignored when existingSecret is set. Avoid in production; prefer existingSecret
+  password: "etherpad"
+  # Name of an existing Secret containing the database credentials. Leave empty to
+  # use the literal username/password values above instead.
+  ## @param externalPostgresql.existingSecret [string] Name of an existing Secret containing the database username/password. DB_USER and DB_PASS are read from it via secretKeyRef instead of the literal values above; no chart-managed Secret is created
+  existingSecret: ""
+  ## @param externalPostgresql.existingSecretUsernameKey Key inside externalPostgresql.existingSecret that holds the database username
+  existingSecretUsernameKey: username
+  ## @param externalPostgresql.existingSecretPasswordKey Key inside externalPostgresql.existingSecret that holds the database password
+  existingSecretPasswordKey: password
+  # Deprecated/unsupported: the stock Etherpad Docker image has no working way to
+  # configure PostgreSQL via a connection string (DB_URL is not consumed by
+  # Etherpad's pg driver). Setting this to true makes the chart fail to render
+  # rather than silently deploy a broken database configuration. Use the discrete
+  # host/port/database/username/password fields (or existingSecret) above instead.
+  ## @param externalPostgresql.useConnectionString Deprecated/unsupported: DB_URL is not honored by Etherpad's PostgreSQL driver on the stock image. Must stay false; setting it to true makes the chart fail to render instead of silently deploying a broken database configuration
   useConnectionString: false
+
+## @section Bundled PostgreSQL parameters (Bitnami dependency)
 
 # https://github.com/bitnami/charts/tree/main/bitnami/postgresql
 postgresql:
+  ## @param postgresql.enabled Deploy PostgreSQL using the bundled Bitnami subchart instead of Etherpad's default DirtyDB backend or an external database. Mutually exclusive with externalPostgresql.enabled
   enabled: false
   auth:
+    ## @param postgresql.auth.username Username for the PostgreSQL database Etherpad connects to (created by the Bitnami subchart)
     username: "etherpad"
     # password:
+    ## @param postgresql.auth.database Name of the PostgreSQL database created by the Bitnami subchart for Etherpad
     database: "etherpad"
+    ## @param postgresql.auth.existingSecret [string] Name of an existing Secret for the bundled PostgreSQL credentials, as understood by the Bitnami subchart. Leave empty to use the subchart's own auto-generated password, which Etherpad still reads via secretKeyRef rather than inlining
+    existingSecret: ""
+  ## @skip postgresql.primary Remaining configuration (persistence, resources, etc.) for the bundled Bitnami PostgreSQL primary instance; refer to the Bitnami postgresql chart's own documentation
   primary:
     persistence:
       enabled: true
@@ -191,52 +292,124 @@ postgresql:
         cpu: 250m
         memory: 512Mi
 
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+## @section Service account parameters
 
+## @extra serviceAccount ServiceAccount options
 serviceAccount:
-  # Specifies whether a service account should be created
+  ## @param serviceAccount.create Create a ServiceAccount for the Etherpad pod
   create: true
-  # Annotations to add to the service account
+  ## @param serviceAccount.annotations [object] Annotations to add to the ServiceAccount
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  ## @param serviceAccount.name [string] Name of the ServiceAccount to use. Auto-generated from the fullname template when empty and serviceAccount.create is true
   name: ""
 
+## @section Pod parameters
+
+## @param podAnnotations [object] Annotations to add to the Etherpad pod
 podAnnotations: {}
 
-podSecurityContext: {}
+## @param podSecurityContext [object] Pod-level security context, applied to the whole Etherpad pod
+podSecurityContext:
+  seccompProfile:
+    type: RuntimeDefault
   # fsGroup: 2000
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
+## @param securityContext [object] Container-level security context for the Etherpad container. Defaults are hardened to run the upstream image as non-root (all capabilities dropped, no privilege escalation, runAsNonRoot). The official image's Dockerfile declares a named USER (etherpad, UID 5001) rather than a numeric one, and Kubernetes cannot verify runAsNonRoot against a named user, so runAsUser must be set explicitly or the pod fails to start with CreateContainerConfigError
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  runAsNonRoot: true
+  # Required: the official image declares USER etherpad (a name, not a numeric UID) in
+  # its Dockerfile. Kubernetes cannot verify runAsNonRoot against a named user, so
+  # without an explicit numeric runAsUser here the pod fails to start with:
+  # "container has runAsNonRoot and image has non-numeric user (etherpad), cannot
+  # verify user is non-root". The image's user resolves to UID 5001, GID 0.
+  runAsUser: 5001
   # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+  # runAsGroup: 0
+
+## @section Extra environment variables
+
+# Additional environment variables appended to the Etherpad container's env list
+# (Kubernetes EnvVar objects). Generic escape hatch for provider-specific settings
+# without expanding this chart's own values surface, e.g. the underlying Node.js
+# PostgreSQL driver (node-postgres, via ueberdb2) may respect standard libpq
+# environment variables such as PGSSLMODE. Whether that yields the TLS behavior
+# you expect depends on your PostgreSQL server/operator; test end-to-end against
+# your actual setup rather than assuming it works.
+## @param extraEnv [array] Additional Kubernetes EnvVar objects appended to the Etherpad container, supporting both plain `value` and `valueFrom.secretKeyRef`/`configMapKeyRef` entries
+extraEnv: []
+# - name: PGSSLMODE
+#   value: require
+# - name: SOME_VALUE
+#   valueFrom:
+#     secretKeyRef:
+#       name: some-secret
+#       key: value
+
+## @section Probes
+
+## @param startupProbe [object] Startup probe configuration (Kubernetes Probe object). Checks Etherpad's /health endpoint; tolerant failureThreshold to allow time for database connection and startup work
+startupProbe:
+  httpGet:
+    path: /health
+    port: http
+  failureThreshold: 60
+  periodSeconds: 5
+
+## @param readinessProbe [object] Readiness probe configuration (Kubernetes Probe object). Checks Etherpad's /health endpoint
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+  periodSeconds: 10
+  failureThreshold: 3
+
+## @param livenessProbe [object] Liveness probe configuration (Kubernetes Probe object). Checks Etherpad's /health endpoint
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3
+
+## @section Service parameters
 
 service:
+  ## @param service.type Kubernetes Service type
   type: ClusterIP
+  ## @param service.port Service port Etherpad is exposed on
   port: 80
 
+## @section Ingress parameters
+
 ingress:
+  ## @param ingress.enabled Enable Ingress for the Etherpad web UI
   enabled: false
+  ## @param ingress.className [string] IngressClass to use (Kubernetes >=1.18)
   className: ""
+  ## @param ingress.annotations [object] Additional annotations for the Ingress
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
+  ## @param ingress.hosts [array] Ingress host and path rules
   hosts:
     - host: chart-example.local
       paths:
         - path: /
           pathType: ImplementationSpecific
+  ## @param ingress.tls [array] TLS configuration for the Ingress (secretName and hosts)
   tls: []
   #  - secretName: tls-etherpad-general
   #    hosts:
   #      - chart-example.local
 
+## @section Resource parameters
+
+## @param resources [object] CPU/Memory resource requests/limits for the Etherpad container
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -249,8 +422,13 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+## @section Scheduling parameters
+
+## @param nodeSelector [object] Node labels for Etherpad pod assignment
 nodeSelector: {}
 
+## @param tolerations [array] Tolerations for Etherpad pod assignment
 tolerations: []
 
+## @param affinity [object] Affinity/anti-affinity rules for Etherpad pod assignment
 affinity: {}

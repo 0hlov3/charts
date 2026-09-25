@@ -37,7 +37,7 @@ spec:
             - name: FAVICON
               value: "{{ .Values.etherpad.general.favicon }}"
             - name: DEFAULT_PAD_TEXT
-              value: {{ .Values.etherpad.general.defaultPadText }}
+              value: {{ .Values.etherpad.general.defaultPadText | quote }}
             - name: IP
               value: {{ .Values.etherpad.general.ip }}
             - name: PORT
@@ -122,14 +122,14 @@ spec:
               value: {{ .Values.etherpad.shortcuts.enabledPAGEUP |quote }}
             - name: PAD_SHORTCUTS_ENABLED_PAGE_DOWN
               value: {{ .Values.etherpad.shortcuts.enabledPAGEDOWN |quote }}
-            - name: SKIN_NAME 
+            - name: SKIN_NAME
               value: {{ .Values.etherpad.skins.skinName }}
             - name: SKIN_VARIANTS
               value: {{ .Values.etherpad.skins.skinVariants }}
             - name: LOGLEVEL
               value: {{ .Values.etherpad.logging.logLevel }}
-            - name: DISABLE_IP_LOGGING
-              value: {{ .Values.etherpad.logging.disableIPLogging |quote }}
+            - name: IP_LOGGING
+              value: {{ .Values.etherpad.logging.ipLogging | default (ternary "anonymous" "full" .Values.etherpad.logging.disableIPLogging) | quote }}
             - name: COOKIE_KEY_ROTATION_INTERVAL
               value: "{{ .Values.etherpad.cookie.keyRotationInterval }}"
             - name: COOKIE_SAME_SITE
@@ -138,8 +138,10 @@ spec:
               value: "{{ .Values.etherpad.cookie.sessionLifetime }}"
             - name: COOKIE_SESSION_REFRESH_INTERVAL
               value: "{{ .Values.etherpad.cookie.sessionRefreshInterval }}"
-            - name: HOW_SETTINGS_IN_ADMIN_PAGE
+            - name: SHOW_SETTINGS_IN_ADMIN_PAGE
               value: {{ .Values.etherpad.advanced.showSettingsInAdminPage |quote }}
+            - name: AUTHENTICATION_METHOD
+              value: {{ .Values.etherpad.advanced.authenticationMethod | quote }}
             - name: TRUST_PROXY
               value: {{ .Values.etherpad.advanced.trustProxy |quote }}
             - name: IMPORT_MAX_FILE_SIZE
@@ -163,11 +165,9 @@ spec:
             - name: MAX_AGE
               value: {{ .Values.etherpad.advanced.maxAge |quote }}
             - name: SOFFICE
-              value: {{ .Values.etherpad.advanced.soffice |quote }}
+              value: {{ .Values.etherpad.advanced.soffice | default "null" | quote }}
             - name: DOCX_EXPORT
               value: {{ .Values.etherpad.advanced.docxExport |quote }}
-            - name: TIDY_HTML
-              value: {{ .Values.etherpad.advanced.tidyHTML |quote }}
             - name: ALLOW_UNKNOWN_FILE_ENDS
               value: {{ .Values.etherpad.advanced.allowUnknownFileEnds |quote }}
             - name: REQUIRE_AUTHENTICATION
@@ -196,11 +196,13 @@ spec:
               value: {{ .Values.etherpad.advanced.exposeVersion |quote }}
             - name: LOWER_CASE_PAD_IDS
               value: "{{ .Values.etherpad.padOptions.lowercasePadIDs }}"
+            {{- if and .Values.postgresql.enabled .Values.externalPostgresql.enabled }}
+            {{ fail "postgresql.enabled and externalPostgresql.enabled cannot both be true: choose exactly one PostgreSQL mode. Enabling both deploys an unused bundled PostgreSQL instance (and its persistent storage) while Etherpad connects to the external database instead. Set one of the two to false." }}
+            {{- end }}
             {{- if .Values.externalPostgresql.enabled }}
-            {{- if eq .Values.externalPostgresql.useConnectionString true }}
-            - name: DB_SETTINGS
-              value: "postgres://${DB_USER}:${DB_PASS}@{{ .Values.externalPostgresql.host }}:{{ .Values.externalPostgresql.port }}/{{ .Values.externalPostgresql.database}}?sslmode=prefer"
-            {{- else }}
+            {{- if .Values.externalPostgresql.useConnectionString }}
+            {{ fail "externalPostgresql.useConnectionString is not supported: the stock Etherpad Docker image does not honor a PostgreSQL connection string (DB_URL is not consumed by Etherpad's pg driver, and settings.json.docker has no working alternative). Set externalPostgresql.useConnectionString to false and configure externalPostgresql.host/port/database/username/password (or existingSecret) instead. See the chart README for details." }}
+            {{- end }}
             - name: DB_TYPE
               value: postgres
             - name: DB_HOST
@@ -209,18 +211,17 @@ spec:
               value: "{{ .Values.externalPostgresql.port }}"
             - name: DB_NAME
               value: "{{ .Values.externalPostgresql.database }}"
-            {{- end }}
             {{- if ne .Values.externalPostgresql.existingSecret "" }}
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.externalPostgresql.existingSecret }}
-                  key: username
+                  key: {{ .Values.externalPostgresql.existingSecretUsernameKey | default "username" }}
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.externalPostgresql.existingSecret }}
-                  key: password
+                  key: {{ .Values.externalPostgresql.existingSecretPasswordKey | default "password" }}
             {{- else }}
             - name: DB_USER
               value: {{ .Values.externalPostgresql.username }}
@@ -246,21 +247,28 @@ spec:
                   key: password
             {{- else }}
             - name: DB_PASS
-              value: {{ .Values.postgresql.auth.password }}
+              valueFrom:
+                secretKeyRef:
+                  # Bitnami's postgresql subchart always writes the effective
+                  # password (auto-generated or postgresql.auth.password) to
+                  # its own Secret under this key, so we never inline it here.
+                  name: {{ include "gotosocial.postgresql.fullname" . }}
+                  key: password
             {{- end }}
+            {{- end }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.etherpad.general.port }}
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          startupProbe:
+            {{- toYaml .Values.startupProbe | nindent 12 }}
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
