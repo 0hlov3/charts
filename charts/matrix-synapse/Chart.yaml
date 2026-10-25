@@ -6,11 +6,11 @@ home: https://github.com/element-hq/synapse
 type: application
 
 # Chart version should follow semantic versioning: https://semver.org/
-version: 1.0.40
+version: 1.0.41
 
 # Application version reflects the specific release of the application.
 # Use quotes to preserve formatting.
-appVersion: "v1.160.0"
+appVersion: "v1.163.2"
 
 # Chart maintainers, contributors, and related metadata.
 maintainers:
