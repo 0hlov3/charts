@@ -6,9 +6,9 @@ home: https://codeberg.org/superseriousbusiness/gotosocial
 
 type: application
 # Chart Version
-version: "2.1.3"
+version: "2.1.4"
 # gotosocial version
-appVersion: "0.22.1"
+appVersion: "0.22.2"
 
 maintainers:
   - name: 0hlov3
