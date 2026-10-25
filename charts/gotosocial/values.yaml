@@ -13,7 +13,6 @@ image:
   repository: superseriousbusiness/gotosocial
   ## @param image.pullPolicy GoToSocial image pull policy
   pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
   ## @skip image.tag GoToSocial image tag (immutable tags are recommended)
   tag: ""
 ## @param imagePullSecrets GoToSocial image pull secrets

@@ -6,6 +6,17 @@ This Helm chart deploys GoToSocial, a lightweight and privacy-focused social net
 
 If PostgreSQL or external database is not enabled, SQLite is used by default. In this scenario, it is critical to back up your instance key before recreating the pod, as the instance key is tied to the database. Failure to do so may result in data loss and federation issues.
 
+## Upgrade to chart 2.1.5 — GoToSocial 0.22.3
+
+Updates GoToSocial from 0.22.2 to 0.22.3, fixing remote-account impersonation
+and updating the Go runtime's certificate trust handling. Upstream reports no
+configuration changes or database migrations from 0.22.x. Back up the database
+before upgrading. Upgrades from versions before 0.22.0 must follow the
+[0.22.0 migration instructions](https://codeberg.org/superseriousbusiness/gotosocial/releases/tag/v0.22.0).
+Do not downgrade a main/snapshot installation to this release.
+
+See the [0.22.3 release notes](https://codeberg.org/superseriousbusiness/gotosocial/releases/tag/v0.22.3).
+
 ## Breaking Changes
 
 ### v2.0.0 — Probe behavior changed (GoToSocial 0.21.0)
