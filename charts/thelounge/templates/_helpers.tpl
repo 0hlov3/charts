@@ -64,12 +64,8 @@ Create the name of the service account to use
 {{/*
 Volumes for deployment
 */}}
-{{- define "thelounge.volumeEnabled" }}
-{{- if or .Values.persistence.enabled .Values.emptyDir.enabled }}
+{{- define "thelounge.volumeEnabled" -}}
+{{- if or .Values.persistence.enabled .Values.emptyDir.enabled .Values.volumeMounts .Values.volumes }}
 true
-{{- else if ne .Values.volumeMounts "[]" }}
-true
-{{ else }}
-false
 {{- end }}
-{{- end }}
+{{- end -}}

@@ -1,5 +1,12 @@
 {{ $fullName := include "thelounge.fullname" . }}
 {{ $volumeEnabled := include "thelounge.volumeEnabled" .}}
+{{/* Explicit mounts take precedence; normalize paths for comparison only. */}}
+{{- $explicitDataMount := false }}
+{{- range .Values.volumeMounts }}
+  {{- if eq (clean .mountPath) "/var/opt/thelounge" }}
+    {{- $explicitDataMount = true }}
+  {{- end }}
+{{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -55,7 +62,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           {{ if $volumeEnabled }}
           volumeMounts:
-          {{- if .Values.persistence.enabled }}
+          {{- if and (or .Values.persistence.enabled .Values.emptyDir.enabled) (not $explicitDataMount) }}
             - name: config
               mountPath: /var/opt/thelounge
               readOnly: false

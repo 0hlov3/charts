@@ -8,7 +8,6 @@ image:
   registry: docker.io
   repository: thelounge/thelounge
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
 emptyDir:
@@ -54,7 +53,6 @@ securityContext:
   # runAsNonRoot: true
   runAsUser: 1000
   runAsGroup: 1000
-  fsGroup: 1000
 
 service:
   type: ClusterIP
