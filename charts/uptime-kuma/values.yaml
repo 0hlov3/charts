@@ -12,7 +12,6 @@ image:
   registry: docker.io
   repository: louislam/uptime-kuma
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
 ## @section Persistence parameters

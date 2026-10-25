@@ -4,8 +4,8 @@ Deploy [Uptime Kuma](https://github.com/louislam/uptime-kuma)—a self-hosted mo
 
 - **Chart name:** `uptime-kuma`
 - **Chart type:** Application
-- **Chart version:** 1.0.0
-- **App version:** `2.0.0`
+- **Chart version:** 1.0.11
+- **App version:** `2.5.7`
 - **Upstream image:** `docker.io/louislam/uptime-kuma`
 
 This chart creates a `Deployment`, `Service`, optional `Ingress`(es), and an optional `PersistentVolumeClaim` for data.
