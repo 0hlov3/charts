@@ -4,10 +4,10 @@
 
 
 ## @section Image parameters
-## @param image.registry [string] Image registry
-## @param image.repository [string] Image repository
+## @param image.registry Image registry
+## @param image.repository Image repository
 ## @param image.tag [string] Image tag (defaults to chart appVersion if empty)
-## @param image.pullPolicy [string] Image pull policy
+## @param image.pullPolicy Image pull policy
 image:
   registry: docker.io
   repository: louislam/uptime-kuma
@@ -16,10 +16,12 @@ image:
 
 ## @section Persistence parameters
 ## @param persistence.enabled Enable PersistentVolumeClaim for Uptime Kuma data
-## @param persistence.size [string] PVC size for data persistence
+## @param persistence.size PVC size for data persistence
+## @param persistence.storageClass [string] StorageClass for the PVC (uses the cluster default if empty)
 persistence:
   enabled: false
   size: 4Gi
+  storageClass: ""
 
 ## @section Service account parameters
 ## @param serviceAccount.create Enable creation of a ServiceAccount
@@ -51,9 +53,9 @@ securityContext: {}
   # runAsNonRoot: true
 # runAsUser: 1000
 
-## @section Probes parameters
+## @section Liveness probe parameters
 ## @param livenessProbe.enabled Enable liveness probe
-## @param livenessProbe.path [string] HTTP path for liveness probe
+## @param livenessProbe.path HTTP path for liveness probe
 ## @param livenessProbe.initialDelaySeconds Delay before liveness probe starts
 ## @param livenessProbe.periodSeconds Liveness probe period
 ## @param livenessProbe.timeoutSeconds Liveness probe timeout
@@ -68,9 +70,9 @@ livenessProbe:
   failureThreshold: 3
   successThreshold: 1
 
-## @section Probes parameters
+## @section Readiness probe parameters
 ## @param readinessProbe.enabled Enable readiness probe
-## @param readinessProbe.path [string] HTTP path for readiness probe
+## @param readinessProbe.path HTTP path for readiness probe
 ## @param readinessProbe.initialDelaySeconds Delay before readiness probe starts
 ## @param readinessProbe.periodSeconds Readiness probe period
 ## @param readinessProbe.timeoutSeconds Readiness probe timeout
@@ -96,7 +98,7 @@ service:
 ## @param ingress.enabled Enable Ingress for the main UI
 ## @param ingress.className [string] IngressClass name to use
 ## @param ingress.annotations [object] Extra annotations for the Ingress
-## @param ingress.hosts [array] List of host rules for the UI (each item supports host and paths[].path/pathType)
+## @param ingress.hosts [array] List of host rules for the UI (each item supports host and paths[].path/pathType; default: example host chart-example.local with path /)
 ## @param ingress.tls [array] TLS configuration for hosts (secretName, hosts[])
 ingress:
   enabled: false
@@ -118,7 +120,7 @@ ingress:
 ## @param ingressStatus.enabled Enable a separate Ingress for a public read-only status page
 ## @param ingressStatus.className [string] IngressClass name to use for the status page
 ## @param ingressStatus.annotations [object] Extra annotations for the status Ingress
-## @param ingressStatus.hosts [array] List of host rules for the status page (paths should point to /status/)
+## @param ingressStatus.hosts [array] List of host rules for the status page (paths should point to /status/; default: example host chart-example.local with path /status/)
 ## @param ingressStatus.tls [array] TLS configuration for status hosts (secretName, hosts[])
 ingressStatus:
   enabled: false
