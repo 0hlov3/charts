@@ -21,8 +21,8 @@ macaroon_secret_key
 {{- if and (ne .Values.config.apiConfiguration.existingSecret.name "") (ne .Values.config.apiConfiguration.existingSecret.keys.macaroon_secret_key "") -}}
 valueFrom:
   secretKeyRef:
-    name: {{ .Values.config.registration.existingSecret.name |quote }}
-    key: {{ .Values.config.registration.existingSecret.keys.registration_shared_secret |quote  }}
+    name: {{ .Values.config.apiConfiguration.existingSecret.name |quote }}
+    key: {{ .Values.config.apiConfiguration.existingSecret.keys.macaroon_secret_key |quote  }}
 {{- else if ne .Values.config.apiConfiguration.macaroon_secret_key "" -}}
 value: {{ .Values.config.apiConfiguration.macaroon_secret_key |quote  }}
 {{- else -}}
