@@ -2,8 +2,15 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+## @section Deployment parameters
+## @param replicaCount Number of Element Web replicas (ignored when autoscaling is enabled)
 replicaCount: 1
 
+## @section Image parameters
+## @param image.registry Image registry
+## @param image.repository Image repository
+## @param image.pullPolicy Image pull policy
+## @param image.tag [string] Image tag (defaults to chart appVersion if empty)
 image:
   registry: docker.io
   repository: vectorim/element-web
@@ -11,39 +18,53 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+## @section Element configuration parameters
 ## Default server for the Element install. (Required)
 ## This will configure the default_server_config block in the config.json
-## Ref: https://github.com/vector-im/element-web/blob/develop/config.sample.json
+## Ref: https://github.com/element-hq/element-web/blob/develop/docs/config.md
 ##
+## @param defaultServer.url Base URL of the default homeserver (required)
+## @param defaultServer.name Server name of the default homeserver (required)
 defaultServer:
   url: 'https://matrix.example.com'
   name: 'matrix.example.com'
   # identity_url: 'https://vector.im'
 
-## Element configuration
-## Ref: https://github.com/vector-im/element-web/blob/develop/config.sample.json
+## Element configuration, merged into config.json together with default_server_config
+## Ref: https://github.com/element-hq/element-web/blob/develop/docs/config.md
 ##
+## @param config [object] Additional Element config.json settings
 config: {}
 
+## @param env.ELEMENT_WEB_PORT Port Element Web listens on (currently not rendered; the Deployment uses 8080)
 env:
   ELEMENT_WEB_PORT: 8080
+
+## @section Volume parameters
 ## Configuration for mounting additional volumes into the application container.
 ##
+## @param extraVolumes [array] Additional volumes to add to the Pod
 extraVolumes: {}
 # - name: backgrounds
 #   persistentVolumeClaim:
 #     claimName: element-backgrounds
+## @param extraVolumeMounts [array] Additional volumeMounts to add to the Element Web container
 extraVolumeMounts: {}
 # - name: backgrounds
 #   mountPath: /app/themes/element/img/backgrounds/
 
-
+## @section Common parameters
+## @param imagePullSecrets [array] Image pull secrets for private registries
 imagePullSecrets: []
+## @param nameOverride [string] String to partially override the chart name
 nameOverride: ""
+## @param fullnameOverride [string] String to fully override the release name
 fullnameOverride: ""
 
-## Configures an application-specific service account.
-##
+## @section Service account parameters
+## @param serviceAccount.create Enable creation of a ServiceAccount
+## @param serviceAccount.annotations [object] Annotations to add to the ServiceAccount
+## @param serviceAccount.name [string] Name of the ServiceAccount to use (auto-generated if empty and create=true)
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -53,11 +74,17 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+## @section Pod parameters
+## @param podAnnotations [object] Additional annotations to add to the Pod
 podAnnotations: {}
 
+## @param podSecurityContext.fsGroup Group ID for the Pod's volumes
 podSecurityContext:
   fsGroup: 1000
 
+## @param securityContext.capabilities.drop Linux capabilities to drop
+## @param securityContext.runAsNonRoot Require the container to run as a non-root user
+## @param securityContext.runAsUser User ID to run the container as
 securityContext:
   capabilities:
     drop:
@@ -66,14 +93,19 @@ securityContext:
   runAsUser: 1000
   # readOnlyRootFilesystem: true
 
-## Service configuration.
-##
+## @section Service parameters
+## @param service.type Kubernetes Service type
+## @param service.port Service port for the Element Web UI
 service:
   type: ClusterIP
   port: 80
 
-## Ingress configuration.
-##
+## @section Ingress parameters
+## @param ingress.enabled Enable Ingress for the Element Web UI
+## @param ingress.className [string] IngressClass name to use
+## @param ingress.annotations [object] Extra annotations for the Ingress
+## @param ingress.hosts [array] List of host rules (each item supports host and paths[].path/pathType; default: example host chart-example.local with path /)
+## @param ingress.tls [array] TLS configuration for hosts (secretName, hosts[])
 ingress:
   enabled: false
   className: ""
@@ -96,6 +128,11 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+## @section Resources & scheduling
+## @param resources.limits.cpu CPU limit for the container
+## @param resources.limits.memory Memory limit for the container
+## @param resources.requests.cpu CPU request for the container
+## @param resources.requests.memory Memory request for the container
 resources:
   limits:
     cpu: 200m
@@ -104,6 +141,10 @@ resources:
     cpu: 200m
     memory: 256Mi
 
+## @param autoscaling.enabled Enable a HorizontalPodAutoscaler
+## @param autoscaling.minReplicas Minimum number of replicas
+## @param autoscaling.maxReplicas Maximum number of replicas
+## @param autoscaling.targetCPUUtilizationPercentage Target average CPU utilization (percent)
 autoscaling:
   enabled: false
   minReplicas: 1
@@ -111,11 +152,16 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
+## @param nodeSelector [object] Node selector rules for pod assignment
 nodeSelector: {}
 
+## @param tolerations [array] Tolerations for pod assignment
 tolerations: []
 
+## @param affinity [object] Affinity rules for pod assignment
 affinity: {}
 
+## @section Network policy parameters
+## @param networkPolicy.enabled Create a NetworkPolicy for the Element Web Pod
 networkPolicy:
   enabled: false
