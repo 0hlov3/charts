@@ -2,6 +2,11 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+## @section Image parameters
+## @param image.registry Image registry
+## @param image.repository Image repository
+## @param image.pullPolicy Image pull policy
+## @param image.tag [string] Image tag (defaults to chart appVersion if empty)
 image:
   registry: ghcr.io
   repository: cinnyapp/cinny
@@ -9,6 +14,11 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+## @section Cinny configuration parameters
+## @param config.override Replace the image's default config.json with one generated from the values below
+## @param config.homeserverList Homeservers offered on the login screen
+## @param config.defaultHomeserver Index in homeserverList of the preselected homeserver (must be lower than the number of entries)
+## @param config.allowCustomHomeservers Allow users to enter a homeserver that is not in homeserverList
 config:
   override: false
   homeserverList:
@@ -21,13 +31,15 @@ config:
   defaultHomeserver: 0
   allowCustomHomeservers: true
 
+## @section Network policy parameters
+## @param networkpolicies.enabled Create NetworkPolicies for the Cinny Pod only: deny by default, then allow DNS, public egress and all ingress
 networkpolicies:
-    enabled: false
+  enabled: false
 
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
+## @section Service account parameters
+## @param serviceAccount.create Enable creation of a ServiceAccount
+## @param serviceAccount.annotations [object] Annotations to add to the ServiceAccount
+## @param serviceAccount.name [string] Name of the ServiceAccount to use (auto-generated if empty and create=true)
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -37,11 +49,13 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+## @section Deployment & Pod parameters
+## @param podAnnotations [object] Additional annotations to add to the Pod
 podAnnotations: {}
-
+## @param podSecurityContext [object] Pod-level security context (e.g. fsGroup)
 podSecurityContext: {}
 # fsGroup: 2000
-
+## @param securityContext [object] Container-level security context (e.g. runAsUser, readOnlyRootFilesystem)
 securityContext: {}
   # capabilities:
   #   drop:
@@ -50,10 +64,19 @@ securityContext: {}
   # runAsNonRoot: true
 # runAsUser: 1000
 
+## @section Service parameters
+## @param service.type Kubernetes Service type
+## @param service.port Service and container port for the Cinny web UI
 service:
   type: ClusterIP
   port: 80
 
+## @section Ingress parameters
+## @param ingress.enabled Enable Ingress for the Cinny web UI
+## @param ingress.className [string] IngressClass name to use
+## @param ingress.annotations [object] Extra annotations for the Ingress
+## @param ingress.hosts [array] List of host rules (each item supports host and paths[].path/pathType; pathType defaults to ImplementationSpecific; default: example host chart-example.local with path /)
+## @param ingress.tls [array] TLS configuration for hosts (secretName, hosts[])
 ingress:
   enabled: false
   className: ""
@@ -71,6 +94,11 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+## @section Resources & scheduling
+## @param resources.limits.cpu CPU limit for the container
+## @param resources.limits.memory Memory limit for the container
+## @param resources.requests.cpu CPU request for the container
+## @param resources.requests.memory Memory request for the container
 resources:
   limits:
     cpu: 100m
@@ -78,9 +106,17 @@ resources:
   requests:
     cpu: 100m
     memory: 128Mi
-
+## @param nodeSelector [object] Node selector rules for pod assignment
 nodeSelector: {}
-
+## @param tolerations [array] Tolerations for pod assignment
 tolerations: []
-
+## @param affinity [object] Affinity rules for pod assignment
 affinity: {}
+
+## @section Common parameters
+## @param nameOverride [string] String to partially override the chart name
+nameOverride: ""
+## @param fullnameOverride [string] String to fully override the release name
+fullnameOverride: ""
+## @param imagePullSecrets [array] Image pull secrets for private registries
+imagePullSecrets: []

@@ -8,7 +8,9 @@ metadata:
   labels:
     {{- include "cinnyapp.labels" . | nindent 4 }}
 spec:
-  podSelector: {}
+  podSelector:
+    matchLabels:
+      {{- include "cinnyapp.selectorLabels" . | nindent 6 }}
   policyTypes:
     - Ingress
     - Egress

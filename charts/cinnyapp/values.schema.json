@@ -14,7 +14,16 @@
       "additionalProperties": false,
       "properties": {
         "limits": { "$ref": "#/$defs/resourceList" },
-        "requests": { "$ref": "#/$defs/resourceList" }
+        "requests": { "$ref": "#/$defs/resourceList" },
+        "claims": {
+          "type": "array",
+          "description": "Dynamic resource claims (Kubernetes 1.26+) used by the container.",
+          "items": {
+            "type": "object",
+            "properties": { "name": { "type": "string", "minLength": 1 } },
+            "required": ["name"]
+          }
+        }
       }
     },
     "ingress": {
@@ -39,7 +48,7 @@
                   "additionalProperties": false,
                   "properties": {
                     "path": { "type": "string" },
-                    "pathType": { "type": "string", "enum": ["Exact", "Prefix", "ImplementationSpecific"] }
+                    "pathType": { "type": "string", "enum": ["Exact", "Prefix", "ImplementationSpecific"], "description": "Ingress path type. Defaults to ImplementationSpecific when unset." }
                   },
                   "required": ["path"]
                 }
@@ -57,14 +66,14 @@
             "properties": {
               "secretName": { "type": "string" },
               "hosts": { "type": "array", "items": { "type": "string" } }
-            },
-            "required": ["secretName"]
+            }
           }
         }
       }
     }
   },
   "properties": {
+    "global": { "type": "object", "description": "Global values shared with parent and sibling charts." },
     "image": {
       "type": "object",
       "additionalProperties": false,
@@ -87,7 +96,7 @@
           "description": "Homeservers offered on the login screen.",
           "items": { "type": "string", "minLength": 1 }
         },
-        "defaultHomeserver": { "type": "integer", "minimum": 0, "description": "Index into homeserverList of the preselected homeserver." },
+        "defaultHomeserver": { "type": "integer", "minimum": 0, "description": "Index into homeserverList of the preselected homeserver. Must be lower than the number of entries in homeserverList." },
         "allowCustomHomeservers": { "type": "boolean", "description": "Allow users to enter a homeserver not in homeserverList." }
       }
     },

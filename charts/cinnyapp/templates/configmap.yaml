@@ -1,4 +1,7 @@
 {{- if .Values.config.override }}
+{{- if ge (int .Values.config.defaultHomeserver) (len .Values.config.homeserverList) }}
+{{- fail (printf "config.defaultHomeserver (%d) must be an index into config.homeserverList (%d entries)" (int .Values.config.defaultHomeserver) (len .Values.config.homeserverList)) }}
+{{- end }}
 {{ $fullName := include "cinnyapp.fullname" . }}
 ---
 apiVersion: v1
