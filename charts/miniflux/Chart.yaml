@@ -24,4 +24,4 @@ annotations:
     - name: App Source
       url: https://github.com/miniflux/v2
     - name: Chart Source
-      url: https://github.com/gabe565/charts/tree/main/charts/miniflux
+      url: https://github.com/0hlov3/charts/tree/main/charts/miniflux
