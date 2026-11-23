@@ -22,11 +22,12 @@
 
 ### Miniflux configuration
 
-| Name                 | Description                                     | Value |
-| -------------------- | ----------------------------------------------- | ----- |
-| `env.RUN_MIGRATIONS` | Run database migrations on startup ("1" or "0") | `1`   |
-| `env.CREATE_ADMIN`   | Create admin user on startup ("1" or "0")       | `1`   |
-| `env.BASE_URL`       | Public base URL (e.g. https://rss.example.com)  | `""`  |
+| Name                 | Description                                                                                                                                                                                                                                             | Value |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `env.RUN_MIGRATIONS` | Run database migrations on startup ("1" or "0")                                                                                                                                                                                                         | `1`   |
+| `env.CREATE_ADMIN`   | Create admin user on startup ("1" or "0")                                                                                                                                                                                                               | `1`   |
+| `env.BASE_URL`       | Public base URL (e.g. https://rss.example.com)                                                                                                                                                                                                          | `""`  |
+| `extraEnv`           | Additional environment variables for the Miniflux container (Kubernetes EnvVar objects with value or valueFrom). Variables set by the chart (DATABASE_URL, RUN_MIGRATIONS, CREATE_ADMIN, ADMIN_USERNAME, ADMIN_PASSWORD, BASE_URL) are not allowed here | `[]`  |
 
 ### ServiceAccount parameters
 

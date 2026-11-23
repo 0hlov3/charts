@@ -73,6 +73,26 @@
         }
       }
     },
+    "extraEnv": {
+      "type": "array",
+      "description": "Additional Kubernetes EnvVar objects for the Miniflux container (e.g. TRUSTED_REVERSE_PROXY_NETWORKS, OAUTH2_*). See https://miniflux.app/docs/configuration.html",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+            "not": { "enum": ["DATABASE_URL", "RUN_MIGRATIONS", "CREATE_ADMIN", "ADMIN_USERNAME", "ADMIN_PASSWORD", "BASE_URL"] },
+            "description": "Variable name. Variables already set by the chart are not allowed."
+          },
+          "value": { "type": "string", "description": "Plain value. Quote numbers and booleans." },
+          "valueFrom": { "type": "object", "description": "Source for the value (secretKeyRef, configMapKeyRef, fieldRef, resourceFieldRef)." }
+        },
+        "required": ["name"],
+        "not": { "required": ["value", "valueFrom"] }
+      }
+    },
     "serviceAccount": {
       "type": "object",
       "additionalProperties": false,

@@ -30,6 +30,19 @@ env:
   CREATE_ADMIN: "1"
   BASE_URL: ""
 
+## @param extraEnv Additional environment variables for the Miniflux container (Kubernetes EnvVar objects with value or valueFrom). Variables set by the chart (DATABASE_URL, RUN_MIGRATIONS, CREATE_ADMIN, ADMIN_USERNAME, ADMIN_PASSWORD, BASE_URL) are not allowed here
+## See https://miniflux.app/docs/configuration.html for all options
+extraEnv: []
+# - name: TRUSTED_REVERSE_PROXY_NETWORKS
+#   value: "10.0.0.0/8"
+# - name: OAUTH2_PROVIDER
+#   value: "oidc"
+# - name: OAUTH2_CLIENT_SECRET
+#   valueFrom:
+#     secretKeyRef:
+#       name: miniflux-oauth2
+#       key: client-secret
+
 ## @section ServiceAccount parameters
 ## @param serviceAccount.create Specifies whether a service account should be created
 ## @param serviceAccount.automount Automatically mount ServiceAccount API credentials
