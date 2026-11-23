@@ -21,7 +21,7 @@ env:
   nextauth:
     ## @param env.nextauth.url Defines the NEXTAUTH_URL and specifies the base URL for NextAuth.js authentication endpoints.
     url: "http://localhost:3000/api/v1/auth"
-    ## @param env.nextauth.secret Defines the NEXTAUTH_SECRET and is used by NextAuth.js to encrypt session tokens and JWTs. Can be generatet via `openssl rand -base64 32`
+    ## @param env.nextauth.secret Defines the NEXTAUTH_SECRET and is used by NextAuth.js to encrypt session tokens and JWTs. Can be generated via `openssl rand -base64 32`
     secret: ""
     existingSecret:
       ## @param env.nextauth.existingSecret.name Defines the NEXTAUTH_SECRET kubernetes secret name where to get the secret.
@@ -56,13 +56,13 @@ extraEnv: []
 ## @section Persistence
 #######################
 persistence:
-  ## @param persistence.enabled Enable persistence mediaStore, if false refers to emptyDir (not recommended).
+  ## @param persistence.enabled Store Linkwarden data (/data/data: archived pages, screenshots, PDFs) in a PersistentVolumeClaim. When false, an emptyDir is used and the data is lost whenever the pod restarts
   enabled: false
-  ## @param persistence.size Defines the Size of Peristant volume for Linkwarden data.
+  ## @param persistence.size Size of the PersistentVolumeClaim for Linkwarden data
   size: 1Gi
-  ## @param persistence.accessMode Enable persistence for SQLite data.
+  ## @param persistence.accessMode Access mode of the PersistentVolumeClaim
   accessMode: ReadWriteOnce
-  ## @param persistence.storageClassName If empty uses the default storageClass.
+  ## @param persistence.storageClassName StorageClass of the PersistentVolumeClaim. If empty, the default StorageClass is used
   storageClassName: ""
 ##################################
 ## @section Database Configuration
@@ -74,16 +74,16 @@ externalPostgresql:
   ## @param externalPostgresql.host Hostname of the external PostgreSQL database.
   ## Default: postgresql.postgresql.svc.cluster.local
   host: postgresql.postgresql.svc.cluster.local
-  ## @param externalPostgresql.port Port for the external PostgreSQL database.
+  ## @param externalPostgresql.port Port for the external PostgreSQL database, as a quoted string (e.g. "5432")
   ## Default: 5432
   port: "5432"
-  ## @param externalPostgresql.database Name of the database to use.
+  ## @param externalPostgresql.database Name of the database to use. Must be URL-safe (see externalPostgresql.password)
   ## Default: linkwarden
   database: linkwarden
-  ## @param externalPostgresql.username Username of the database to use.
+  ## @param externalPostgresql.username Username of the database to use. Must be URL-safe (see externalPostgresql.password)
   ## Default: linkwarden
   username: ""
-  ## @param externalPostgresql.password Password of the database to use.
+  ## @param externalPostgresql.password Password of the database to use. It is inserted into DATABASE_URL without URL encoding, so it must not contain @ : / # ? or %
   ## Default: linkwarden
   password: ""
   existingSecret:
@@ -94,10 +94,10 @@ externalPostgresql:
       ## @param externalPostgresql.existingSecret.keys.host Key for the host in the existing secret.
       ## Default: ""
       host: ""
-      ## @param externalPostgresql.existingSecret.keys.port Key for the port in the existing secret.
+      ## @param externalPostgresql.existingSecret.keys.port Key for the port in the existing secret. The value must be the bare port number (no trailing newline)
       ## Default: ""
       port: ""
-      ## @param externalPostgresql.existingSecret.keys.database Key for the port in the existing secret.
+      ## @param externalPostgresql.existingSecret.keys.database Key for the database name in the existing secret.
       ## Default: ""
       database: ""
       ## @param externalPostgresql.existingSecret.keys.username Key for the username in the existing secret.
@@ -119,7 +119,7 @@ service:
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
-  ## @param ingress.enabled Enable ingress record generation for 
+  ## @param ingress.enabled Enable Ingress for the Linkwarden web UI
   enabled: false
   ## @param ingress.className IngressClass that will be used to implement the Ingress
   className: ""

@@ -55,8 +55,6 @@ spec:
           # Database Config ##
           ####################
           {{- if .Values.externalPostgresql.enabled }}
-            #- name: DATABASE_URL
-            #  value: "postgresql://${LINKWARDEN_POSTGRES_USER}:${LINKWARDEN_POSTGRES_PASSWORD}@${LINKWARDEN_POSTGRES_HOST}:5432/${LINKWARDEN_POSTGRES_DATABASE}"
             - name: LINKWARDEN_POSTGRES_HOST
               {{- include "linkwarden.postgres_host" . | nindent 14 }}
             - name: LINKWARDEN_POSTGRES_PORT
@@ -68,7 +66,7 @@ spec:
             - name: LINKWARDEN_POSTGRES_PASSWORD
               {{- include "linkwarden.postgres_password" . | nindent 14 }}
             - name: DATABASE_URL
-              value: "postgresql://$(LINKWARDEN_POSTGRES_USER):$(LINKWARDEN_POSTGRES_PASSWORD)@$(LINKWARDEN_POSTGRES_HOST):5432/$(LINKWARDEN_POSTGRES_DATABASE)"
+              value: "postgresql://$(LINKWARDEN_POSTGRES_USER):$(LINKWARDEN_POSTGRES_PASSWORD)@$(LINKWARDEN_POSTGRES_HOST):$(LINKWARDEN_POSTGRES_PORT)/$(LINKWARDEN_POSTGRES_DATABASE)"
           {{- end }}
           #############
           # ExtraEnv ##

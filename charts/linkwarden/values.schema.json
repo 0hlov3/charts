@@ -139,7 +139,7 @@
       "properties": {
         "enabled": { "type": "boolean", "description": "Use an external PostgreSQL database. Must be true." },
         "host": { "type": "string", "description": "Database host." },
-        "port": { "type": "string", "pattern": "^[0-9]*$", "description": "Database port, as a quoted string (e.g. \"5432\")." },
+        "port": { "type": "string", "pattern": "^[0-9]+$", "description": "Database port, as a quoted string (e.g. \"5432\")." },
         "database": { "type": "string", "description": "Database name." },
         "username": { "type": "string", "description": "Database username." },
         "password": { "type": "string", "description": "Database password." },
