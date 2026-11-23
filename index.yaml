@@ -4115,6 +4115,26 @@ entries:
   linkwarden:
   - apiVersion: v2
     appVersion: v2.17.0
+    created: "2026-11-23T20:39:02.464442194Z"
+    description: Linkwarden is a self-hosted, open-source collaborative bookmark manager
+      that preserves a snapshot of every saved page.
+    digest: 21f4576bede936c8acae0cc0f4d133000c5849acd3f0725c2a90aae0e25b7f4f
+    home: https://github.com/linkwarden/linkwarden
+    icon: https://docs.linkwarden.app/img/logo.png
+    maintainers:
+    - email: dev@privatetrace.io
+      name: 0hlov3
+      url: https://schoenwald.aero
+    name: linkwarden
+    sources:
+    - https://github.com/linkwarden/linkwarden
+    - https://docs.linkwarden.app/
+    type: application
+    urls:
+    - https://github.com/0hlov3/charts/releases/download/linkwarden-1.1.0/linkwarden-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    appVersion: v2.17.0
     created: "2026-11-23T20:29:12.72067171Z"
     description: A Helm chart for Kubernetes
     digest: 7a825079b03c3a4387744a32bf5d9657e54efe9ba6ebd5dc132f9b85f46bbcc2
@@ -7577,4 +7597,4 @@ entries:
     urls:
     - https://github.com/fSocietySocial/charts/releases/download/yopass-0.1.0/yopass-0.1.0.tgz
     version: 0.1.0
-generated: "2026-11-23T20:29:12.721055272Z"
+generated: "2026-11-23T20:39:02.465575808Z"
