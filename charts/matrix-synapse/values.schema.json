@@ -1,0 +1,439 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "matrix-synapse values",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "portString": {
+      "type": "string",
+      "pattern": "^[0-9]*$",
+      "description": "Port as a quoted string (e.g. \"5432\"). Empty when read from an existing Secret."
+    },
+    "boolOrEmpty": {
+      "description": "true/false, or \"\" to leave it unset. Rendered as-is into the Synapse config.",
+      "anyOf": [
+        { "type": "boolean" },
+        { "type": "string", "enum": ["", "true", "false"] }
+      ]
+    },
+    "persistence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean", "description": "Use a PersistentVolumeClaim. When false, an emptyDir is used." },
+        "size": { "type": "string", "minLength": 1, "description": "Requested storage size (e.g. 2Gi)." },
+        "accessMode": { "type": "string", "enum": ["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany", "ReadWriteOncePod"], "description": "PVC access mode." },
+        "storageClassName": { "type": "string", "description": "StorageClass to use. Empty uses the cluster default." }
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "registry": { "type": "string", "minLength": 1, "description": "Container image registry." },
+        "repository": { "type": "string", "minLength": 1, "description": "Container image repository." },
+        "tag": { "type": "string", "description": "Image tag." },
+        "pullPolicy": { "type": "string", "enum": ["Always", "IfNotPresent", "Never"], "description": "Image pull policy." }
+      }
+    },
+    "resourceList": {
+      "type": "object",
+      "description": "Map of resource name (e.g. cpu, memory) to Kubernetes resource quantity.",
+      "additionalProperties": { "type": ["string", "number"] }
+    },
+    "resourceRequirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "limits": { "$ref": "#/$defs/resourceList" },
+        "requests": { "$ref": "#/$defs/resourceList" },
+        "claims": {
+          "type": "array",
+          "description": "Dynamic resource claims (Kubernetes 1.26+) used by the container.",
+          "items": {
+            "type": "object",
+            "properties": { "name": { "type": "string", "minLength": 1 } },
+            "required": ["name"]
+          }
+        }
+      }
+    },
+    "probe": {
+      "type": "object",
+      "description": "Kubernetes Probe object."
+    },
+    "secretRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "Name of an existing Secret. Empty uses the plain value." }
+      }
+    },
+    "ingress": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean", "description": "Enable the Ingress resource." },
+        "className": { "type": "string", "description": "IngressClass to use (Kubernetes >=1.18)." },
+        "annotations": { "type": "object", "description": "Annotations to add to the Ingress." },
+        "hosts": {
+          "type": "array",
+          "description": "Ingress host definitions.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "host": { "type": "string", "description": "Hostname to route through the Ingress." },
+              "paths": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "path": { "type": "string" },
+                    "pathType": { "type": "string", "enum": ["Exact", "Prefix", "ImplementationSpecific"], "description": "Ingress path type (required by networking.k8s.io/v1)." }
+                  },
+                  "required": ["path", "pathType"]
+                }
+              }
+            },
+            "required": ["host"]
+          }
+        },
+        "tls": {
+          "type": "array",
+          "description": "TLS configuration for the Ingress (secrets and hostnames).",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "secretName": { "type": "string" },
+              "hosts": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "global": { "type": "object", "description": "Global values shared with parent and sibling charts." },
+    "image": { "$ref": "#/$defs/image", "description": "Synapse container image. The tag defaults to the chart appVersion when empty." },
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Synapse homeserver configuration.",
+      "properties": {
+        "server": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "server_name": { "type": "string", "description": "Public-facing domain of the server (required, e.g. example.com)." },
+            "public_baseurl": { "type": "string", "description": "Public base URL clients use. Defaults to https://<server_name>." },
+            "web_client_location": { "type": "string", "description": "URL of the web client that / redirects to. Empty disables the redirect." },
+            "serve_server_wellknown": { "type": "boolean", "description": "Serve /.well-known/matrix/server." },
+            "email": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": { "type": "boolean", "description": "Render the email config." },
+                "smtp_host": { "type": "string" },
+                "smtp_port": { "$ref": "#/$defs/portString" },
+                "smtp_user": { "type": "string" },
+                "smtp_pass": { "type": "string" },
+                "existingSecret": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": { "type": "string", "description": "Name of an existing Secret with SMTP settings." },
+                    "keys": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Keys inside the existing Secret. Empty keys fall back to the plain values.",
+                      "properties": {
+                        "smtp_host": { "type": "string" },
+                        "smtp_port": { "type": "string" },
+                        "smtp_user": { "type": "string" },
+                        "smtp_pass": { "type": "string" }
+                      }
+                    }
+                  }
+                },
+                "force_tls": { "$ref": "#/$defs/boolOrEmpty" },
+                "require_transport_security": { "$ref": "#/$defs/boolOrEmpty" },
+                "enable_tls": { "$ref": "#/$defs/boolOrEmpty" },
+                "notif_from": { "type": "string", "description": "\"From\" address for emails. Required when email is enabled." },
+                "enable_notifs": { "$ref": "#/$defs/boolOrEmpty" },
+                "client_base_url": { "type": "string", "description": "Client URL used in email notification links." }
+              }
+            }
+          }
+        },
+        "mediaStore": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enable_media_repo": { "type": "boolean", "description": "Serve the media repository from the main Synapse process." },
+            "persistence": { "$ref": "#/$defs/persistence", "description": "Storage for /synapse/data (media and uploads)." }
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enable_metrics": { "type": "boolean", "description": "Enable the metrics listener on port 9090." },
+            "report_stats": {
+              "description": "Report homeserver usage statistics to matrix.org.",
+              "anyOf": [
+                { "type": "boolean" },
+                { "type": "string", "enum": ["true", "false"] }
+              ]
+            },
+            "serviceMonitor": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": { "type": "boolean", "description": "Deploy a Prometheus Operator ServiceMonitor." }
+              }
+            },
+            "prometheusRule": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": { "type": "boolean", "description": "Deploy a Prometheus Operator PrometheusRule." },
+                "rules": {
+                  "type": "array",
+                  "description": "Prometheus alerting/recording rules.",
+                  "items": { "type": "object" }
+                }
+              }
+            }
+          }
+        },
+        "registration": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enable_registration": { "type": "boolean", "description": "Allow new users to register." },
+            "enable_registration_without_verification": { "type": "boolean", "description": "Allow registration without email or captcha verification." },
+            "registration_shared_secret": { "type": "string", "description": "Shared secret for registering users via the admin API." },
+            "existingSecret": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string" },
+                "keys": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": { "registration_shared_secret": { "type": "string" } }
+                }
+              }
+            }
+          }
+        },
+        "apiConfiguration": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "macaroon_secret_key": { "type": "string", "description": "Secret used to sign guest access, SSO login and unsubscribe tokens." },
+            "existingSecret": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string" },
+                "keys": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": { "macaroon_secret_key": { "type": "string" } }
+                }
+              }
+            }
+          }
+        },
+        "signingKeys": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "trusted_key_servers": {
+              "type": "array",
+              "description": "Servers to download signing keys from (e.g. [{server_name: matrix.org}]).",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "server_name": { "type": "string", "minLength": 1 },
+                  "verify_keys": { "type": "object", "additionalProperties": { "type": "string" } },
+                  "accept_keys_insecurely": { "type": "boolean" }
+                },
+                "required": ["server_name"]
+              }
+            },
+            "suppress_key_server_warning": { "type": "boolean" }
+          }
+        },
+        "oidc_providers_enabled": { "type": "boolean", "description": "Render oidc_providers into the Synapse config." },
+        "oidc_providers": {
+          "type": "array",
+          "description": "OIDC identity providers. Client ID and secret are read from existingSecretName (keys clientId and clientSecret).",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "idp_id": {
+                "type": "string",
+                "pattern": "^[a-z0-9_]+$",
+                "description": "Provider ID. Lowercase letters, digits and _ only, because it is uppercased into environment variable names (OIDC_CLIENT_ID_<IDP_ID>)."
+              },
+              "idp_name": { "type": "string" },
+              "discover": { "type": ["boolean", "string"] },
+              "issuer": { "type": "string" },
+              "scopes": { "type": "array", "items": { "type": "string" } },
+              "allow_existing_users": { "type": ["boolean", "string"] },
+              "user_mapping_provider": {
+                "type": "object",
+                "properties": { "config": { "type": "object" } }
+              },
+              "existingSecretName": { "type": "string", "minLength": 1, "description": "Secret with the keys clientId and clientSecret." },
+              "extra_oidc_provider_config": { "type": "object", "description": "Additional provider settings, merged into the provider entry." }
+            },
+            "required": ["idp_id", "existingSecretName"]
+          }
+        }
+      }
+    },
+    "extraListeners": {
+      "type": "array",
+      "description": "Additional Synapse listeners.",
+      "items": { "type": "object" }
+    },
+    "extraConfig": { "type": "object", "description": "Additional Synapse settings appended to homeserver.yaml." },
+    "extraCommands": {
+      "type": "array",
+      "description": "Extra shell commands to run before starting Synapse.",
+      "items": { "type": "string" }
+    },
+    "logConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "useStructuredLogging": { "type": "boolean", "description": "Log as structured JSON." },
+        "logLevel": { "type": "string", "enum": ["DEBUG", "INFO", "WARN", "WARNING", "ERROR", "CRITICAL"], "description": "Log level for Synapse." },
+        "extraLoggers": { "type": "object", "description": "Additional logger settings added under loggers.synapse." }
+      }
+    },
+    "sqlite": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "SQLite database (not recommended for production). Ignored when externalPostgresql is enabled.",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "persistence": { "$ref": "#/$defs/persistence", "description": "Storage for the SQLite database." }
+      }
+    },
+    "externalPostgresql": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "External PostgreSQL database. Each field can be read from existingSecret instead of the plain value.",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "host": { "type": "string" },
+        "port": { "$ref": "#/$defs/portString" },
+        "database": { "type": "string" },
+        "username": { "type": "string" },
+        "password": { "type": "string" },
+        "existingSecret": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string" },
+            "keys": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "Keys inside the existing Secret. Empty keys fall back to the plain values.",
+              "properties": {
+                "host": { "type": "string" },
+                "port": { "type": "string" },
+                "database": { "type": "string" },
+                "username": { "type": "string" },
+                "password": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dragonfly": {
+      "type": "object",
+      "description": "Values for the Dragonfly subchart (work in progress). Only enabled is validated here.",
+      "properties": {
+        "enabled": { "type": "boolean" }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "description": "imagePullSecrets to use for pulling images (e.g. [{name: my-secret}]).",
+      "items": { "type": "object" }
+    },
+    "nameOverride": { "type": "string", "description": "String to partially override chart name." },
+    "fullnameOverride": { "type": "string", "description": "String to fully override chart fullname." },
+    "serviceAccount": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "ServiceAccount options.",
+      "properties": {
+        "create": { "type": "boolean" },
+        "automount": { "type": "boolean" },
+        "annotations": { "type": "object" },
+        "name": { "type": "string", "description": "If not set and create is true, a name is generated using the fullname template." }
+      }
+    },
+    "podAnnotations": { "type": "object" },
+    "podLabels": { "type": "object" },
+    "podSecurityContext": { "type": "object", "description": "Pod-level security context." },
+    "securityContext": { "type": "object", "description": "Container-level security context." },
+    "service": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": { "type": "string", "enum": ["ClusterIP", "NodePort", "LoadBalancer"] },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 }
+      }
+    },
+    "ingress": { "$ref": "#/$defs/ingress" },
+    "resources": { "$ref": "#/$defs/resourceRequirements" },
+    "livenessProbe": { "$ref": "#/$defs/probe" },
+    "readinessProbe": { "$ref": "#/$defs/probe" },
+    "autoscaling": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "minReplicas": { "type": "integer", "minimum": 1 },
+        "maxReplicas": { "type": "integer", "minimum": 1 },
+        "targetCPUUtilizationPercentage": { "type": "integer", "minimum": 1 },
+        "targetMemoryUtilizationPercentage": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "volumes": { "type": "array", "items": { "type": "object" } },
+    "volumeMounts": { "type": "array", "items": { "type": "object" } },
+    "nodeSelector": { "type": "object" },
+    "tolerations": { "type": "array", "items": { "type": "object" } },
+    "affinity": { "type": "object" },
+    "signingkey": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Source of the federation signing key: a Job that creates it, or an existing Secret.",
+      "properties": {
+        "job": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean", "description": "Run a Job that generates the signing key if it does not exist." },
+            "storeSecretImage": { "$ref": "#/$defs/image", "description": "kubectl image used to store the key in a Secret (needs sh)." }
+          }
+        },
+        "existingSecret": { "type": "string", "description": "Existing Secret holding the signing key. Cannot be combined with job.enabled." },
+        "existingSecretKey": { "type": "string", "description": "Key in existingSecret holding the signing key. Defaults to signing.key." },
+        "resources": { "$ref": "#/$defs/resourceRequirements", "description": "Resources for the signing key Job containers." }
+      }
+    }
+  }
+}

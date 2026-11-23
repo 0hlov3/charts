@@ -133,7 +133,7 @@ config:
   signingKeys:
     ## @param config.signingKeys.trusted_key_servers The trusted servers to download signing keys from.
     trusted_key_servers: []
-      # - "matrix.org"
+      # - server_name: "matrix.org"
     ## @param config.signingKeys.suppress_key_server_warning Set the following to true to disable the warning that is emitted when the trusted_key_servers include 'matrix.org'.
     suppress_key_server_warning: false
   ## @param config.oidc_providers_enabled Enables an OIDC Providor config [#synapse-oidc-config](synapse-oidc-config)
