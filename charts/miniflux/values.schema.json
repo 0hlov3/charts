@@ -73,6 +73,39 @@
         }
       }
     },
+    "database": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Database credentials.",
+      "properties": {
+        "existingSecret": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string", "minLength": 1, "description": "Existing Secret holding the PostgreSQL connection URL." },
+            "key": { "type": "string", "minLength": 1, "description": "Key inside the Secret holding the connection URL." }
+          },
+          "required": ["name", "key"]
+        }
+      }
+    },
+    "admin": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Admin user credentials, used when env.CREATE_ADMIN is enabled.",
+      "properties": {
+        "existingSecret": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string", "minLength": 1, "description": "Existing Secret holding the admin credentials." },
+            "usernameKey": { "type": "string", "minLength": 1, "description": "Key inside the Secret holding the admin username." },
+            "passwordKey": { "type": "string", "minLength": 1, "description": "Key inside the Secret holding the admin password." }
+          },
+          "required": ["name", "usernameKey", "passwordKey"]
+        }
+      }
+    },
     "extraEnv": {
       "type": "array",
       "description": "Additional Kubernetes EnvVar objects for the Miniflux container (e.g. TRUSTED_REVERSE_PROXY_NETWORKS, OAUTH2_*). See https://miniflux.app/docs/configuration.html",
@@ -83,8 +116,8 @@
           "name": {
             "type": "string",
             "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
-            "not": { "enum": ["DATABASE_URL", "RUN_MIGRATIONS", "CREATE_ADMIN", "ADMIN_USERNAME", "ADMIN_PASSWORD", "BASE_URL"] },
-            "description": "Variable name. Variables already set by the chart are not allowed."
+            "not": { "enum": ["DATABASE_URL", "DATABASE_URL_FILE", "RUN_MIGRATIONS", "CREATE_ADMIN", "ADMIN_USERNAME", "ADMIN_USERNAME_FILE", "ADMIN_PASSWORD", "ADMIN_PASSWORD_FILE", "BASE_URL", "PORT", "LISTEN_ADDR"] },
+            "description": "Variable name. Variables managed by the chart (database, admin, BASE_URL) and the listen address (PORT, LISTEN_ADDR; use service.port) are not allowed."
           },
           "value": { "type": "string", "description": "Plain value. Quote numbers and booleans." },
           "valueFrom": { "type": "object", "description": "Source for the value (secretKeyRef, configMapKeyRef, fieldRef, resourceFieldRef)." }

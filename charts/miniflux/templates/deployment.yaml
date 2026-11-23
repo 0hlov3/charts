@@ -49,8 +49,8 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  key: database_url
-                  name: miniflux-db-creds
+                  name: {{ .Values.database.existingSecret.name | quote }}
+                  key: {{ .Values.database.existingSecret.key | quote }}
             ################
             # Admin Config #
             ###############
@@ -58,18 +58,20 @@ spec:
               value: "{{ .Values.env.RUN_MIGRATIONS }}"
             - name: CREATE_ADMIN
               value: "{{ .Values.env.CREATE_ADMIN }}"
+            {{- if has (toString .Values.env.CREATE_ADMIN | lower) (list "1" "true" "yes" "on") }}
             - name: ADMIN_USERNAME
               valueFrom:
                 secretKeyRef:
-                  key: username
-                  name: miniflux-admin-creds
+                  name: {{ .Values.admin.existingSecret.name | quote }}
+                  key: {{ .Values.admin.existingSecret.usernameKey | quote }}
             - name: ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: password
-                  name: miniflux-admin-creds
+                  name: {{ .Values.admin.existingSecret.name | quote }}
+                  key: {{ .Values.admin.existingSecret.passwordKey | quote }}
+            {{- end }}
             - name: BASE_URL
-              value: {{ .Values.env.BASE_URL | default "http://localhost" }}
+              value: {{ .Values.env.BASE_URL | default "http://localhost" | quote }}
             {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}

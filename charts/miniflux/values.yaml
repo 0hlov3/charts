@@ -23,14 +23,32 @@ image:
 
 ## @section Miniflux configuration
 ## @param env.RUN_MIGRATIONS Run database migrations on startup ("1" or "0")
-## @param env.CREATE_ADMIN Create admin user on startup ("1" or "0")
+## @param env.CREATE_ADMIN Create admin user on startup ("1" or "0"). The admin credentials are only read from admin.existingSecret when enabled
 ## @param env.BASE_URL Public base URL (e.g. https://rss.example.com)
 env:
   RUN_MIGRATIONS: "1"
   CREATE_ADMIN: "1"
   BASE_URL: ""
 
-## @param extraEnv Additional environment variables for the Miniflux container (Kubernetes EnvVar objects with value or valueFrom). Variables set by the chart (DATABASE_URL, RUN_MIGRATIONS, CREATE_ADMIN, ADMIN_USERNAME, ADMIN_PASSWORD, BASE_URL) are not allowed here
+## @section Credentials
+## @param database.existingSecret.name Name of the existing Secret holding the PostgreSQL connection URL (DATABASE_URL)
+## @param database.existingSecret.key Key inside the Secret holding the connection URL (e.g. postgres://user:pass@host/miniflux?sslmode=disable)
+database:
+  existingSecret:
+    name: miniflux-db-creds
+    key: database_url
+
+## @param admin.existingSecret.name Name of the existing Secret holding the admin credentials (only used when env.CREATE_ADMIN is enabled)
+## @param admin.existingSecret.usernameKey Key inside the Secret holding the admin username
+## @param admin.existingSecret.passwordKey Key inside the Secret holding the admin password
+admin:
+  existingSecret:
+    name: miniflux-admin-creds
+    usernameKey: username
+    passwordKey: password
+
+## @section Extra environment variables
+## @param extraEnv Additional environment variables for the Miniflux container (Kubernetes EnvVar objects with value or valueFrom). Not allowed: variables set by the chart (DATABASE_URL, RUN_MIGRATIONS, CREATE_ADMIN, ADMIN_USERNAME, ADMIN_PASSWORD, BASE_URL and their _FILE variants) and PORT/LISTEN_ADDR (use service.port)
 ## See https://miniflux.app/docs/configuration.html for all options
 extraEnv: []
 # - name: TRUSTED_REVERSE_PROXY_NETWORKS
